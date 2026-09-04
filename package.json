@@ -6,5 +6,8 @@
   "scripts": {
     "build": "rm -rf dist && cp -r public dist",
     "og": "node tools/render-og.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.118.0"
   }
 }
