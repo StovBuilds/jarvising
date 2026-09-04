@@ -1,0 +1,10 @@
+{
+  "name": "jarvising",
+  "private": true,
+  "type": "module",
+  "description": "jarvising.com — open portfolio of test projects. Static site, no framework.",
+  "scripts": {
+    "build": "rm -rf dist && cp -r public dist",
+    "og": "node tools/render-og.mjs"
+  }
+}

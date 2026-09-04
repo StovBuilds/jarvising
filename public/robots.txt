@@ -1,0 +1,5 @@
+# Jarvising — open portfolio. Everything here is meant to be read.
+User-agent: *
+Allow: /
+
+Sitemap: https://jarvising.com/sitemap.xml

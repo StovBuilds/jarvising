@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jarvising — the act of creating innovative projects at scale</title>
+<meta name="description" content="jarvising (verb): the act of creating innovative projects at scale, and giving people the tools to do it themselves. An open portfolio of test projects, published as they are built.">
+<link rel="canonical" href="https://jarvising.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jarvising">
+<meta property="og:title" content="Jarvising">
+<meta property="og:description" content="jarvising (verb): the act of creating innovative projects at scale, and giving people the tools to do it themselves.">
+<meta property="og:url" content="https://jarvising.com/">
+<meta property="og:image" content="https://jarvising.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Jarvising">
+<meta name="twitter:description" content="The act of creating innovative projects at scale, and giving people the tools to do it themselves.">
+<meta name="twitter:image" content="https://jarvising.com/og.png">
+<meta name="theme-color" content="#F6F1E7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://jarvising.com/#website",
+      "url": "https://jarvising.com/",
+      "name": "Jarvising",
+      "description": "An open portfolio of test projects, published as they are built.",
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://jarvising.com/#term",
+      "name": "jarvising",
+      "url": "https://jarvising.com/",
+      "description": "1. The act of creating innovative projects at scale. 2. Giving people the tools to do it themselves.",
+      "inDefinedTermSet": {
+        "@type": "DefinedTermSet",
+        "name": "Jarvising"
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+  /* Self-hosted fonts. No third-party requests anywhere on this page, so
+     there is nothing to consent to and no banner. */
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('/fonts/fraunces-latin.woff2') format('woff2');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Fraunces';
+    src: url('/fonts/fraunces-latin-ext.woff2') format('woff2');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-normal-latin.woff2') format('woff2');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-normal-latin-ext.woff2') format('woff2');
+    font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+
+  :root {
+    --paper: #F6F1E7;
+    --paper-deep: #EFE8D9;
+    --line: #DED5C2;
+    --line-strong: #C9BEA5;
+    --ink: #1B1D20;
+    --ink-soft: #4E5259;
+    --ink-faint: #7A7E86;
+    --accent: #B5451B;
+    --accent-soft: #F1D9CC;
+    --rule: #1B1D20;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #15171A;
+      --paper-deep: #1C1F23;
+      --line: #2C3036;
+      --line-strong: #3B4048;
+      --ink: #EDE7DA;
+      --ink-soft: #B8B2A6;
+      --ink-faint: #858079;
+      --accent: #E8845A;
+      --accent-soft: #3A2A22;
+      --rule: #EDE7DA;
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 72px 24px 56px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  @media (max-width: 600px) { .wrap { padding-top: 40px; } }
+
+  .fade { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .fade-2 { animation-delay: .09s; }
+  .fade-3 { animation-delay: .18s; }
+  .fade-4 { animation-delay: .27s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade, .fade-2, .fade-3, .fade-4 { animation: none; } }
+
+  /* ── Running head, as a dictionary page has ── */
+  .running-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .running-head b { font-weight: 600; color: var(--ink-soft); }
+
+  /* ── Headword block ── */
+  .entry { margin-top: 56px; }
+  .headword {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 144;
+    font-size: clamp(56px, 12vw, 104px);
+    line-height: .95;
+    letter-spacing: -0.03em;
+    margin: 0;
+    color: var(--ink);
+  }
+  .headword .dot { color: var(--accent); }
+  .pron {
+    margin-top: 18px;
+    display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline;
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+  .pron .ipa {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .pron .pos {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .pron .pos i { font-style: italic; }
+  .pron .tag {
+    font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    padding: 3px 9px 2px;
+    font-weight: 600;
+  }
+
+  /* ── Senses ── */
+  .senses {
+    list-style: none; margin: 40px 0 0; padding: 0;
+    counter-reset: sense;
+  }
+  .senses li {
+    counter-increment: sense;
+    position: relative;
+    padding-left: 56px;
+    margin-top: 28px;
+  }
+  .senses li::before {
+    content: counter(sense);
+    position: absolute; left: 0; top: -2px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .sense-def {
+    margin: 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-variation-settings: 'opsz' 40;
+    font-size: clamp(22px, 3.4vw, 28px);
+    line-height: 1.3;
+    letter-spacing: -0.008em;
+    font-weight: 500;
+  }
+  .sense-gloss {
+    margin: 10px 0 0;
+    color: var(--ink-soft);
+    font-size: 17px;
+    max-width: 58ch;
+  }
+  .sense-ex {
+    margin: 12px 0 0;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.45;
+    padding-left: 14px;
+    border-left: 2px solid var(--line-strong);
+  }
+  .sense-ex b { font-weight: 600; font-style: normal; color: var(--ink); }
+
+  /* ── Small-caps labelled paragraphs: origin, usage ── */
+  .note {
+    margin-top: 32px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 6px 20px;
+    align-items: baseline;
+  }
+  @media (max-width: 520px) { .note { grid-template-columns: 1fr; gap: 4px; } }
+  .note dt {
+    font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600;
+    padding-top: 4px;
+  }
+  .note dd { margin: 0; color: var(--ink-soft); max-width: 60ch; }
+  .note dd i { font-family: 'Fraunces', Georgia, serif; color: var(--ink); font-size: 1.04em; }
+  .note dd + dt { margin-top: 16px; }
+  @media (max-width: 520px) { .note dd + dt { margin-top: 18px; } }
+
+  /* ── The portfolio, as "See also" ── */
+  .see-also {
+    margin-top: 56px;
+    background: var(--paper-deep);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 28px 26px;
+  }
+  @media (max-width: 520px) { .see-also { padding: 22px 20px; } }
+  .see-also h2 {
+    margin: 0;
+    font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600;
+  }
+  .see-also p {
+    margin: 12px 0 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-variation-settings: 'opsz' 30;
+    font-size: clamp(19px, 2.8vw, 22px);
+    line-height: 1.38;
+    color: var(--ink);
+    max-width: 30em;
+  }
+  .see-also .sub {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15.5px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+  .slots {
+    list-style: none; margin: 22px 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  @media (max-width: 520px) { .slots { grid-template-columns: 1fr; } }
+  .slots li {
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+    color: var(--ink-faint);
+    font-size: 13px;
+    letter-spacing: .02em;
+    display: flex; flex-direction: column; gap: 6px;
+    min-height: 74px;
+  }
+  .slots li span {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .slots li small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+
+  footer {
+    margin-top: auto;
+    padding-top: 48px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
+    font-size: 13.5px;
+    color: var(--ink-faint);
+  }
+  footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  footer a:hover { color: var(--ink); border-color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="running-head fade">
+    <span><b>jarvising</b></span>
+    <span>jarvising.com</span>
+  </header>
+
+  <main class="entry" id="jarvising">
+    <h1 class="headword fade fade-2">jar<span class="dot">·</span>vis<span class="dot">·</span>ing</h1>
+
+    <div class="pron fade fade-2">
+      <span class="ipa" lang="en-fonipa">/ˈdʒɑː.vɪ.sɪŋ/</span>
+      <span class="pos"><i>verb</i> (present participle of <i>jarvis</i>); also <i>noun</i></span>
+      <span class="tag">New entry</span>
+    </div>
+
+    <ol class="senses fade fade-3">
+      <li>
+        <p class="sense-def">The act of creating innovative projects at scale.</p>
+        <p class="sense-gloss">Building many things, quickly and in the open, and letting the ones that work stand on their own.</p>
+        <p class="sense-ex">"She spent the summer <b>jarvising</b>: eleven prototypes, three of them still running."</p>
+      </li>
+      <li>
+        <p class="sense-def">Giving people the tools to do it themselves.</p>
+        <p class="sense-gloss">The making is not kept but handed on, so that the next person starts further along than you did.</p>
+        <p class="sense-ex">"Proper <b>jarvising</b> ends with someone else doing it without you."</p>
+      </li>
+    </ol>
+
+    <dl class="note fade fade-3">
+      <dt>Origin</dt>
+      <dd>Early 21st century: from <i>Jarvis</i>, the name given to a home-built assistant that grew into a fleet of small, cooperating agents. The <i>&#8209;ing</i> marks that the work is never quite finished.</dd>
+      <dt>Usage</dt>
+      <dd>Not to be confused with <i>tinkering</i>, which has no ambition of scale, or <i>shipping</i>, which has no obligation to teach.</dd>
+    </dl>
+
+    <section class="see-also fade fade-4" aria-labelledby="see-also-h">
+      <h2 id="see-also-h">See also</h2>
+      <p>This site is the open portfolio of what jarvising produces: test projects, experiments and tools, published here as they are built.</p>
+      <p class="sub">The first entries are on their way. Each one will show what it does, how it was made, and how to make your own.</p>
+      <ul class="slots" aria-label="Upcoming entries">
+        <li><small>Entry 1</small><span>in progress</span></li>
+        <li><small>Entry 2</small><span>in progress</span></li>
+        <li><small>Entry 3</small><span>in progress</span></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="fade fade-4">
+    <span>© 2026 Jarvising. Built in the open.</span>
+    <span>by <a href="https://jstov.uk/" rel="me">Jack Stovell</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

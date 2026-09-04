@@ -1,0 +1,4 @@
+Contact: https://jstov.uk/
+Expires: 2027-09-02T12:39:05Z
+Preferred-Languages: en
+Canonical: https://jarvising.com/.well-known/security.txt

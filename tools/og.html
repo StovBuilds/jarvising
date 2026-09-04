@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin.woff2') format('woff2'); font-weight: 100 900; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin.woff2') format('woff2'); font-weight: 100 900; }
+  html, body { margin: 0; }
+  body {
+    width: 1200px; height: 630px; overflow: hidden;
+    background: #F6F1E7; color: #1B1D20;
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    padding: 64px 80px 56px; box-sizing: border-box;
+  }
+  .head {
+    display: flex; justify-content: space-between;
+    font-size: 20px; letter-spacing: .14em; text-transform: uppercase; color: #7A7E86;
+    padding-bottom: 20px; border-bottom: 2px solid #C9BEA5;
+  }
+  .head b { color: #4E5259; font-weight: 600; }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 600;
+    font-variation-settings: 'opsz' 144;
+    font-size: 150px; line-height: .95; letter-spacing: -0.03em; margin: 52px 0 0;
+  }
+  h1 .dot { color: #B5451B; }
+  .pron { margin-top: 22px; font-size: 26px; color: #4E5259; display: flex; gap: 26px; align-items: baseline; }
+  .pron .ipa { font-family: 'Fraunces', Georgia, serif; font-size: 30px; color: #1B1D20; }
+  .pron .pos { font-family: 'Fraunces', Georgia, serif; font-style: italic; }
+  .def {
+    margin-top: 40px;
+    font-family: 'Fraunces', Georgia, serif; font-variation-settings: 'opsz' 40;
+    font-size: 36px; line-height: 1.28; font-weight: 500; letter-spacing: -0.008em;
+    max-width: 30em;
+  }
+  .def .n { color: #B5451B; font-weight: 600; margin-right: 12px; }
+  .foot { margin-top: auto; font-size: 20px; color: #7A7E86; }
+</style>
+</head>
+<body>
+  <div class="head"><span><b>jarvising</b></span><span>jarvising.com</span></div>
+  <h1>jar<span class="dot">·</span>vis<span class="dot">·</span>ing</h1>
+  <div class="pron"><span class="ipa">/ˈdʒɑː.vɪ.sɪŋ/</span><span class="pos">verb; also noun</span></div>
+  <div class="def"><span class="n">1</span>The act of creating innovative projects at scale. <span class="n" style="margin-left:14px">2</span>Giving people the tools to do it themselves.</div>
+  <div class="foot">An open portfolio of test projects, published as they are built.</div>
+</body>
+</html>

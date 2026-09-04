@@ -1,0 +1,28 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun run build
+      - name: sanity-check dist
+        run: |
+          set -e
+          test -f dist/index.html
+          test -f dist/_headers
+          test -f dist/og.png
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          test -f dist/llms.txt
+          test -f functions/_middleware.js
+          # every self-hosted asset the page references must exist in dist
+          for f in $(grep -oE "(/fonts/[a-z0-9.-]+\.woff2|/favicon\.svg|/apple-touch-icon\.png|/og\.png)" dist/index.html | sort -u); do
+            test -f "dist$f" || { echo "missing dist$f"; exit 1; }
+          done
+          node -e "import('./functions/_middleware.js').then(m => { if (typeof m.onRequest !== 'function') process.exit(1) })"

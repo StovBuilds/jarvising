@@ -1,0 +1,17 @@
+# Jarvising
+
+> jarvising (verb, present participle of *jarvis*; also noun): 1. The act of creating innovative projects at scale. 2. Giving people the tools to do it themselves.
+
+jarvising.com is an open portfolio of test projects, experiments and tools built by Jack Stovell (https://jstov.uk/). Projects are published here as they are built, each showing what it does, how it was made, and how to make your own.
+
+## Status
+
+- Holding page live (September 2026). First project entries are in progress.
+
+## Pages
+
+- [Home](https://jarvising.com/): the dictionary entry for "jarvising" and the portfolio index.
+
+## Related
+
+- [jstov.uk](https://jstov.uk/): Jack Stovell's personal site.
