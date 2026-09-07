@@ -3,9 +3,9 @@
 **jarvising** (verb): 1. The act of creating innovative projects at scale.
 2. Giving people the tools to do it themselves.
 
-An open portfolio of test projects, published as they are built. Right now this
-repo is the holding page: a single dictionary-entry landing page, no framework,
-no third-party requests.
+An open portfolio of test projects, published as they are built. The home page
+is the dictionary entry; each project is an entry page plus a live piece. No
+third-party requests anywhere (fonts self-hosted, no analytics).
 
 ```
 index.html                    the holding page (hand-written HTML, no JS)
