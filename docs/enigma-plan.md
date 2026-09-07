@@ -54,8 +54,10 @@ Procedural primitives cap the fidelity. Remaining candidates, in order of payoff
    a Bakelite telephone, a Typex-style typewriter on the second desk, a
    coat on a hook, a stove.
 
-Budget: GLBs ≤ 2 MB total, Draco-compressed; lazy-load the bombe only when
-progress passes 0.6. Keep the procedural fallback if a GLB fails to load.
+Budget: GLBs ≤ 2 MB total, quantised only (no Draco/meshopt while the CSP
+stays strict — see phase 2 note above); lazy-load anything not needed before
+the rotor beat. A GLB that fails to load must leave the chapter readable from
+the copy alone (the bombe already does).
 
 ## Phase 3 — exhibition / kiosk mode (`?kiosk=1`)
 
