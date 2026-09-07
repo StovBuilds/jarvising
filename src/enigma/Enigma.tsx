@@ -57,7 +57,7 @@ const CHAPTERS: Chapter[] = [
   {
     from: 0, to: 0.0875, ghost: "ENIGMA", kicker: "001 · THE MACHINE",
     head: "A secret\nin an oak box",
-    body: "From 1926 to 1945, the German military poured its radio traffic through this device. Press a letter and a different one lights — and the scrambling changed with every single keypress. Some 40,000 of these boxes carried orders, U-boat positions and weather reports, all of it presumed unreadable. This one sits where it was read: a hut at Bletchley Park, on the night watch.",
+    body: "From 1926 to 1945, the German military poured its radio traffic through this device. Press a letter and a different one lights — and the scrambling changed with every single keypress. An estimated forty thousand or more of these boxes carried orders, U-boat positions and weather reports, all of it presumed unreadable. This one sits where it was read: a hut at Bletchley Park, on the night watch.",
   },
   {
     from: 0.0875, to: 0.21, ghost: "1918", kicker: "002 · THE TIMELINE",
@@ -117,18 +117,19 @@ const CHAPTERS: Chapter[] = [
       ["Aug 1939", "GC&CS arrives at Bletchley Park"],
       ["Hut 6", "Heer & Luftwaffe traffic — Gordon Welchman"],
       ["Hut 8", "Kriegsmarine traffic — Alan Turing"],
+      ["Flow", "Registration → Machine Room → Decoding → Hut 3"],
       ["1974", "the secret is finally published"],
     ],
   },
   {
     from: 0.78, to: 0.86, ghost: "BOMBE", kicker: "008 · THE BOMBE",
     head: "A machine\nto beat a machine",
-    body: "You cannot try 10²⁰ keys by hand. Turing's bombe — built on a Polish idea, refined by Welchman's diagonal board — ran dozens of Enigmas in parallel against a crib: a guessed scrap of plaintext, a weather report, a routine sign-off. Because no letter could encrypt to itself, most guesses died instantly. The first bombe, Victory, arrived in March 1940; by the end there were around two hundred, tended around the clock by Wrens. The reading of Enigma is credited with shortening the war by years.",
+    body: "You cannot try 10²⁰ keys by hand. Turing's bombe — built on a Polish idea, refined by Welchman's diagonal board — ran dozens of Enigmas in parallel against a crib: a guessed scrap of plaintext, a weather report, a routine sign-off. Because no letter could encrypt to itself, most guesses died instantly. The first bombe, Victory, arrived in March 1940; by the end some two hundred and ten had been built, tended around the clock by Wrens. Sir Harry Hinsley, the official historian of British intelligence, judged that reading Enigma shortened the war by not less than two years.",
     specs: [
       ["Mar 1940", "first bombe, Victory, installed"],
       ["Aug 1940", "diagonal board — the bombe comes good"],
       ["36", "Enigma equivalents per bombe"],
-      ["~200", "bombes running by 1945"],
+      ["~210", "bombes built by 1945"],
       ["Wrens", "the Women's Royal Naval Service ran them"],
     ],
   },

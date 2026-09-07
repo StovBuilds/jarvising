@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Enigma — entry 001 · Jarvising</title>
-<meta name="description" content="Entry 001: a scroll-driven teardown of the Enigma I that ends in a faithful machine you can type on. What it does, how it was made, and how to make your own.">
+<meta name="description" content="Entry 001: a scroll-driven teardown of the Enigma I in a Bletchley Park hut, ending in a faithful machine you can type on. What it does, how it was made, how to make your own, and the sources.">
 <link rel="canonical" href="https://jarvising.com/projects/enigma/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Jarvising">
@@ -37,6 +37,7 @@
   "author": { "@type": "Person", "name": "Jack Stovell", "url": "https://jstov.uk/" },
   "datePublished": "2026-08-27",
   "dateModified": "2026-09-07",
+  "citation": ["https://www.gchq.gov.uk/information/the-pyry-forest-meeting", "https://www.tnmoc.org/bombe", "https://www.cryptomuseum.com/crypto/enigma/hist.htm", "https://www.bletchleypark.org.uk/markers/hut-3-and-hut-6/"],
   "isPartOf": { "@id": "https://jarvising.com/#website" },
   "image": "https://jarvising.com/projects/enigma/og.png",
   "keywords": ["Enigma", "Three.js", "WebGL", "scroll-driven", "procedural", "cipher"]
@@ -248,6 +249,38 @@
   <span class="k">return</span> String.fromCharCode(65 + x);
 }</pre>
         <p class="caption">Plug pairs go in the map both ways. Reset <code>pos</code> to the same start position to decrypt.</p>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>History notes</h2>
+      <div>
+        <p>Things the chapters touch but cannot dwell on, each checked against the sources below.</p>
+        <ul>
+          <li><strong>The Herivel tip and cillies, May 1940.</strong> John Herivel guessed that a tired operator setting up in the morning would leave the rotors near the ring-setting he had just fixed; with operating slips nicknamed "cillies", that guess carried Hut 6 for months before enough bombes existed.</li>
+          <li><strong>Banburismus, Hut 8.</strong> Turing's paper method for naval Enigma, named for the punched sheets printed in Banbury, cut the bombe work by ruling out wheel orders statistically.</li>
+          <li><strong>U-110, 9 May 1941.</strong> HMS <i>Bulldog</i>'s boarding party took an intact naval Enigma and its key documents from a sinking U-boat. The King called it perhaps the most important single event in the whole war at sea.</li>
+          <li><strong>Shark, 1942.</strong> On 1 February 1942 the U-boats switched to the four-rotor M4 and Hut 8 went blind for ten months. On 30 October, Lieutenant Tony Fasson and Able Seaman Colin Grazier of HMS <i>Petard</i>, with canteen assistant Tommy Brown, went into the sinking <i>U-559</i> for its weather code book; Fasson and Grazier did not come out. Shark was read again from 13 December.</li>
+          <li><strong>Matapan, March 1941.</strong> Mavis Lever, later Batey, working under Dilly Knox on Italian naval Enigma, broke the message that put the Italian fleet at sea; the Royal Navy met it off Cape Matapan on 28 and 29 March.</li>
+          <li><strong>What a hut actually did.</strong> Intercepts arrived in Hut 6's Registration Room, went to the Machine Room to be attacked, then to the Decoding Room to be typed out on modified British machines, then through a wooden tunnel to Hut 3, on a tea-tray pushed with a broom handle, to be translated and assessed.</li>
+        </ul>
+        <p class="caption">The lid card in the piece keeps the real plate's heading, <i>Zur Beachtung!</i>, but the original carried maintenance instructions; ours explains the machine instead. The notice-board cards and the intercept form are evocations, not transcriptions.</p>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>Sources</h2>
+      <div>
+        <ul>
+          <li><a href="https://www.gchq.gov.uk/information/the-pyry-forest-meeting">GCHQ, The Pyry Forest meeting</a> and <a href="https://www.gchq.gov.uk/person/mavis-batey">GCHQ, Mavis Batey</a></li>
+          <li><a href="https://www.bletchleypark.org.uk/markers/hut-3-and-hut-6/">Bletchley Park Trust, Hut 3 and Hut 6</a>; <a href="https://www.bletchleypark.org.uk/our-story/e168-inside-hut-6/">Inside Hut 6</a>; <a href="https://www.bletchleypark.org.uk/our-story/e144-shark-attack/">Shark Attack</a>; <a href="https://artsandculture.google.com/story/the-women-of-bletchley-park/qgVxQIAxvdB-JA">The women of Bletchley Park</a></li>
+          <li><a href="https://www.tnmoc.org/bombe">The National Museum of Computing, the Turing-Welchman Bombe</a> and its <a href="https://www.tnmoc.org/bh-1-bombe-historical-background">historical background</a></li>
+          <li><a href="https://www.cryptomuseum.com/crypto/enigma/hist.htm">Crypto Museum, Enigma history</a> and <a href="https://www.cryptomuseum.com/crypto/enigma/i/index.htm">Enigma I</a></li>
+          <li><a href="https://uboat.net/technical/enigma_breaking.htm">uboat.net, Allied breaking of naval Enigma</a>; <a href="https://www.naval-history.net/xDKWW2-4105-32MAY01.htm">naval-history.net, the capture of U-110</a>; <a href="https://www.rmg.co.uk/collections/library/rmgl-116804">Royal Museums Greenwich, HMS Petard</a></li>
+          <li><a href="https://www.cix.co.uk/~klockstone/hinsley.htm">F. H. Hinsley, The Influence of ULTRA in the Second World War</a> (1993 lecture)</li>
+          <li>Books: Hinsley &amp; Stripp, <i>Codebreakers</i>; Welchman, <i>The Hut Six Story</i>; Copeland, <i>The Essential Turing</i>; Sebag-Montefiore, <i>Enigma: The Battle for the Code</i>; Winterbotham, <i>The Ultra Secret</i> (1974)</li>
+        </ul>
+        <p class="caption">A claim-by-claim ledger with verdicts lives in the repo: <a href="https://github.com/StovBuilds/jarvising/blob/main/docs/enigma-sources.md">docs/enigma-sources.md</a>.</p>
       </div>
     </section>
 

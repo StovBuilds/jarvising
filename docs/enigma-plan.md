@@ -118,10 +118,20 @@ Original requirements, for reference:
 
 ## Phase 4 — history depth and accuracy pass
 
-Before any approach to Bletchley Park Trust, every historical claim on the
-page gets a source. Current claims and where they came from (general
-histories — Hinsley & Stripp *Codebreakers*, Copeland *The Essential Turing*,
-Welchman *The Hut Six Story*, BP Trust's own site):
+**Done 2026-09-07.** Every claim on both pages is in `docs/enigma-sources.md`
+with a source and a verdict. Three were adjusted on the page: the machine
+count ("an estimated forty thousand or more" — estimates run 40–50k), the
+bombe count ("~210 built" per TNMOC, not "~200 running"), and the war-
+shortening claim (now attributed to Hinsley's "not less than two years"). Two
+notes recorded rather than changed: Victory's date differs between TNMOC
+(14 March 1940) and Wikipedia (18 March) so the page says only "March"; the
+real lid plate carried maintenance instructions, ours explains the machine,
+and the entry page now says so. Added to the entry page: a sourced "History
+notes" section (Herivel tip and cillies, Banburismus, U-110, Shark and U-559,
+Matapan, the Hut 6 → Hut 3 flow) and a "Sources" section; chapter 007's spec
+table gained the hut flow. Schema.org `citation` added.
+
+Original scope, for reference:
 
 - Scherbius patent Feb 1918; commercial exhibition 1923; Reichsmarine 1926;
   army plug board 1930; three-of-five 1938; M4 1942.
