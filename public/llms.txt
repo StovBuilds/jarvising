@@ -13,6 +13,10 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 - [Home](https://jarvising.com/): the dictionary entry for "jarvising" and the index of entries.
 
+## Source
+
+- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`.
+
 ## Related
 
 - [jstov.uk](https://jstov.uk/): Jack Stovell's personal site.

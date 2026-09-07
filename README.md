@@ -7,6 +7,9 @@ An open portfolio of test projects, published as they are built. The home page
 is the dictionary entry; each project is an entry page plus a live piece. No
 third-party requests anywhere (fonts self-hosted, no analytics).
 
+Public repo (2026-09-07): the site says "how to make your own", so the source is
+here to read. Live at [jarvising.com](https://jarvising.com/).
+
 ```
 index.html                    the holding page (hand-written HTML, no JS)
 projects/<slug>/index.html    entry page: what it does / how it was made / how to make your own

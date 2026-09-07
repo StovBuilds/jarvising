@@ -178,6 +178,7 @@
       <li><small>Code</small><span>≈1,800 lines</span></li>
       <li><small>First shipped</small><span>27 Aug 2026</span></li>
     </ul>
+    <p class="caption fade fade-4">Source: <a href="https://github.com/StovBuilds/jarvising/tree/main/src/enigma">github.com/StovBuilds/jarvising</a> · <code>src/enigma/</code></p>
 
     <section class="note fade fade-4">
       <h2>What it does</h2>
@@ -211,7 +212,7 @@
           <li><b>Add a debug parameter that pins progress.</b> <code>?p=0.42</code> lets you screenshot any beat on a machine with software GL, where smoothed values never settle.</li>
           <li><b>Make sound opt-in and synthesised.</b> Create the AudioContext on the user's click, and build clacks and ratchets from filtered noise bursts. Zero downloads, and no autoplay policy to fight.</li>
         </ol>
-        <p>The whole cipher, for the taking:</p>
+        <p>The whole cipher, for the taking (the full piece is in <a href="https://github.com/StovBuilds/jarvising/tree/main/src/enigma">src/enigma/</a> on GitHub):</p>
 <pre><span class="c">// Enigma I: rotors I·II·III, reflector B. Historical wirings, public domain.</span>
 <span class="k">const</span> WIRINGS = [<span class="c">"EKMFLGDQVZNTOWYHXUSPAIBRCJ"</span>, <span class="c">"AJDKSIRUXBLHWTMCQGZNPYFVOE"</span>, <span class="c">"BDFHJLCPRTXVZNYEIWGAKMUSQO"</span>];
 <span class="k">const</span> NOTCHES = [16, 4, 21];           <span class="c">// Q, E, V</span>
