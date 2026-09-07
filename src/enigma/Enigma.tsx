@@ -18,6 +18,7 @@ import { buildMachine, ROWS, type MachineBuild } from "./machine";
 import { Enigma as EnigmaCipher } from "./cipher";
 import { EnigmaAudio } from "./sound";
 import { buildRoom } from "./room";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const SCROLL_VH = 1400;
 
@@ -151,9 +152,11 @@ const CALLOUTS: Callout[] = [
   { window: [0.48, 0.58], label: "WIRING CORE", sub: "26 in · 26 out, scrambled", anchor: "rt_core" },
   { window: [0.485, 0.58], label: "CONTACT PINS", sub: "sprung, face to face", anchor: "rt_pins" },
   { window: [0.62, 0.72], label: "UMKEHRWALZE", sub: "the reflector — turns it back", anchor: "reflector" },
+  { window: [0.836, 0.862], label: "BOMBE", sub: "108 drums · 36 Enigmas at once", anchor: "bombe" },
 ];
 
-interface OrbitKey { p: number; theta: number; phi: number; r: number; tx: number; ty: number; tz: number }
+interface OrbitKey { p: number; theta: number; phi: number; r: number; tx: number; ty: number; tz: number; fov?: number }
+const FOV = 38;
 const ORBIT: OrbitKey[] = [
   { p: 0.0, theta: 2.2, phi: 1.22, r: 8.6, tx: 0, ty: 0.1, tz: 0 },
   { p: 0.1, theta: 1.28, phi: 1.0, r: 6.8, tx: 0, ty: 0.4, tz: 0 },
@@ -166,7 +169,9 @@ const ORBIT: OrbitKey[] = [
   { p: 0.74, theta: 1.5, phi: 0.55, r: 3.8, tx: 0.05, ty: 0.45, tz: -1.0 },
   { p: 0.79, theta: 1.5, phi: 0.55, r: 3.8, tx: 0.05, ty: 0.45, tz: -1.0 },
   { p: 0.815, theta: 2.25, phi: 1.2, r: 11.5, tx: -0.5, ty: 1.4, tz: -0.5 }, // the hut, machine stepping to itself
-  { p: 0.86, theta: 1.95, phi: 1.08, r: 7.0, tx: 0, ty: 0.25, tz: 0.2 },
+  { p: 0.833, theta: 2.15, phi: 1.28, r: 14.8, tx: 10.5, ty: 2.2, tz: 4, fov: 64 }, // 008: the whole bombe — it is a wardrobe, so go wide
+  { p: 0.853, theta: 1.15, phi: 1.17, r: 7.4, tx: 13.0, ty: 2.4, tz: 4, fov: 46 },   // …pushing in on the drums
+  { p: 0.875, theta: 1.95, phi: 1.08, r: 7.0, tx: 0, ty: 0.25, tz: 0.2 },
   { p: 1.0, theta: 1.3, phi: 1.14, r: 6.3, tx: 0, ty: 0.15, tz: 0.3 },
 ];
 
@@ -175,8 +180,10 @@ function sampleOrbit(p: number): OrbitKey {
   while (i < ORBIT.length - 2 && ORBIT[i + 1].p <= p) i++;
   const a = ORBIT[i], b = ORBIT[i + 1];
   const t = smooth(a.p, b.p, p);
+  const fa = a.fov ?? FOV, fb = b.fov ?? FOV;
   return {
     p,
+    fov: fa + (fb - fa) * t,
     theta: a.theta + (b.theta - a.theta) * t,
     phi: a.phi + (b.phi - a.phi) * t,
     r: a.r + (b.r - a.r) * t,
@@ -276,7 +283,7 @@ const Enigma = () => {
     let raf = 0;
     let renderer: THREE.WebGLRenderer | null = null;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 200);
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 200);
     const clock = new THREE.Clock();
     let progress = 0;
     let lastChapter = -1;
@@ -303,6 +310,7 @@ const Enigma = () => {
       }
     };
 
+    let loadBombe: (() => void) | null = null;
     const forced = parseFloat(new URLSearchParams(window.location.search).get("p") ?? "");
     const targetProgress = () => {
       if (!Number.isNaN(forced)) return Math.min(1, Math.max(0, forced));
@@ -353,13 +361,17 @@ const Enigma = () => {
         key.shadow.camera.far = 30;
         for (const m of room.receivers) m.receiveShadow = true;
       }
+      // second pendant over the bombe: no shadows, just enough to read the drums
+      const lamp2 = new THREE.PointLight("#ffe2b0", 60, 22, 1.8);
+      lamp2.position.copy(room.lampPos2);
+      scene.add(lamp2);
       const rim = new THREE.DirectionalLight("#8fa8d8", 1.3);
       rim.position.copy(room.moonDir);
       scene.add(rim);
       scene.add(new THREE.AmbientLight("#3c3a38", 0.9));
       // cool spill from the blackout slit so the back wall reads at all
       const moon = new THREE.PointLight("#6f86b8", 7, 16, 2);
-      moon.position.set(-3.4, 3.6, -5.2);
+      moon.position.set(-6.6, 3.6, -5.2);
       scene.add(moon);
       const fill = new THREE.PointLight("#ffd9a4", 16, 24, 2);
       fill.position.set(0, 2.2, 5);
@@ -368,6 +380,31 @@ const Enigma = () => {
       build = buildMachine();
       scene.add(build.root);
       if (shadows) build.root.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+
+      // The bombe is a Blender-built GLB (tools/blender/bombe.py), the first
+      // non-procedural asset in the piece. It is only needed from chapter 007,
+      // so it loads once the reader is past the rotor beat; a callout anchor
+      // is registered up front so the label works the moment it appears.
+      const bombeAnchor = new THREE.Object3D();
+      bombeAnchor.position.copy(room.bombeSlot.position).add(new THREE.Vector3(-2.8, 9.5, -1.5));
+      scene.add(bombeAnchor);
+      build.anchors.set("bombe", bombeAnchor);
+      let bombeRequested = false;
+      loadBombe = () => {
+        if (bombeRequested) return;
+        bombeRequested = true;
+        new GLTFLoader().load("/models/bombe.glb", (gltf) => {
+          if (dead) return;
+          const g = gltf.scene;
+          g.position.copy(room.bombeSlot.position);
+          g.rotation.y = room.bombeSlot.rotationY;
+          g.traverse((o) => {
+            const m = o as THREE.Mesh;
+            if (m.isMesh) { m.castShadow = shadows; m.receiveShadow = shadows; }
+          });
+          scene.add(g);
+        }, undefined, () => { /* no bombe: the chapter still reads from the copy */ });
+      };
       build.root.add(pulse);
       demoRef.current = build.demo;
       rotorHome.copy(build.rotor1.position);
@@ -470,6 +507,7 @@ const Enigma = () => {
       else progress += (targetProgress() - progress) * 0.08;
       const b = toBeat(progress);
       progressRef.current = b;
+      if (b > 0.55 && loadBombe) { loadBombe(); loadBombe = null; }
 
       // explode envelope: full at assembly → 0.15 for the rotor beat →
       // 0.35 for the path beat (tubes are built for exactly that) → 0
@@ -620,6 +658,7 @@ const Enigma = () => {
         Math.sin(phi) * Math.sin(theta) * o.r,
       );
       camera.lookAt(o.tx, o.ty, o.tz);
+      if (Math.abs(camera.fov - (o.fov ?? FOV)) > 0.01) { camera.fov = o.fov ?? FOV; camera.updateProjectionMatrix(); }
       build.root.position.y = -2.2 * solo; // sits on the desk
       renderer!.render(scene, camera);
 

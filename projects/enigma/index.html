@@ -174,8 +174,8 @@
 
     <ul class="facts fade fade-4" aria-label="Facts">
       <li><small>Stack</small><span>Three.js + TypeScript</span></li>
-      <li><small>Assets</small><span>None. All procedural</span></li>
-      <li><small>Code</small><span>≈2,300 lines</span></li>
+      <li><small>Assets</small><span>One GLB: the bombe</span></li>
+      <li><small>Code</small><span>≈2,500 lines</span></li>
       <li><small>Shipped</small><span>27 Aug · hut 7 Sep 2026</span></li>
     </ul>
     <p class="caption fade fade-4">Source: <a href="https://github.com/StovBuilds/jarvising/tree/main/src/enigma">github.com/StovBuilds/jarvising</a> · <code>src/enigma/</code></p>
@@ -196,6 +196,7 @@
         <p><strong>Everything is generated at runtime.</strong> The oak grain, the crinkle-paint chassis, the alphabet rings, the key caps, the painted hut boards, the floorboards, the notice board and the card inside the lid are all 2D canvases drawn on the fly and used as textures. The machine is built from primitives as named parts, each carrying a resting position, a full explode vector and a small lag, so one scalar can pull the whole thing apart in a staggered order. The room is a second set of primitives around it, lit by one shadow-casting spotlight where the pendant bulb hangs.</p>
         <p><strong>One number drives the page.</strong> Scroll position becomes a 0–1 progress value, smoothed per frame. Every effect is a smoothstep window on that value: the explode envelope, the lid hinge, the rotor solo, the two current tubes revealed by advancing their draw range, the camera path sampled from ten orbit keyframes, the chapter copy, the callout fade-ins. Nothing is on a timer, so scrubbing backwards just works.</p>
         <p><strong>The labels are 3D points.</strong> Each callout is an invisible object parented to the actual mesh it describes, so it rides along through the explode, the lid hinge and the rotor spin. Every frame it is projected through the camera, placed to the near side, clamped inside the viewport and away from the copy, pushed clear of any label it would overlap, and drawn as HTML with an SVG leader line back to the point.</p>
+        <p><strong>The bombe is the one modelled asset.</strong> Chapter 008 needed a machine to look at, and primitives in the browser were never going to make 108 drums read. It is built parametrically in Blender from a Python script (no hand modelling, no .blend file), exported as glTF, welded and quantised to under a megabyte, and loaded lazily once you are past the rotor chapter. Drum colours follow the period convention of one colour per rotor type.</p>
         <p><strong>The cipher is separate from the picture.</strong> An 80-line class holds the historical wirings and does the encryption; the scene only asks it which lamp lit. The live current trace reuses the same path factory the authored chapter uses, evaluated at an explode value of zero.</p>
         <p>Built with Claude Code from a one-line brief, in the same session that shipped it as experiment 008 on jstov.uk's lab. This is now the primary version: the hut, the lid card, the anchored callouts and the two Bletchley chapters were added here first.</p>
       </div>
@@ -212,6 +213,7 @@
           <li><b>Put labels in 3D and project them.</b> Anchor to a part, call <code>project()</code>, position an HTML element, draw the leader line in one SVG you rewrite per frame.</li>
           <li><b>Keep two timelines.</b> Scroll position maps to a "beat" value through one function, so new chapters can be inserted by remapping instead of retuning every window. The Bletchley chapters hold the machine on its stepping beat while the camera pulls back.</li>
           <li><b>Add a debug parameter that pins progress.</b> <code>?p=0.42</code> lets you screenshot any beat on a machine with software GL, where smoothed values never settle.</li>
+          <li><b>Reach for Blender when primitives stop reading.</b> Keep it scripted so the asset is reproducible, keep the scene scale identical, and load it lazily so the first paint stays light. Skip Draco and meshopt if your page ships a strict content-security policy; quantisation alone halves the file and needs no decoder.</li>
           <li><b>Make sound opt-in and synthesised.</b> Create the AudioContext on the user's click, and build clacks and ratchets from filtered noise bursts. Zero downloads, and no autoplay policy to fight.</li>
         </ol>
         <p>The whole cipher, for the taking (the full piece is in <a href="https://github.com/StovBuilds/jarvising/tree/main/src/enigma">src/enigma/</a> on GitHub):</p>

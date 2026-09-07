@@ -28,18 +28,28 @@ the jstov.uk lab copy gets backfilled when this is finished.
 - **Legibility.** Radial dark backdrop + text shadow behind the chapter copy;
   translucent blurred panel behind the simulator.
 
-## Phase 2 — Blender assets (jstov repo has the pipeline; `blender-assets` skill)
+## Phase 2 — Blender assets (`blender-assets` skill; harness `~/bin/blender-run.mjs`)
 
-Procedural primitives cap the fidelity. Candidates, in order of payoff:
+**Started 2026-09-07 — the bombe is in.** `tools/blender/bombe.py` (parametric
+bpy, scene units, Z-up → exporter Y-up) → `public/models/bombe.glb` →
+`tools/optimize-glb.mjs` (weld + quantize + prune via the 3d-kit gltf-transform
+install; **no meshopt/Draco** because the CSP has no `wasm-unsafe-eval` and no
+`blob:` workers) → 867 kB, 40.7k tris, 16 meshes. Loaded lazily by GLTFLoader
+once beat > 0.55, stood along the right wall (room widened to ±16), two camera
+keys for chapter 008 and a `bombe` callout anchor. Rebuild:
+`node ~/bin/blender-run.mjs tools/blender/bombe.py --expect public/models/bombe.glb -- --out public/models/bombe.glb [--preview x.png]`
+then `node tools/optimize-glb.mjs public/models/bombe.glb`.
+
+Procedural primitives cap the fidelity. Remaining candidates, in order of payoff:
 
 1. **The Enigma itself** as a GLB: proper rotor thumb-wheel serrations,
    bakelite key stems, the lamp-panel bezel, plug-board sockets with real
    cable sag, the case's dovetail corners and hinges. Keep the *same part
    names* so the explode choreography and anchors keep working.
-2. **The bombe** for chapter 008: a Blender model of the front face (three
-   banks of 36 drums, the menu plugging on the back) that rolls into the hut
-   during the chapter, or lives on the second desk. Even a low-poly silhouette
-   with drum rows reads instantly.
+2. ~~The bombe~~ — done (above). Next for it: a letter ring texture on the
+   drum faces, the back-side menu plugging for a reverse shot, and a slow drum
+   spin during chapter 008 (drums are joined per colour; spinning needs them
+   as instances — export with linked duplicates + `EXT_mesh_gpu_instancing`).
 3. Room dressing that primitives do badly: the pendant lamp's enamel shade,
    a Bakelite telephone, a Typex-style typewriter on the second desk, a
    coat on a hook, a stove.

@@ -17,7 +17,7 @@ jobs:
         run: |
           set -e
           for f in index.html projects/enigma/index.html projects/enigma/live/index.html \
-                   _headers og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png; do
+                   _headers og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png models/bombe.glb; do
             test -f "dist/$f" || { echo "missing dist/$f"; exit 1; }
           done
           test -f functions/_middleware.js

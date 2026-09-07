@@ -10,8 +10,12 @@ import * as THREE from "three";
 
 export interface RoomBuild {
   root: THREE.Group;
+  /** where the bombe (a lazily loaded GLB) stands: floor point + yaw */
+  bombeSlot: { position: THREE.Vector3; rotationY: number };
   /** where the pendant bulb hangs — put the key light here */
   lampPos: THREE.Vector3;
+  /** second pendant, over the bombe — a plain point light will do */
+  lampPos2: THREE.Vector3;
   /** direction the blackout-window slit leaks moonlight from */
   moonDir: THREE.Vector3;
   /** meshes that should receive the machine's shadow */
@@ -21,7 +25,7 @@ export interface RoomBuild {
 const DESK_Y = -0.62;      // top surface of the desk board
 const FLOOR_Y = -7.2;
 const WALL_Z = -6.2;
-const WALL_X = 11.5;
+const WALL_X = 16;          // wide enough for a 2 m bombe along the right wall
 const CEIL_Y = 12.5;
 
 function tex(w: number, h: number, draw: (g: CanvasRenderingContext2D, r: () => number) => void, seed = 1): THREE.CanvasTexture {
@@ -301,7 +305,7 @@ export function buildRoom(): RoomBuild {
 
   // blackout window, back-left: frame, black cloth, a moonlit slit down one edge, tape cross
   const win = new THREE.Group();
-  win.position.set(-5.2, 3.6, WALL_Z + 0.02);
+  win.position.set(-8.4, 3.6, WALL_Z + 0.02);
   root.add(win);
   const WW = 4.2, WH = 4.8;
   const cloth = new THREE.Mesh(new THREE.PlaneGeometry(WW, WH), new THREE.MeshStandardMaterial({ color: "#07080c", roughness: 1 }));
@@ -333,17 +337,17 @@ export function buildRoom(): RoomBuild {
 
   // notice board, back-right
   const board = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 3.45), new THREE.MeshStandardMaterial({ map: noticeTex(), roughness: 0.95 }));
-  board.position.set(4.6, 3.4, WALL_Z + 0.05);
+  board.position.set(3.2, 3.4, WALL_Z + 0.05);
   root.add(board);
 
   // HUT 6 sign, high right
   const sign = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 0.9), new THREE.MeshStandardMaterial({ map: hutSignTex(), roughness: 0.6 }));
-  sign.position.set(8.6, 6.2, WALL_Z + 0.04);
+  sign.position.set(7.6, 6.4, WALL_Z + 0.04);
   root.add(sign);
 
   // wall clock, centre high
   const clock = new THREE.Group();
-  clock.position.set(0.4, 6.4, WALL_Z + 0.08);
+  clock.position.set(-2.4, 6.6, WALL_Z + 0.08);
   root.add(clock);
   const rim = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.07, 10, 40), darkWood);
   clock.add(rim);
@@ -366,10 +370,10 @@ export function buildRoom(): RoomBuild {
   }
   // a second desk further back-left, unlit, for depth
   const desk2 = new THREE.Mesh(new THREE.BoxGeometry(9, 0.14, 5), new THREE.MeshStandardMaterial({ color: "#4a3320", roughness: 0.8 }));
-  desk2.position.set(-9, DESK_Y - 0.07, -2.5);
+  desk2.position.set(-11.5, DESK_Y - 0.07, -2.5);
   root.add(desk2);
   const chair = new THREE.Group();
-  chair.position.set(-8.5, FLOOR_Y, 1.8);
+  chair.position.set(-11, FLOOR_Y, 1.8);
   root.add(chair);
   const seat = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.12, 1.7), darkWood);
   seat.position.y = 4.1;
@@ -416,26 +420,41 @@ export function buildRoom(): RoomBuild {
   forms.rotation.y = 0.12;
   root.add(forms);
 
-  // pendant lamp over the machine
+  // pendants: one over the machine (the key light), one over the bombe
+  const pendant = (pos: THREE.Vector3) => {
+    const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, CEIL_Y - pos.y, 6), new THREE.MeshStandardMaterial({ color: "#1a1a1a" }));
+    cord.position.set(pos.x, (CEIL_Y + pos.y) / 2, pos.z);
+    root.add(cord);
+    const shade = new THREE.Mesh(
+      new THREE.ConeGeometry(1.35, 0.9, 32, 1, true),
+      new THREE.MeshStandardMaterial({ color: "#1f4a3a", roughness: 0.4, metalness: 0.5, side: THREE.DoubleSide }),
+    );
+    shade.position.set(pos.x, pos.y + 0.4, pos.z);
+    root.add(shade);
+    const shadeInner = new THREE.Mesh(
+      new THREE.ConeGeometry(1.3, 0.86, 32, 1, true),
+      new THREE.MeshStandardMaterial({ color: "#fff4dc", emissive: "#ffd9a0", emissiveIntensity: 0.9, side: THREE.BackSide }),
+    );
+    shadeInner.position.copy(shade.position);
+    root.add(shadeInner);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 12), new THREE.MeshStandardMaterial({ color: "#fff8e6", emissive: "#fff1c8", emissiveIntensity: 3 }));
+    bulb.position.copy(pos);
+    root.add(bulb);
+  };
   const lampPos = new THREE.Vector3(0.3, 6.9, 0.6);
-  const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, CEIL_Y - lampPos.y, 6), new THREE.MeshStandardMaterial({ color: "#1a1a1a" }));
-  cord.position.set(lampPos.x, (CEIL_Y + lampPos.y) / 2, lampPos.z);
-  root.add(cord);
-  const shade = new THREE.Mesh(
-    new THREE.ConeGeometry(1.35, 0.9, 32, 1, true),
-    new THREE.MeshStandardMaterial({ color: "#1f4a3a", roughness: 0.4, metalness: 0.5, side: THREE.DoubleSide }),
-  );
-  shade.position.set(lampPos.x, lampPos.y + 0.4, lampPos.z);
-  root.add(shade);
-  const shadeInner = new THREE.Mesh(
-    new THREE.ConeGeometry(1.3, 0.86, 32, 1, true),
-    new THREE.MeshStandardMaterial({ color: "#fff4dc", emissive: "#ffd9a0", emissiveIntensity: 0.9, side: THREE.BackSide }),
-  );
-  shadeInner.position.copy(shade.position);
-  root.add(shadeInner);
-  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 12), new THREE.MeshStandardMaterial({ color: "#fff8e6", emissive: "#fff1c8", emissiveIntensity: 3 }));
-  bulb.position.copy(lampPos);
-  root.add(bulb);
+  const lampPos2 = new THREE.Vector3(WALL_X - 10, 11.3, 4.0); // above the bombe top (y ≈ 11.2) and 4 units out from its face
+  pendant(lampPos);
+  pendant(lampPos2);
 
-  return { root, lampPos, moonDir: new THREE.Vector3(-3.2, 3.6, WALL_Z), receivers };
+  // a duckboard runner where the bombe will stand, so it does not float
+  const runner = new THREE.Mesh(new THREE.BoxGeometry(6.5, 0.12, 21), darkWood);
+  runner.position.set(WALL_X - 3.4, FLOOR_Y + 0.06, 4.0);
+  root.add(runner);
+  receivers.push(runner);
+
+  return {
+    root, lampPos, lampPos2, receivers,
+    moonDir: new THREE.Vector3(-6.4, 3.6, WALL_Z),
+    bombeSlot: { position: new THREE.Vector3(WALL_X - 2.9, FLOOR_Y + 0.12, 4.0), rotationY: -Math.PI / 2 }, // 19.4 long: z −5.7…13.7 stays inside the back wall
+  };
 }
