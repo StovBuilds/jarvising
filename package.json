@@ -2,7 +2,7 @@
   "name": "jarvising",
   "private": true,
   "type": "module",
-  "description": "jarvising.com — open portfolio of test projects. Static site, no framework.",
+  "description": "jarvising.com \u2014 open portfolio of test projects. Static site, no framework.",
   "scripts": {
     "build": "vite build",
     "dev": "vite",
@@ -27,5 +27,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.185.1"
-  }
+  },
+  "license": "MIT"
 }

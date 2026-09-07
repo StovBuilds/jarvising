@@ -87,3 +87,9 @@ Self-hosted so the page makes no third-party requests.
 Each portfolio entry should show what it does, how it was made, and how to
 make your own. Structure for that (per-project pages, an index) is the next
 step; the "See also" block on the holding page is where the index will live.
+
+## Licence
+
+Code is [MIT](LICENSE). The bundled fonts (Fraunces, Inter, Space Grotesk,
+JetBrains Mono, Special Elite) are under the SIL Open Font License and keep
+their own terms.
