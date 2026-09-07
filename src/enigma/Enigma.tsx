@@ -156,10 +156,10 @@ const CALLOUTS: Callout[] = [
   { window: [0.28, 0.41], label: "LAMPENFELD", sub: "26 glow lamps", anchor: "lampPanel" },
   { window: [0.29, 0.41], label: "TASTATUR", sub: "26 sprung keys", anchor: "keyboard" },
   { window: [0.29, 0.41], label: "STECKERBRETT", sub: "the plug board", anchor: "plugboard" },
-  { window: [0.47, 0.58], label: "THUMB WHEEL", sub: "sets the start position", anchor: "rt_wheel" },
-  { window: [0.475, 0.58], label: "ALPHABET RING", sub: "A–Z round the rim", anchor: "rt_ring" },
-  { window: [0.48, 0.58], label: "WIRING CORE", sub: "26 in · 26 out, scrambled", anchor: "rt_core" },
-  { window: [0.485, 0.58], label: "CONTACT PINS", sub: "sprung, face to face", anchor: "rt_pins" },
+  { window: [0.478, 0.585], label: "THUMB WHEEL", sub: "sets the start position", anchor: "rt_wheel" },
+  { window: [0.483, 0.585], label: "ALPHABET RING", sub: "A–Z round the rim", anchor: "rt_ring" },
+  { window: [0.488, 0.585], label: "WIRING CORE", sub: "26 in · 26 out, scrambled", anchor: "rt_core" },
+  { window: [0.493, 0.585], label: "CONTACT PINS", sub: "sprung, face to face", anchor: "rt_pins" },
   { window: [0.62, 0.72], label: "UMKEHRWALZE", sub: "the reflector — turns it back", anchor: "reflector" },
   { window: [0.836, 0.862], label: "BOMBE", sub: "108 drums · 36 Enigmas at once", anchor: "bombe" },
 ];
@@ -172,7 +172,7 @@ const ORBIT: OrbitKey[] = [
   { p: 0.175, theta: 1.55, phi: 1.13, r: 5.0, tx: 0.1, ty: 2.25, tz: -2.3 }, // reading the lid card
   { p: 0.235, theta: 1.05, phi: 0.9, r: 9.2, tx: 0, ty: 1.55, tz: 0 },
   { p: 0.34, theta: 1.8, phi: 0.86, r: 10.0, tx: 0, ty: 1.7, tz: 0 },
-  { p: 0.45, theta: 1.35, phi: 1.08, r: 3.5, tx: 0.1, ty: 1.95, tz: 0.3 },
+  { p: 0.47, theta: 1.35, phi: 1.08, r: 3.5, tx: 0.1, ty: 1.95, tz: 0.3 },  // arrives AFTER the rotor is on the stage (solo done by 0.465)
   { p: 0.57, theta: 0.85, phi: 1.22, r: 3.3, tx: 0.1, ty: 1.9, tz: 0.3 },
   { p: 0.63, theta: 1.5, phi: 0.92, r: 7.8, tx: 0, ty: 0.75, tz: 0 },
   { p: 0.74, theta: 1.5, phi: 0.55, r: 3.8, tx: 0.05, ty: 0.45, tz: -1.0 },
@@ -619,14 +619,16 @@ const Enigma = () => {
 
       // rotor solo — the machine slides offstage; the rotor holds a fixed
       // world pose (compensating for the root shift and basket explode)
-      const solo = smooth(0.44, 0.5, b) * (1 - smooth(0.56, 0.61, b));
-      build.root.position.z = -1.5 * solo;
-      build.root.position.x = -9.5 * solo; // slides off to the left, out of frame (not through the back wall)
+      const solo = smooth(0.43, 0.465, b) * (1 - smooth(0.585, 0.62, b));
+      // offstage = up and back-left, clear of the desk, the props and the
+      // pendant, and outside the stage camera's frustum (45° left, 40° up)
+      build.root.position.z = -3 * solo;
+      build.root.position.x = -6 * solo;
       const basketObj = build.parts.get("rotorBasket")!.obj;
       const stageLocal = rotorStage.clone().sub(build.root.position).sub(basketObj.position);
       build.rotor1.position.lerpVectors(rotorHome, stageLocal, solo);
       if (solo > 0.01) build.rotor1.rotation.x += dt * 0.5 * solo;
-      const sub = smooth(0.475, 0.53, b) * (1 - smooth(0.55, 0.6, b));
+      const sub = smooth(0.475, 0.53, b) * (1 - smooth(0.55, 0.585, b));
       for (const part of build.rotorSub.values()) {
         part.obj.position.copy(part.base).addScaledVector(part.dir, sub);
       }
@@ -765,7 +767,7 @@ const Enigma = () => {
       );
       camera.lookAt(o.tx, o.ty, o.tz);
       if (Math.abs(camera.fov - (o.fov ?? FOV)) > 0.01) { camera.fov = o.fov ?? FOV; camera.updateProjectionMatrix(); }
-      build.root.position.y = -2.2 * solo; // sits on the desk
+      build.root.position.y = 7 * solo; // on the desk at rest; lifted clear during the rotor solo
       renderer!.render(scene, camera);
 
       // HUD
