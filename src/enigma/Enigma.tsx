@@ -22,6 +22,14 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 const SCROLL_VH = 1400;
 
+// Exhibition / kiosk mode: ?kiosk=1 (optional &idle=<seconds>, default 60).
+// Unattended loop, touch-first UI, no links out, fullscreen + wake-lock on the
+// first touch, service worker for offline. ?p= still pins progress for setup.
+const QS = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+const KIOSK = QS.get("kiosk") === "1";
+const IDLE_MS = Math.max(3, Number(QS.get("idle") ?? 60)) * 1000;
+const START_MS = Math.min(IDLE_MS, 8000);
+
 // Scroll progress (0..1 over the page) → beat space. The machine choreography
 // was authored against a seven-chapter timeline; two Bletchley chapters were
 // added at 0.70–0.86 of the page, during which the machine holds the stepping
@@ -223,6 +231,8 @@ const Enigma = () => {
   const grainRef = useRef<HTMLDivElement>(null);
   const partsLibRef = useRef<string>("unknown");
   const [noAnim] = useState(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [attract, setAttract] = useState(false);
+  const lastTouchRef = useRef(typeof performance !== "undefined" ? performance.now() : 0);
   autoRef.current = auto;
 
   useEffect(() => {
@@ -578,7 +588,7 @@ const Enigma = () => {
       if (autoRef.current) {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         window.scrollTo(0, Math.min(max, window.scrollY + (max * dt) / 80));
-        if (window.scrollY >= max - 1) setAuto(false);
+        if (window.scrollY >= max - 1) { setAuto(false); lastTouchRef.current = performance.now(); }
       }
       if (!Number.isNaN(forced)) progress = forced;
       else progress += (targetProgress() - progress) * 0.08;
@@ -902,12 +912,59 @@ const Enigma = () => {
   }, []);
 
   useEffect(() => {
-    const cancel = () => {
-      if (autoRef.current) setAuto(false);
+    const touch = (ev?: Event) => {
+      lastTouchRef.current = performance.now();
+      const t = ev?.target as HTMLElement | null;
+      if (autoRef.current && !(t && t.closest && t.closest(".en-controls"))) setAuto(false);
     };
+    const cancel = () => touch();
     window.addEventListener("wheel", cancel, { passive: true });
-    return () => window.removeEventListener("wheel", cancel);
+    window.addEventListener("pointerdown", touch, { passive: true });
+    window.addEventListener("touchstart", touch, { passive: true });
+    window.addEventListener("keydown", touch);
+    return () => {
+      window.removeEventListener("wheel", cancel);
+      window.removeEventListener("pointerdown", touch);
+      window.removeEventListener("touchstart", touch);
+      window.removeEventListener("keydown", touch);
+    };
   }, []);
+
+  // kiosk: attract loop, fullscreen + wake-lock on first touch, service worker
+  useEffect(() => {
+    if (!KIOSK || phase !== "ready") return;
+    let lock: { release: () => Promise<void> } | null = null;
+    const tick = window.setInterval(() => {
+      const idle = performance.now() - lastTouchRef.current;
+      const atTop = progressRef.current < 0.02;
+      if (!autoRef.current && atTop && idle > START_MS) {
+        // sitting at the title: start the film
+        setAttract(false);
+        setAuto(true);
+      } else if (!autoRef.current && !atTop && idle > IDLE_MS) {
+        // abandoned mid-way (or the film finished and held): back to the top, then run again
+        simReset();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        lastTouchRef.current = performance.now() - START_MS + 1500; // film restarts ~1.5 s after arriving
+      }
+      setAttract(!autoRef.current && atTop && idle > 1500);
+    }, 500);
+    const firstTouch = async () => {
+      window.removeEventListener("pointerdown", firstTouch);
+      try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.(); } catch { /* not allowed here */ }
+      try { lock = await (navigator as unknown as { wakeLock?: { request: (t: string) => Promise<{ release: () => Promise<void> }> } }).wakeLock?.request("screen") ?? null; } catch { /* unsupported */ }
+    };
+    window.addEventListener("pointerdown", firstTouch);
+    const onVis = () => { if (document.visibilityState === "visible" && !lock) firstTouch(); };
+    document.addEventListener("visibilitychange", onVis);
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js", { scope: "/projects/enigma/" }).catch(() => { /* offline support is best-effort */ });
+    return () => {
+      window.clearInterval(tick);
+      window.removeEventListener("pointerdown", firstTouch);
+      document.removeEventListener("visibilitychange", onVis);
+      lock?.release().catch(() => { /* fine */ });
+    };
+  }, [phase, simReset]);
 
   // arriving with ?key=ABC&msg=CIPHER: set the key, ride to the machine, and
   // type the ciphertext — Enigma is reciprocal, so the plaintext comes out
@@ -947,6 +1004,7 @@ const Enigma = () => {
     (window as unknown as { __enigma?: object }).__enigma = {
       press: simPress,
       parts: () => partsLibRef.current,
+      kiosk: () => ({ on: KIOSK, idleMs: IDLE_MS, auto: autoRef.current, idle: performance.now() - lastTouchRef.current }),
       reset: simReset,
       progress: () => progressRef.current,
       trace: () => bridgeRef.current?.traceInfo?.(),
@@ -957,7 +1015,7 @@ const Enigma = () => {
   const showSim = chapterIdx === CHAPTERS.length - 1;
 
   return (
-    <div className={`enigma ${showSim ? "sim-on" : ""} ${noAnim ? "no-anim" : ""}`}>
+    <div className={`enigma ${showSim ? "sim-on" : ""} ${noAnim ? "no-anim" : ""} ${KIOSK ? "kiosk" : ""}`}>
       <style>{CSS}</style>
       <div className="en-spacer" style={{ height: `${SCROLL_VH}vh` }} />
       <div ref={ghostRef} className="en-ghost">ENIGMA</div>
@@ -975,7 +1033,7 @@ const Enigma = () => {
           <h1>ENIGMA</h1>
           <p>This teardown needs WebGL. The chapters it would run:</p>
           <ol>{CHAPTERS.map((c) => <li key={c.kicker}>{c.kicker} — {c.head.replace("\n", " ")}</li>)}</ol>
-          <a href="/projects/enigma/">← back to the entry</a>
+          {!KIOSK && <a href="/projects/enigma/">← back to the entry</a>}
         </div>
       )}
 
@@ -986,7 +1044,7 @@ const Enigma = () => {
             <span className="en-series">CHIFFRIERMASCHINE · 1918–1945</span>
             <span className="en-cta">GEHEIM</span>
           </header>
-          <a href="/projects/enigma/" className="en-escape">← jarvising · 001</a>
+          {!KIOSK && <a href="/projects/enigma/" className="en-escape">← jarvising · 001</a>}
           <div ref={readoutRef} className="en-readout">ORBIT 0°</div>
 
           <section className="en-copy" key={chapterIdx}>
@@ -1025,7 +1083,7 @@ const Enigma = () => {
                   </>
                 )}
               </div>
-              {tape.length > 0 && (
+              {tape.length > 0 && !KIOSK && (
                 <button className="en-share" onClick={() => shareSecret(tape)}>
                   {copied ? "COPIED — SEND IT TO SOMEONE" : "COPY SECRET LINK"}
                 </button>
@@ -1066,10 +1124,31 @@ const Enigma = () => {
             <div className="en-rail-track"><div ref={railFillRef} className="en-rail-fill" /></div>
           </div>
           <div className="en-controls">
-            <button className={auto ? "on" : ""} onClick={() => setAuto((a) => !a)}>{auto ? "■ HOLD" : "▶ RUN FILM"}</button>
+            {!KIOSK && <button className={auto ? "on" : ""} onClick={() => setAuto((a) => !a)}>{auto ? "■ HOLD" : "▶ RUN FILM"}</button>}
             <button className={soundOn ? "on" : ""} onClick={toggleSound}>{soundOn ? "♪ SOUND ON" : "♪ SOUND OFF"}</button>
           </div>
-          <div className="en-hint">scroll to decode</div>
+          {KIOSK ? (
+            <>
+              <nav className="en-chapters" aria-label="Chapters">
+                {CHAPTERS.map((c, i) => (
+                  <button
+                    key={c.kicker}
+                    className={ch === c ? "on" : ""}
+                    onClick={() => {
+                      setAuto(false);
+                      const max = document.documentElement.scrollHeight - window.innerHeight;
+                      window.scrollTo({ top: (c.from + 0.01) * max, behavior: "smooth" });
+                    }}
+                  >
+                    <b>{String(i + 1).padStart(3, "0")}</b><span>{c.kicker.split(" · ")[1]}</span>
+                  </button>
+                ))}
+              </nav>
+              {attract && <div className="en-attract">TOUCH TO BEGIN</div>}
+            </>
+          ) : (
+            <div className="en-hint">scroll to decode</div>
+          )}
         </>
       )}
     </div>
@@ -1171,6 +1250,50 @@ const CSS = `
 .en-fallback h1 { font-size: 40px; }
 .en-fallback ol { color: #8a8272; line-height: 2; }
 .en-fallback a { color: #d9a441; }
+/* ── kiosk / exhibition mode ─────────────────────────────────────────── */
+.kiosk { cursor: default; }
+.kiosk .en-grain, .kiosk .en-rail, .kiosk .en-series { display: none; }
+.kiosk .en-copy { left: 40px; bottom: 96px; max-width: 560px; }
+.kiosk .en-copy::before { background: radial-gradient(ellipse at 30% 60%, rgba(11,11,13,0.9) 30%, rgba(11,11,13,0.6) 60%, rgba(11,11,13,0) 80%); }
+.kiosk .en-kicker { font-size: 16px; }
+.kiosk .en-copy h2 { font-size: clamp(34px, 3.8vw, 58px); }
+.kiosk .en-copy p { font-size: 18px; color: #d8d0c0; }
+.kiosk .en-specs { font-size: 14px; }
+.kiosk .en-specs td { color: #b8b0a0; padding: 7px 18px 7px 0; }
+.kiosk .en-label strong { font-size: 15px; }
+.kiosk .en-label span { font-size: 13px; color: #c0b8a8; }
+.kiosk .en-readout { font-size: 13px; }
+.kiosk .en-brand { font-size: 20px; }
+.kiosk .en-sim { width: min(470px, 92vw); bottom: 100px; gap: 14px; padding: 18px; }
+.kiosk .en-keys button { width: 42px; height: 42px; font-size: 16px; }
+.kiosk .en-keyrow { gap: 7px; }
+.kiosk .en-win > button { font-size: 14px; padding: 4px 12px; }
+.kiosk .en-windows .en-letter { font-size: 22px; padding: 5px 13px; }
+.kiosk .en-windows .en-reset { font-size: 13px; padding: 8px 14px; }
+.kiosk .en-tape { min-height: 70px; }
+.kiosk .en-tape em { font-size: 15px; }
+.kiosk .en-tape-row { font-size: 18px; }
+.kiosk .en-controls { bottom: 24px; right: 40px; }
+.kiosk .en-controls button { font-size: 12px; padding: 10px 16px; }
+.en-chapters {
+  position: fixed; left: 40px; right: 200px; bottom: 22px; z-index: 6;
+  display: flex; gap: 8px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+}
+.en-chapters button {
+  flex: 1 0 auto; min-height: 48px; padding: 8px 14px; border-radius: 999px;
+  background: rgba(11,11,13,0.72); border: 1px solid #3a3427; color: #a89f8e;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 1.2px; cursor: pointer;
+  display: flex; align-items: center; gap: 10px; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.en-chapters button b { color: #d9a441; font-weight: 400; }
+.en-chapters button.on { border-color: #d9a441; color: #ecdfc2; background: rgba(217,164,65,0.12); }
+.en-attract {
+  position: fixed; left: 50%; bottom: 120px; transform: translateX(-50%); z-index: 7;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 6px; color: #ffd98a;
+  padding: 16px 30px; border: 1px solid rgba(217,164,65,0.6); border-radius: 999px; background: rgba(11,11,13,0.6);
+  animation: en-pulse 1.8s ease-in-out infinite;
+}
+@keyframes en-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
 @media (max-width: 720px) {
   .en-copy { left: 18px; right: 18px; bottom: 30px; max-width: none; }
   .sim-on .en-copy p, .sim-on .en-copy h2 { display: none; }

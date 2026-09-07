@@ -73,8 +73,37 @@ the copy alone (the bombe already does).
 
 ## Phase 3 — exhibition / kiosk mode (`?kiosk=1`)
 
-For a gallery screen or a Bletchley entry point, the piece needs to run
-unattended:
+**Built 2026-09-07.** `https://jarvising.com/projects/enigma/live/?kiosk=1`
+(`&idle=<seconds>` overrides the 60 s idle threshold for testing; `&p=` still
+pins progress for setup staff). What it does:
+
+- **Attract loop** (`Enigma.tsx`, kiosk effect): idle at the title for 8 s →
+  the film runs (the existing RUN FILM auto-scroll, ~80 s end to end). Any
+  touch/wheel/key stops it. Abandoned mid-way and quiet for 60 s → simulator
+  reset, smooth scroll to the top, film restarts ~1.5 s later. The film's end
+  counts as an interaction, so the typing beat holds a full idle period before
+  the reset. "TOUCH TO BEGIN" pulses whenever it is sitting at the title.
+- **Touch-first**: vertical rail replaced by a tappable chapter bar (nine
+  pills); 42 px simulator keys; bigger rotor-window buttons; copy and labels
+  larger and brighter; grain overlay off; no share link, no exit link, no
+  "scroll to decode".
+- **Fullscreen + wake-lock** requested on the first touch (both need a
+  gesture); wake-lock re-requested when the tab becomes visible again.
+- **Offline**: `public/sw.js`, registered only in kiosk mode with scope
+  `/projects/enigma/`. Navigation network-first with the cached shell as
+  fallback; `/assets/`, `/fonts/`, `/models/` cache-first with background
+  revalidate; on activate it crawls the live page + CSS for hashed asset URLs
+  and warms the cache with them and the three GLBs.
+- QA: `node tools/qa-shots.mjs --p 0.3,1 --qs "kiosk=1" --w 1920 --h 1080`,
+  and the attract-loop behavioural test (see the session's `kiosk-loop.mjs`
+  pattern: `idle=3`, expect start → stop on touch → reset → restart).
+
+Still to do before a real installation: a physical soak test on the target
+hardware (touch screen, GPU, browser kiosk flags), a hidden staff gesture to
+exit fullscreen, and sound policy for the space (the sound toggle still needs
+a first gesture, which the attract touch provides).
+
+Original requirements, for reference:
 
 - Attract loop: auto-run the film on idle, reset to the top after 60 s with
   no input, no share link, no external links, no keyboard shortcuts that

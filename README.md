@@ -68,6 +68,20 @@ Manual deploy when you cannot wait:
 `--branch main` is not optional on a hand-run `wrangler pages deploy`: any other
 branch name lands on a preview alias and production never changes.
 
+## Kiosk / exhibition mode (entry 001)
+
+`https://jarvising.com/projects/enigma/live/?kiosk=1` runs the Enigma piece
+unattended: attract loop (film on idle, reset after a quiet minute),
+touch-first controls, no links out, fullscreen + wake-lock on first touch, and
+a service worker (`public/sw.js`, kiosk-only) so it survives a dropped network.
+`&idle=<seconds>` shortens the idle threshold for testing; `&p=0.42` pins
+progress for setup. Launch with a kiosk browser, e.g.
+
+```bash
+chromium --kiosk --noerrdialogs --disable-infobars --autoplay-policy=no-user-gesture-required \
+  "https://jarvising.com/projects/enigma/live/?kiosk=1"
+```
+
 ## Regenerating the social image
 
 ```bash
