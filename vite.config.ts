@@ -9,6 +9,10 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target: "es2020",
+    // Never inline assets as data: URIs — _headers ships `font-src 'self'`, and
+    // Vite's default (<4 kB → base64) turned three small font subsets into
+    // CSP violations on the live page (found on prod 2026-09-07).
+    assetsInlineLimit: 0,
     chunkSizeWarningLimit: 600, // three.js alone is ~540 kB minified; it is its own cached chunk
     rollupOptions: {
       input: {
