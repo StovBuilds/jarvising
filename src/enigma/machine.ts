@@ -34,6 +34,8 @@ export interface MachineBuild {
   curveFwd: THREE.CatmullRomCurve3;
   curveRet: THREE.CatmullRomCurve3;
   demo: { press: string; lamp: string };
+  /** invisible markers parented to the real meshes — project these for callouts */
+  anchors: Map<string, THREE.Object3D>;
   trace: (press: string, lamp: string, e: number) => { fwd: THREE.CatmullRomCurve3; ret: THREE.CatmullRomCurve3 };
 }
 
@@ -111,6 +113,13 @@ export function buildMachine(): MachineBuild {
   const rotorSub = new Map<string, PartDef>();
   const keys = new Map<string, THREE.Group>();
   const lamps = new Map<string, { mat: THREE.MeshStandardMaterial; glow: THREE.Sprite }>();
+  const anchors = new Map<string, THREE.Object3D>();
+  const anchor = (name: string, parent: THREE.Object3D, x = 0, y = 0, z = 0) => {
+    const o = new THREE.Object3D();
+    o.position.set(x, y, z);
+    parent.add(o);
+    anchors.set(name, o);
+  };
 
   const oak = new THREE.MeshStandardMaterial({ map: oakTex(11), roughness: 0.72, metalness: 0.04 });
   const oakDark = new THREE.MeshStandardMaterial({ map: oakTex(31), roughness: 0.8, metalness: 0.02, color: "#b99668" });
@@ -150,43 +159,71 @@ export function buildMachine(): MachineBuild {
   caseG.add(handle);
 
   // ── Lid (hinged at the back edge) ─────────────────────────────────────────
-  const lidPart = addPart("lid", new THREE.Vector3(0, 2.4, -0.4), 0);
+  const lidPart = addPart("lid", new THREE.Vector3(0, 1.7, -0.6), 0); // low enough to stay in the assembly shot
   const lidPivot = new THREE.Group();
   lidPivot.position.set(0, 0.75, -D / 2);
   lidPart.add(lidPivot);
   const lidBoard = new THREE.Mesh(new THREE.BoxGeometry(W, 0.08, D), oakDark);
   lidBoard.position.set(0, 0.04, D / 2);
   lidPivot.add(lidBoard);
-  const sheetTex = canvasTex(512, 380, (g) => {
-    g.fillStyle = "#e7ddc2";
-    g.fillRect(0, 0, 512, 380);
-    g.strokeStyle = "#6a5a3a";
-    g.strokeRect(10, 10, 492, 360);
+  anchor("lid", lidBoard, -0.5, -0.06, 0.2);
+  // The real lid carried a printed "Zur Beachtung!" notice. Ours keeps the
+  // header and uses the card to say, plainly, what the machine does — the
+  // camera reads it in chapter 002 and it stays legible up close.
+  const sheetTex = canvasTex(1024, 760, (g) => {
+    g.fillStyle = "#e9dfc4";
+    g.fillRect(0, 0, 1024, 760);
+    g.strokeStyle = "#7a6a48";
+    g.lineWidth = 3;
+    g.strokeRect(18, 18, 988, 724);
+    g.strokeStyle = "#b9ab88";
+    g.lineWidth = 1;
+    g.strokeRect(30, 30, 964, 700);
     g.fillStyle = "#232018";
-    g.font = "bold 34px Georgia, serif";
     g.textAlign = "center";
-    g.fillText("Zur Beachtung!", 256, 58);
+    g.font = "bold 64px Georgia, 'Times New Roman', serif";
+    g.fillText("Zur Beachtung!", 512, 104);
+    g.font = "italic 26px Georgia, serif";
+    g.fillStyle = "#5a5040";
+    g.fillText("What this machine does", 512, 146);
     g.textAlign = "left";
-    g.fillStyle = "#4a4436";
-    const r = rng(5);
-    for (let i = 0; i < 15; i++) {
-      const y = 92 + i * 19;
-      g.fillRect(34, y, 150 + r() * 290, 3.2);
-    }
+    g.fillStyle = "#2a2418";
+    g.font = "31px Georgia, 'Times New Roman', serif";
+    const body = [
+      "Press a key and a battery pushes current through the plug",
+      "board, three rotors and a reflector — then back through all",
+      "of it — until one lamp lights. That lamp is your letter.",
+      "",
+      "The right-hand rotor turns one step with every key, so the",
+      "same letter never lights the same lamp twice running.",
+      "",
+      "To read a message, set the rotors to the day's start",
+      "position and type the cipher text: the plain text lights up.",
+    ];
+    body.forEach((l, i) => g.fillText(l, 60, 206 + i * 42));
+    g.font = "bold 22px Georgia, serif";
+    g.fillStyle = "#7a2e2a";
+    g.fillText("1  Steckerbrett · plug board        2  Walzen · rotors", 60, 620);
+    g.fillText("3  Umkehrwalze · reflector           4  Lampenfeld · lamps", 60, 656);
+    g.font = "italic 20px Georgia, serif";
+    g.fillStyle = "#6a5a3a";
+    g.textAlign = "right";
+    g.fillText("Chiffriermaschinen AG · Berlin", 964, 712);
   });
   const sheet = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.7, 1.26),
+    new THREE.PlaneGeometry(2.1, 1.56),
     new THREE.MeshStandardMaterial({ map: sheetTex, roughness: 0.92 }),
   );
   sheet.rotation.x = Math.PI / 2;
-  sheet.position.set(-0.45, -0.005, D / 2 - 0.1);
+  sheet.position.set(-0.35, -0.005, D / 2 - 0.05);
   lidPivot.add(sheet);
+  anchor("lidText", sheet, 0.7, 0.4, 0.02);
   const filter = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.0, 0.8),
+    new THREE.PlaneGeometry(0.7, 0.7),
     new THREE.MeshStandardMaterial({ color: "#2e5c36", roughness: 0.4, transparent: true, opacity: 0.85 }),
   );
   filter.rotation.x = Math.PI / 2;
-  filter.position.set(0.85, -0.005, D / 2 - 0.35);
+  filter.position.set(1.05, -0.005, D / 2 - 1.15);
   lidPivot.add(filter);
   for (let i = 0; i < 4; i++) { // spare bulbs
     const bulb = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.09, 8), nickel);
@@ -227,6 +264,7 @@ export function buildMachine(): MachineBuild {
   const lampPlate = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.04, 1.05), crinkle);
   lampPlate.position.set(0, 0.47, -0.42);
   lampPanel.add(lampPlate);
+  anchor("lampPanel", lampPlate, -1.0, 0.03, 0.1);
   const lampRowsZ = [-0.75, -0.42, -0.09];
   const glowTex = canvasTex(64, 64, (g) => {
     const rad = g.createRadialGradient(32, 32, 2, 32, 32, 32);
@@ -268,6 +306,7 @@ export function buildMachine(): MachineBuild {
   // ── Keyboard ──────────────────────────────────────────────────────────────
   const keyboard = addPart("keyboard", new THREE.Vector3(0, 1.0, 0), 0.09);
   const keyRowsZ = [0.38, 0.7, 1.02];
+  anchor("keyboard", keyboard, 1.16, 0.57, 0.7);
   ROWS.forEach((row, ri) => {
     [...row].forEach((ch, i) => {
       const x = (i - (row.length - 1) / 2) * 0.29;
@@ -308,6 +347,7 @@ export function buildMachine(): MachineBuild {
   const pbPlate = new THREE.Mesh(new THREE.BoxGeometry(2.72, 0.78, 0.05), crinkle);
   pbPlate.position.set(0, -0.06, D / 2 + 0.03);
   plugboard.add(pbPlate);
+  anchor("plugboard", pbPlate, 1.0, 0.2, 0.04);
   const sockets = new Map<string, THREE.Vector3>();
   ROWS.forEach((row, ri) => {
     [...row].forEach((ch, i) => {
@@ -357,6 +397,7 @@ export function buildMachine(): MachineBuild {
   axle.rotation.z = Math.PI / 2;
   axle.position.set(0.1, axleY, axleZ);
   basket.add(axle);
+  anchor("rotorBasket", axle, 0, 0.5, 0); // axle is rotated 90° about z: local +y is world +x
   for (const sx of [-0.72, 0.95]) { // end cheeks
     const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.5, 0.55), blackMetal);
     cheek.position.set(sx, axleY - 0.02, axleZ);
@@ -366,6 +407,7 @@ export function buildMachine(): MachineBuild {
   reflector.rotation.z = Math.PI / 2;
   reflector.position.set(-0.58, axleY, axleZ);
   basket.add(reflector);
+  anchor("reflector", reflector, 0, 0, 0);
   const entry = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.09, 26), blackMetal);
   entry.rotation.z = Math.PI / 2;
   entry.position.set(0.82, axleY, axleZ);
@@ -406,7 +448,10 @@ export function buildMachine(): MachineBuild {
       const holder = new THREE.Group();
       holder.add(obj);
       rg.add(holder);
-      if (solo) rotorSub.set(name, { obj: holder, base: new THREE.Vector3(), dir: new THREE.Vector3(dx, 0, 0), lag: 0 });
+      if (solo) {
+        rotorSub.set(name, { obj: holder, base: new THREE.Vector3(), dir: new THREE.Vector3(dx, 0, 0), lag: 0 });
+        anchor(name, holder, obj.position.x, 0, 0);
+      }
     };
     // thumbwheel (serrated, pokes up through the deck line)
     const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.055, 40), new THREE.MeshStandardMaterial({ map: knurlTex, roughness: 0.6, metalness: 0.3 }));
@@ -545,6 +590,7 @@ export function buildMachine(): MachineBuild {
     root, parts, rotors, rotorSub, rotor1, keys, lamps, lidPivot,
     pathFwd, pathRet, curveFwd, curveRet,
     demo: { press: demoPress, lamp: demoLamp },
+    anchors,
     trace: traceCurves,
   };
 }

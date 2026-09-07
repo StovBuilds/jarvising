@@ -162,10 +162,10 @@
       <span class="tag">Entry 001</span>
     </div>
 
-    <p class="sense fade fade-3">A scroll-driven teardown of the Enigma I, from oak lid to reflector, ending in a faithful machine you can type on.</p>
+    <p class="sense fade fade-3">A scroll-driven teardown of the Enigma I on a night watch in Hut 6, from oak lid to reflector, ending in a faithful machine you can type on.</p>
 
     <a class="door fade fade-3" href="/projects/enigma/live/">
-      <img src="/projects/enigma/hero.jpg" width="1600" height="900" alt="The Enigma I lifted apart into six layers: oak lid, rotor basket, lamp panel, keyboard, plug board and case, lit from above against black." fetchpriority="high">
+      <img src="/projects/enigma/hero.jpg" width="1600" height="900" alt="The Enigma I lifted apart into six layers on a desk in a wartime hut, lit by a single pendant lamp, a blackout window and a notice board behind it." fetchpriority="high">
       <span class="cta">
         <span class="btn">Open the teardown →</span>
         <span class="meta">WebGL · about two minutes<br>sound optional · keyboard works</span>
@@ -175,15 +175,16 @@
     <ul class="facts fade fade-4" aria-label="Facts">
       <li><small>Stack</small><span>Three.js + TypeScript</span></li>
       <li><small>Assets</small><span>None. All procedural</span></li>
-      <li><small>Code</small><span>≈1,800 lines</span></li>
-      <li><small>First shipped</small><span>27 Aug 2026</span></li>
+      <li><small>Code</small><span>≈2,300 lines</span></li>
+      <li><small>Shipped</small><span>27 Aug · hut 7 Sep 2026</span></li>
     </ul>
     <p class="caption fade fade-4">Source: <a href="https://github.com/StovBuilds/jarvising/tree/main/src/enigma">github.com/StovBuilds/jarvising</a> · <code>src/enigma/</code></p>
 
     <section class="note fade fade-4">
       <h2>What it does</h2>
       <div>
-        <p>You scroll, and the machine comes apart. Seven chapters run from the hero orbit through a timeline of Scherbius's patent, then the oak case lifts into six labelled layers, the middle rotor slides offstage and explodes into its own stack, one keypress is traced as glowing current through plug board, rotors and reflector and back, and the rotors step like an odometer.</p>
+        <p>You scroll, and the machine comes apart. Nine chapters run from the hero orbit through a timeline of Scherbius's patent, then the camera leans in to read the card inside the lid, the oak case lifts into six labelled layers, the middle rotor slides offstage and explodes into its own stack, one keypress is traced as glowing current through plug board, rotors and reflector and back, and the rotors step like an odometer.</p>
+        <p>Then the room takes over. The machine sits on a desk in Hut 6 at Bletchley Park, on the night watch: one pendant lamp, a blackout window, a notice board with the day's crib pinned to it. Two chapters tell the story of the people who broke it, from Rejewski's paper reconstruction in 1932 and the Pyry hand-over of July 1939 to Turing and Welchman's bombes and the thirty-year silence that followed.</p>
         <p>The last beat is a working <i>Enigma I</i>: rotors I·II·III, reflector B, ten plug pairs, the double-step anomaly included. Type on your keyboard or tap the keys; the lamps answer and a paper tape keeps both alphabets. "Copy secret link" bundles the start position and ciphertext into a URL, and because Enigma is reciprocal, whoever opens it watches the machine type the plaintext back out.</p>
         <p>Sound is opt-in and synthesised live: key clacks, lamp thunks, rotor ratchets, a lid creak, and faint Morse under the hero. No audio files either.</p>
       </div>
@@ -192,11 +193,11 @@
     <section class="note">
       <h2>How it was made</h2>
       <div>
-        <p><strong>Everything is generated at runtime.</strong> The oak grain, the crinkle-paint chassis, the alphabet rings and the key caps are all 2D canvases drawn on the fly and used as textures. The machine is built from primitives as named parts, each carrying a resting position, a full explode vector and a small lag, so one scalar can pull the whole thing apart in a staggered order.</p>
+        <p><strong>Everything is generated at runtime.</strong> The oak grain, the crinkle-paint chassis, the alphabet rings, the key caps, the painted hut boards, the floorboards, the notice board and the card inside the lid are all 2D canvases drawn on the fly and used as textures. The machine is built from primitives as named parts, each carrying a resting position, a full explode vector and a small lag, so one scalar can pull the whole thing apart in a staggered order. The room is a second set of primitives around it, lit by one shadow-casting spotlight where the pendant bulb hangs.</p>
         <p><strong>One number drives the page.</strong> Scroll position becomes a 0–1 progress value, smoothed per frame. Every effect is a smoothstep window on that value: the explode envelope, the lid hinge, the rotor solo, the two current tubes revealed by advancing their draw range, the camera path sampled from ten orbit keyframes, the chapter copy, the callout fade-ins. Nothing is on a timer, so scrubbing backwards just works.</p>
-        <p><strong>The labels are 3D points.</strong> Each callout is anchored to a part in world space, projected through the camera each frame, and drawn as an HTML label with an SVG leader line back to the projected point.</p>
+        <p><strong>The labels are 3D points.</strong> Each callout is an invisible object parented to the actual mesh it describes, so it rides along through the explode, the lid hinge and the rotor spin. Every frame it is projected through the camera, placed to the near side, clamped inside the viewport and away from the copy, pushed clear of any label it would overlap, and drawn as HTML with an SVG leader line back to the point.</p>
         <p><strong>The cipher is separate from the picture.</strong> An 80-line class holds the historical wirings and does the encryption; the scene only asks it which lamp lit. The live current trace reuses the same path factory the authored chapter uses, evaluated at an explode value of zero.</p>
-        <p>Built with Claude Code from a one-line brief, in the same session that shipped it as experiment 008 on jstov.uk's lab. Ported here unchanged apart from its links.</p>
+        <p>Built with Claude Code from a one-line brief, in the same session that shipped it as experiment 008 on jstov.uk's lab. This is now the primary version: the hut, the lid card, the anchored callouts and the two Bletchley chapters were added here first.</p>
       </div>
     </section>
 
@@ -209,6 +210,7 @@
           <li><b>Derive everything from one progress value.</b> Read scroll, normalise to 0–1, ease it a little each frame, and express each beat as a smoothstep between two progress values. Never start a timer.</li>
           <li><b>Keyframe the camera in spherical coordinates.</b> A short list of <code>{p, theta, phi, r, target}</code> entries, interpolated by progress, reads far better than any free-fly control.</li>
           <li><b>Put labels in 3D and project them.</b> Anchor to a part, call <code>project()</code>, position an HTML element, draw the leader line in one SVG you rewrite per frame.</li>
+          <li><b>Keep two timelines.</b> Scroll position maps to a "beat" value through one function, so new chapters can be inserted by remapping instead of retuning every window. The Bletchley chapters hold the machine on its stepping beat while the camera pulls back.</li>
           <li><b>Add a debug parameter that pins progress.</b> <code>?p=0.42</code> lets you screenshot any beat on a machine with software GL, where smoothed values never settle.</li>
           <li><b>Make sound opt-in and synthesised.</b> Create the AudioContext on the user's click, and build clacks and ratchets from filtered noise bursts. Zero downloads, and no autoplay policy to fight.</li>
         </ol>

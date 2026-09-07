@@ -17,8 +17,17 @@ import "@fontsource/special-elite";
 import { buildMachine, ROWS, type MachineBuild } from "./machine";
 import { Enigma as EnigmaCipher } from "./cipher";
 import { EnigmaAudio } from "./sound";
+import { buildRoom } from "./room";
 
-const SCROLL_VH = 1100;
+const SCROLL_VH = 1400;
+
+// Scroll progress (0..1 over the page) → beat space. The machine choreography
+// was authored against a seven-chapter timeline; two Bletchley chapters were
+// added at 0.70–0.86 of the page, during which the machine holds the stepping
+// beat (b 0.80→0.86) and the camera pulls back to take in the hut. Everything
+// that moves the scene reads `b`; chapters, the rail and the ghost read `p`.
+const toBeat = (p: number) =>
+  p < 0.70 ? p * (0.80 / 0.70) : p < 0.86 ? 0.80 + ((p - 0.70) / 0.16) * 0.06 : p;
 
 const smooth = (a: number, b: number, x: number) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
@@ -37,29 +46,30 @@ interface Chapter {
 
 const CHAPTERS: Chapter[] = [
   {
-    from: 0, to: 0.1, ghost: "ENIGMA", kicker: "001 · THE MACHINE",
+    from: 0, to: 0.0875, ghost: "ENIGMA", kicker: "001 · THE MACHINE",
     head: "A secret\nin an oak box",
-    body: "From 1926 to 1945, the German military poured its radio traffic through this device. Press a letter and a different one lights — and the scrambling changed with every single keypress. Some 40,000 of these boxes carried orders, U-boat positions and weather reports, all of it presumed unreadable.",
+    body: "From 1926 to 1945, the German military poured its radio traffic through this device. Press a letter and a different one lights — and the scrambling changed with every single keypress. Some 40,000 of these boxes carried orders, U-boat positions and weather reports, all of it presumed unreadable. This one sits where it was read: a hut at Bletchley Park, on the night watch.",
   },
   {
-    from: 0.1, to: 0.24, ghost: "1918", kicker: "002 · THE TIMELINE",
+    from: 0.0875, to: 0.21, ghost: "1918", kicker: "002 · THE TIMELINE",
     head: "Scherbius's\nslow-burn patent",
-    body: "Arthur Scherbius patented the rotor cipher in February 1918 and spent the twenties failing to sell it to banks. Then the militaries arrived.",
+    body: "Arthur Scherbius patented the rotor cipher in February 1918 and spent the twenties failing to sell it to banks. Then the militaries arrived. Inside the lid, a printed card told the operator what he was holding — read it.",
     specs: [
       ["1918", "rotor cipher patented — A. Scherbius"],
       ["1923", "commercial Enigma exhibited"],
       ["1926", "Reichsmarine adopts it"],
       ["1930", "army model adds the plug board"],
+      ["1932", "Rejewski reconstructs the wiring in Warsaw"],
       ["1938", "rotor choice grows to three-of-five"],
       ["1942", "U-boat M4 squeezes in a fourth rotor"],
     ],
   },
   {
-    from: 0.24, to: 0.42, ghost: "APART", kicker: "003 · THE ASSEMBLY",
+    from: 0.21, to: 0.3675, ghost: "APART", kicker: "003 · THE ASSEMBLY",
     head: "Six layers,\nno mystery yet",
     body: "Lifted apart, it is an ordinary electric circuit: a battery, 26 switches under the keys, 26 torch bulbs behind the lamps, and wire. Every layer is honest. The deceit lives entirely in the copper.",
     specs: [
-      ["01", "oak lid — instructions & glare filter"],
+      ["01", "oak lid — instructions & spare bulbs"],
       ["02", "rotor basket — the scrambler"],
       ["03", "lamp panel — Lampenfeld"],
       ["04", "keyboard — Tastatur"],
@@ -68,17 +78,17 @@ const CHAPTERS: Chapter[] = [
     ],
   },
   {
-    from: 0.42, to: 0.6, ghost: "ROTOR", kicker: "004 · THE ROTOR",
+    from: 0.3675, to: 0.525, ghost: "ROTOR", kicker: "004 · THE ROTOR",
     head: "26 wires,\ncrossed on purpose",
     body: "Each Walze hides 26 wires crossing a bakelite core in a scrambled order — spring pins on one face, flat contacts on the other. Three in a row, each free to turn: 17,576 alignments before the geometry repeats, and the operator could rearrange or swap the wheels themselves.",
   },
   {
-    from: 0.6, to: 0.74, ghost: "CURRENT", kicker: "005 · THE PATH",
+    from: 0.525, to: 0.6475, ghost: "CURRENT", kicker: "005 · THE PATH",
     head: "One keypress,\ntwice through",
     body: "Press T. The current detours through the plug board, threads all three rotors, strikes the reflector — and comes back through everything again before it lights a lamp. The reflector meant no letter could ever encrypt to itself. That tiny flaw became a crowbar at Bletchley Park.",
   },
   {
-    from: 0.74, to: 0.86, ghost: "STEP", kicker: "006 · THE STEP",
+    from: 0.6475, to: 0.70, ghost: "STEP", kicker: "006 · THE STEP",
     head: "An odometer\nof chaos",
     body: "Every keypress ratchets the right rotor one notch before the current flows; at its turnover notch it kicks the middle wheel, which kicks the left. Same key, different lamp, every single time — the cipher alphabet died the moment it was used.",
     specs: [
@@ -89,43 +99,73 @@ const CHAPTERS: Chapter[] = [
     ],
   },
   {
-    from: 0.86, to: 1.01, ghost: "TYPE", kicker: "007 · YOUR TURN",
+    from: 0.70, to: 0.78, ghost: "HUT 6", kicker: "007 · BLETCHLEY",
+    head: "A country house,\nand the huts",
+    body: "In August 1939 the Government Code and Cypher School moved into a Victorian mansion fifty miles north of London and started building wooden huts on the lawn. Hut 6 took army and air-force Enigma; Hut 8, under Alan Turing, took the navy's. The Poles had handed Britain and France their reconstruction of the machine only weeks before, at a meeting outside Warsaw. By 1945 nearly nine thousand people worked here, three-quarters of them women, and almost none of them told anyone for thirty years.",
+    specs: [
+      ["1932", "Marian Rejewski breaks the wiring by pure mathematics"],
+      ["Jul 1939", "Pyry meeting — Poland hands over its work"],
+      ["Aug 1939", "GC&CS arrives at Bletchley Park"],
+      ["Hut 6", "Heer & Luftwaffe traffic — Gordon Welchman"],
+      ["Hut 8", "Kriegsmarine traffic — Alan Turing"],
+      ["1974", "the secret is finally published"],
+    ],
+  },
+  {
+    from: 0.78, to: 0.86, ghost: "BOMBE", kicker: "008 · THE BOMBE",
+    head: "A machine\nto beat a machine",
+    body: "You cannot try 10²⁰ keys by hand. Turing's bombe — built on a Polish idea, refined by Welchman's diagonal board — ran dozens of Enigmas in parallel against a crib: a guessed scrap of plaintext, a weather report, a routine sign-off. Because no letter could encrypt to itself, most guesses died instantly. The first bombe, Victory, arrived in March 1940; by the end there were around two hundred, tended around the clock by Wrens. The reading of Enigma is credited with shortening the war by years.",
+    specs: [
+      ["Mar 1940", "first bombe, Victory, installed"],
+      ["Aug 1940", "diagonal board — the bombe comes good"],
+      ["36", "Enigma equivalents per bombe"],
+      ["~200", "bombes running by 1945"],
+      ["Wrens", "the Women's Royal Naval Service ran them"],
+    ],
+  },
+  {
+    from: 0.86, to: 1.01, ghost: "TYPE", kicker: "009 · YOUR TURN",
     head: "Type.\nThe lamps answer",
-    body: "A faithful Enigma I — rotors I·II·III at AAA, reflector B, ten plug pairs. Marian Rejewski broke this design on paper in 1932; Turing and Welchman's bombes broke it at scale, and reading it is credited with shortening the war by years. Type — and notice it never gives you your own letter back.",
+    body: "A faithful Enigma I — rotors I·II·III at AAA, reflector B, ten plug pairs. Marian Rejewski broke this design on paper in 1932; Turing and Welchman's bombes broke it at scale. Type — and notice it never gives you your own letter back.",
   },
 ];
 
 interface Callout {
+  /** beat-space window */
   window: [number, number];
   label: string;
   sub: string;
-  anchor: [number, number, number];
-  part?: string;
+  /** name of an anchor Object3D parented to the real mesh (machine.ts) */
+  anchor: string;
 }
 
 const CALLOUTS: Callout[] = [
-  { window: [0.27, 0.41], label: "OAK LID", sub: "instructions · green filter", anchor: [-1.1, 0.1, 0.6], part: "lid" },
-  { window: [0.28, 0.41], label: "ROTOR BASKET", sub: "three Walzen + reflector", anchor: [1.0, 0.4, -1.1], part: "rotorBasket" },
-  { window: [0.28, 0.41], label: "LAMPENFELD", sub: "26 glow lamps", anchor: [-1.1, 0.2, -0.4], part: "lampPanel" },
-  { window: [0.29, 0.41], label: "TASTATUR", sub: "26 sprung keys", anchor: [1.15, 0.1, 0.8], part: "keyboard" },
-  { window: [0.29, 0.41], label: "STECKERBRETT", sub: "the plug board", anchor: [1.05, -0.1, 1.9], part: "plugboard" },
-  { window: [0.47, 0.58], label: "THUMB WHEEL", sub: "sets the start position", anchor: [0.75, 0.42, 0], part: "rt_wheel" },
-  { window: [0.475, 0.58], label: "ALPHABET RING", sub: "A–Z round the rim", anchor: [0.42, -0.5, 0], part: "rt_ring" },
-  { window: [0.48, 0.58], label: "WIRING CORE", sub: "26 in · 26 out, scrambled", anchor: [-0.1, 0.55, 0], part: "rt_core" },
-  { window: [0.485, 0.58], label: "CONTACT PINS", sub: "sprung, face to face", anchor: [-0.8, 0.3, 0], part: "rt_pins" },
-  { window: [0.62, 0.72], label: "UMKEHRWALZE", sub: "the reflector — turns it back", anchor: [-0.75, 0.45, -1.15], part: "rotorBasket" },
+  { window: [0.15, 0.235], label: "ZUR BEACHTUNG!", sub: "the lid card says what it does", anchor: "lidText" },
+  { window: [0.27, 0.41], label: "OAK LID", sub: "instructions · spare bulbs", anchor: "lid" },
+  { window: [0.28, 0.41], label: "ROTOR BASKET", sub: "three Walzen + reflector", anchor: "rotorBasket" },
+  { window: [0.28, 0.41], label: "LAMPENFELD", sub: "26 glow lamps", anchor: "lampPanel" },
+  { window: [0.29, 0.41], label: "TASTATUR", sub: "26 sprung keys", anchor: "keyboard" },
+  { window: [0.29, 0.41], label: "STECKERBRETT", sub: "the plug board", anchor: "plugboard" },
+  { window: [0.47, 0.58], label: "THUMB WHEEL", sub: "sets the start position", anchor: "rt_wheel" },
+  { window: [0.475, 0.58], label: "ALPHABET RING", sub: "A–Z round the rim", anchor: "rt_ring" },
+  { window: [0.48, 0.58], label: "WIRING CORE", sub: "26 in · 26 out, scrambled", anchor: "rt_core" },
+  { window: [0.485, 0.58], label: "CONTACT PINS", sub: "sprung, face to face", anchor: "rt_pins" },
+  { window: [0.62, 0.72], label: "UMKEHRWALZE", sub: "the reflector — turns it back", anchor: "reflector" },
 ];
 
 interface OrbitKey { p: number; theta: number; phi: number; r: number; tx: number; ty: number; tz: number }
 const ORBIT: OrbitKey[] = [
   { p: 0.0, theta: 2.2, phi: 1.22, r: 8.6, tx: 0, ty: 0.1, tz: 0 },
   { p: 0.1, theta: 1.28, phi: 1.0, r: 6.8, tx: 0, ty: 0.4, tz: 0 },
-  { p: 0.22, theta: 1.05, phi: 0.9, r: 9.2, tx: 0, ty: 1.55, tz: 0 },
+  { p: 0.175, theta: 1.55, phi: 1.13, r: 5.0, tx: 0.1, ty: 2.25, tz: -2.3 }, // reading the lid card
+  { p: 0.235, theta: 1.05, phi: 0.9, r: 9.2, tx: 0, ty: 1.55, tz: 0 },
   { p: 0.34, theta: 1.8, phi: 0.86, r: 10.0, tx: 0, ty: 1.7, tz: 0 },
   { p: 0.45, theta: 1.35, phi: 1.08, r: 3.5, tx: 0.1, ty: 1.95, tz: 0.3 },
   { p: 0.57, theta: 0.85, phi: 1.22, r: 3.3, tx: 0.1, ty: 1.9, tz: 0.3 },
   { p: 0.63, theta: 1.5, phi: 0.92, r: 7.8, tx: 0, ty: 0.75, tz: 0 },
   { p: 0.74, theta: 1.5, phi: 0.55, r: 3.8, tx: 0.05, ty: 0.45, tz: -1.0 },
+  { p: 0.79, theta: 1.5, phi: 0.55, r: 3.8, tx: 0.05, ty: 0.45, tz: -1.0 },
+  { p: 0.815, theta: 2.25, phi: 1.2, r: 11.5, tx: -0.5, ty: 1.4, tz: -0.5 }, // the hut, machine stepping to itself
   { p: 0.86, theta: 1.95, phi: 1.08, r: 7.0, tx: 0, ty: 0.25, tz: 0.2 },
   { p: 1.0, theta: 1.3, phi: 1.14, r: 6.3, tx: 0, ty: 0.15, tz: 0.3 },
 ];
@@ -290,42 +330,44 @@ const Enigma = () => {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      const shadows = window.innerWidth >= 900 && !reduced;
+      renderer.shadowMap.enabled = shadows;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       stageRef.current.appendChild(renderer.domElement);
 
-      // studio
-      const key = new THREE.SpotLight("#fff2dc", 700, 80, 0.65, 0.55, 1.7);
-      key.position.set(8, 15, 9);
-      scene.add(key);
-      const rim = new THREE.DirectionalLight("#8fa8d8", 1.6);
-      rim.position.set(-9, 5, -8);
+      // the hut: a night watch in Hut 6. One pendant over the desk is the key
+      // light; a slit of moonlight past the blackout is the rim.
+      const room = buildRoom();
+      scene.add(room.root);
+      scene.fog = new THREE.Fog("#0b0b0d", 9, 34);
+      const key = new THREE.SpotLight("#ffe9c4", 280, 40, 0.82, 0.7, 1.6);
+      key.position.copy(room.lampPos);
+      key.target.position.set(0, -0.5, 0.3);
+      scene.add(key, key.target);
+      if (shadows) {
+        key.castShadow = true;
+        key.shadow.mapSize.set(2048, 2048);
+        key.shadow.bias = -0.0004;
+        key.shadow.normalBias = 0.02;
+        key.shadow.camera.near = 1;
+        key.shadow.camera.far = 30;
+        for (const m of room.receivers) m.receiveShadow = true;
+      }
+      const rim = new THREE.DirectionalLight("#8fa8d8", 1.3);
+      rim.position.copy(room.moonDir);
       scene.add(rim);
-      scene.add(new THREE.AmbientLight("#3c3a38", 1.1));
-      const fill = new THREE.PointLight("#ffd9a4", 30, 30, 2);
-      fill.position.set(0, 2.5, 5);
+      scene.add(new THREE.AmbientLight("#3c3a38", 0.9));
+      // cool spill from the blackout slit so the back wall reads at all
+      const moon = new THREE.PointLight("#6f86b8", 7, 16, 2);
+      moon.position.set(-3.4, 3.6, -5.2);
+      scene.add(moon);
+      const fill = new THREE.PointLight("#ffd9a4", 16, 24, 2);
+      fill.position.set(0, 2.2, 5);
       scene.add(fill);
-
-      const discTex = (() => {
-        const c = document.createElement("canvas");
-        c.width = c.height = 256;
-        const g = c.getContext("2d")!;
-        const rg = g.createRadialGradient(128, 128, 20, 128, 128, 126);
-        rg.addColorStop(0, "rgba(255,255,255,1)");
-        rg.addColorStop(0.7, "rgba(255,255,255,0.55)");
-        rg.addColorStop(1, "rgba(255,255,255,0)");
-        g.fillStyle = rg;
-        g.fillRect(0, 0, 256, 256);
-        return new THREE.CanvasTexture(c);
-      })();
-      const floor = new THREE.Mesh(
-        new THREE.CircleGeometry(11, 48),
-        new THREE.MeshBasicMaterial({ color: "#0d0d10", transparent: true, alphaMap: discTex }),
-      );
-      floor.rotation.x = -Math.PI / 2;
-      floor.position.y = -1.35;
-      scene.add(floor);
 
       build = buildMachine();
       scene.add(build.root);
+      if (shadows) build.root.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } });
       build.root.add(pulse);
       demoRef.current = build.demo;
       rotorHome.copy(build.rotor1.position);
@@ -426,14 +468,15 @@ const Enigma = () => {
       }
       if (!Number.isNaN(forced)) progress = forced;
       else progress += (targetProgress() - progress) * 0.08;
-      progressRef.current = progress;
+      const b = toBeat(progress);
+      progressRef.current = b;
 
       // explode envelope: full at assembly → 0.15 for the rotor beat →
       // 0.35 for the path beat (tubes are built for exactly that) → 0
-      const e = smooth(0.25, 0.34, progress)
-        - smooth(0.42, 0.47, progress) * 0.85
-        + smooth(0.58, 0.62, progress) * 0.2
-        - smooth(0.72, 0.78, progress) * 0.35;
+      const e = smooth(0.25, 0.34, b)
+        - smooth(0.42, 0.47, b) * 0.85
+        + smooth(0.58, 0.62, b) * 0.2
+        - smooth(0.72, 0.78, b) * 0.35;
       for (const [name, part] of build.parts) {
         const pe = Math.max(0, Math.min(1, e * (1 + part.lag) - part.lag));
         part.obj.position.copy(part.base).addScaledVector(part.dir, pe);
@@ -442,30 +485,30 @@ const Enigma = () => {
       }
 
       // lid opens through the timeline beat
-      const lidA = smooth(0.1, 0.2, progress);
+      const lidA = smooth(0.1, 0.2, b);
       build.lidPivot.rotation.x = -1.95 * lidA;
       if (lidA > 0.03 && prevLid <= 0.03) audioRef.current?.creak();
       prevLid = lidA;
-      audioRef.current?.setMorse(progress < 0.1);
+      audioRef.current?.setMorse(b < 0.1);
 
       // rotor solo — the machine slides offstage; the rotor holds a fixed
       // world pose (compensating for the root shift and basket explode)
-      const solo = smooth(0.44, 0.5, progress) * (1 - smooth(0.56, 0.61, progress));
-      build.root.position.z = -8.5 * solo;
-      build.root.position.x = -3 * solo;
+      const solo = smooth(0.44, 0.5, b) * (1 - smooth(0.56, 0.61, b));
+      build.root.position.z = -1.5 * solo;
+      build.root.position.x = -9.5 * solo; // slides off to the left, out of frame (not through the back wall)
       const basketObj = build.parts.get("rotorBasket")!.obj;
       const stageLocal = rotorStage.clone().sub(build.root.position).sub(basketObj.position);
       build.rotor1.position.lerpVectors(rotorHome, stageLocal, solo);
       if (solo > 0.01) build.rotor1.rotation.x += dt * 0.5 * solo;
-      const sub = smooth(0.475, 0.53, progress) * (1 - smooth(0.55, 0.6, progress));
+      const sub = smooth(0.475, 0.53, b) * (1 - smooth(0.55, 0.6, b));
       for (const part of build.rotorSub.values()) {
         part.obj.position.copy(part.base).addScaledVector(part.dir, sub);
       }
 
       // signal path
-      const f1 = smooth(0.615, 0.665, progress);
-      const f2 = smooth(0.668, 0.715, progress);
-      const inPath = progress > 0.6 && progress < 0.745;
+      const f1 = smooth(0.615, 0.665, b);
+      const f2 = smooth(0.668, 0.715, b);
+      const inPath = b > 0.6 && b < 0.745;
       build.pathFwd.visible = inPath && f1 > 0.001;
       build.pathRet.visible = inPath && f2 > 0.001;
       const setRange = (mesh: THREE.Mesh, frac: number) => {
@@ -483,13 +526,13 @@ const Enigma = () => {
       if (inPath && f2 >= 1) {
         const lamp = build.lamps.get(build.demo.lamp);
         if (lamp) { lamp.mat.emissiveIntensity = 2.2; lamp.glow.material.opacity = 0.85; }
-      } else if (progress < 0.84) {
+      } else if (b < 0.84) {
         const lamp = build.lamps.get(build.demo.lamp);
         if (lamp) { lamp.mat.emissiveIntensity = 0; lamp.glow.material.opacity = 0; }
       }
 
       // stepping beat: the machine types to itself
-      const inStep = progress > 0.745 && progress < 0.86;
+      const inStep = b > 0.745 && b < 0.86;
       if (inStep) {
         stepTimer += dt;
         if (stepTimer > 0.55) {
@@ -567,8 +610,8 @@ const Enigma = () => {
       }
 
       // camera
-      const o = sampleOrbit(progress);
-      const spin = !reduced && progress < 0.06 ? t * 0.1 : 0;
+      const o = sampleOrbit(b);
+      const spin = !reduced && b < 0.06 ? t * 0.1 : 0;
       const theta = o.theta + spin + pointer.x * 0.08;
       const phi = Math.max(0.3, Math.min(2.4, o.phi + pointer.y * 0.06));
       camera.position.set(
@@ -577,7 +620,7 @@ const Enigma = () => {
         Math.sin(phi) * Math.sin(theta) * o.r,
       );
       camera.lookAt(o.tx, o.ty, o.tz);
-      build.root.position.y = (reduced ? 0 : Math.sin(t * 0.7) * 0.04) + (-2.2 * solo);
+      build.root.position.y = -2.2 * solo; // sits on the desk
       renderer!.render(scene, camera);
 
       // HUD
@@ -585,13 +628,13 @@ const Enigma = () => {
         let txt: string;
         if (inPath) txt = `${build.demo.press} → ${build.demo.lamp}  ·  LIVE TRACE`;
         else if (inStep) txt = `WINDOW  ${positions.map((p) => String.fromCharCode(65 + p)).join(" ")}`;
-        else if (progress > 0.86) txt = `ROTORS  ${simRef.current.positions.map((p) => String.fromCharCode(65 + p)).join(" ")}`;
+        else if (b > 0.86) txt = `ROTORS  ${simRef.current.positions.map((p) => String.fromCharCode(65 + p)).join(" ")}`;
         else if (e > 0.01) txt = `EXPLODE  ${(e * 100).toFixed(0)}%`;
         else txt = `ORBIT  ${(((theta * 57.3) % 360 + 360) % 360).toFixed(0)}°`;
         if (readoutRef.current.textContent !== txt) readoutRef.current.textContent = txt;
       }
       if (windowsRef.current) {
-        const show = progress > 0.86;
+        const show = b > 0.86;
         windowsRef.current.style.opacity = show ? "1" : "0";
         if (show) {
           const txt = simRef.current.positions.map((p) => String.fromCharCode(65 + p)).join("");
@@ -608,34 +651,54 @@ const Enigma = () => {
         if (ghostRef.current.textContent !== txt) ghostRef.current.textContent = txt;
       }
 
-      // callout projection
+      // callouts: anchors live on the real meshes, so they track explode,
+      // hinge and rotor moves for free. Labels sit 120px to the near side,
+      // are clamped inside the viewport and away from the copy block / HUD,
+      // and are pushed apart when two land on top of each other.
       if (svgRef.current && labelHost.current) {
         const w = window.innerWidth, h = window.innerHeight;
-        let svg = "";
         const kids = labelHost.current.children;
+        const narrow = w < 720;
+        const placed: { el: HTMLDivElement; sx: number; sy: number; lx: number; ly: number; left: boolean; vis: number; wpx: number; hpx: number }[] = [];
         CALLOUTS.forEach((c, i) => {
           const el = kids[i] as HTMLDivElement;
-          const vis = smooth(c.window[0], c.window[0] + 0.02, progress) * (1 - smooth(c.window[1] - 0.02, c.window[1], progress));
-          if (vis <= 0.02) {
-            el.style.opacity = "0";
-            return;
-          }
-          const part = c.part ? build!.parts.get(c.part) ?? build!.rotorSub.get(c.part) : null;
-          if (part) part.obj.getWorldPosition(project);
-          else project.set(0, 0, 0);
-          project.x += c.anchor[0];
-          project.y += c.anchor[1];
-          project.z += c.anchor[2];
+          const vis = smooth(c.window[0], c.window[0] + 0.02, b) * (1 - smooth(c.window[1] - 0.02, c.window[1], b));
+          const a = build!.anchors.get(c.anchor);
+          if (vis <= 0.02 || !a) { el.style.opacity = "0"; return; }
+          a.getWorldPosition(project);
           project.project(camera);
+          if (project.z > 1 || Math.abs(project.x) > 1.3 || Math.abs(project.y) > 1.3) { el.style.opacity = "0"; return; }
           const sx = (project.x * 0.5 + 0.5) * w;
           const sy = (-project.y * 0.5 + 0.5) * h;
-          const lx = sx + (sx < w / 2 ? -110 : 110);
-          const ly = Math.max(90, sy - 42);
-          el.style.opacity = String(vis);
-          el.style.transform = `translate(${lx + (sx < w / 2 ? -el.offsetWidth : 0)}px, ${ly}px)`;
-          svg += `<line x1="${sx}" y1="${sy}" x2="${lx}" y2="${ly + 14}" stroke="rgba(217,164,65,0.55)" stroke-width="1"/>` +
-            `<circle cx="${sx}" cy="${sy}" r="2.6" fill="#d9a441" opacity="${vis}"/>`;
+          const left = sx < w / 2;
+          const wpx = el.offsetWidth, hpx = el.offsetHeight;
+          const gap = narrow ? 56 : 120;
+          let lx = left ? sx - gap - wpx : sx + gap;
+          let ly = sy - 42;
+          const pad = 16, top = narrow ? 70 : 100;
+          const bottomLimit = narrow ? h - 330 : left ? h - 430 : h - 130;
+          lx = Math.min(Math.max(lx, pad), w - pad - wpx);
+          ly = Math.min(Math.max(ly, top), bottomLimit - hpx);
+          el.classList.toggle("left", left);
+          placed.push({ el, sx, sy, lx, ly, left, vis, wpx, hpx });
         });
+        for (const side of [true, false]) {
+          const list = placed.filter((q) => q.left === side).sort((q1, q2) => q1.ly - q2.ly);
+          for (let i = 1; i < list.length; i++) {
+            const prev = list[i - 1], cur = list[i];
+            const xOverlap = cur.lx < prev.lx + prev.wpx + 12 && prev.lx < cur.lx + cur.wpx + 12;
+            if (xOverlap && cur.ly < prev.ly + prev.hpx + 10) cur.ly = prev.ly + prev.hpx + 10;
+          }
+        }
+        let svg = "";
+        for (const q of placed) {
+          q.el.style.opacity = String(q.vis);
+          q.el.style.transform = `translate(${q.lx}px, ${q.ly}px)`;
+          const ex = q.left ? q.lx + q.wpx + 8 : q.lx - 8;
+          const ey = q.ly + 14;
+          svg += `<line x1="${q.sx}" y1="${q.sy}" x2="${ex}" y2="${ey}" stroke="rgba(217,164,65,${0.6 * q.vis})" stroke-width="1"/>` +
+            `<circle cx="${q.sx}" cy="${q.sy}" r="2.8" fill="#d9a441" opacity="${q.vis}"/>`;
+        }
         svgRef.current.innerHTML = svg;
       }
 
@@ -756,7 +819,7 @@ const Enigma = () => {
   }, [simPress, simReset]);
 
   const ch = CHAPTERS[chapterIdx];
-  const showSim = chapterIdx === 6;
+  const showSim = chapterIdx === CHAPTERS.length - 1;
 
   return (
     <div className={`enigma ${showSim ? "sim-on" : ""} ${noAnim ? "no-anim" : ""}`}>
@@ -906,6 +969,11 @@ const CSS = `
 .en-copy {
   position: fixed; left: 30px; bottom: 40px; max-width: 400px; z-index: 5;
   animation: en-in 0.5s ease both;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 22px rgba(0,0,0,0.7);
+}
+.en-copy::before {
+  content: ""; position: absolute; inset: -60px -80px -50px -40px; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse at 30% 60%, rgba(11,11,13,0.82) 30%, rgba(11,11,13,0.5) 60%, rgba(11,11,13,0) 78%);
 }
 @keyframes en-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; } }
 .en-kicker { font-family: 'Special Elite', monospace; color: #d9a441; font-size: 13px; letter-spacing: 2px; }
@@ -914,7 +982,7 @@ const CSS = `
 .en-specs { margin-top: 14px; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
 .en-specs td { border-top: 1px solid #26241f; padding: 5px 14px 5px 0; color: #8a8272; }
 .en-specs td:first-child { color: #d9a441; white-space: nowrap; }
-.en-sim { position: fixed; right: 30px; bottom: 36px; z-index: 6; width: min(360px, 92vw); display: flex; flex-direction: column; gap: 10px; }
+.en-sim { position: fixed; right: 30px; bottom: 58px; z-index: 6; width: min(360px, 92vw); display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; background: rgba(11,11,13,0.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(58,52,39,0.6); }
 .en-windows { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; transition: opacity 0.4s; }
 .en-windows label { font-size: 10px; color: #8a8272; letter-spacing: 2px; }
 .en-windows .en-letter { background: #17150f; border: 1px solid #3a3427; color: #ffd98a; padding: 3px 9px; font-size: 16px; }
@@ -936,9 +1004,10 @@ const CSS = `
 }
 .en-keys button:hover { border-color: #d9a441; color: #ffd98a; }
 .en-labels { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
-.en-label { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.2s; max-width: 190px; }
-.en-label strong { display: block; font-size: 12px; letter-spacing: 1.5px; color: #ecdfc2; }
-.en-label span { font-size: 11px; color: #8a8272; font-family: 'JetBrains Mono', monospace; }
+.en-label { position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 0.2s; max-width: 200px; }
+.en-label.left { text-align: right; }
+.en-label strong { display: block; font-size: 12px; letter-spacing: 1.5px; color: #ecdfc2; text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8); }
+.en-label span { font-size: 11px; color: #a89f8e; font-family: 'JetBrains Mono', monospace; text-shadow: 0 1px 2px rgba(0,0,0,0.9), 0 0 10px rgba(0,0,0,0.8); }
 .en-rail { position: fixed; right: 14px; top: 18vh; bottom: 18vh; width: 14px; z-index: 5; }
 .en-rail-track { position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: #26241f; }
 .en-rail-fill { width: 2px; background: #d9a441; height: 0; }

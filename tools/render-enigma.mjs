@@ -64,7 +64,7 @@ try {
   const result = await sim.evaluate(async () => {
     const api = window.__enigma;
     for (const ch of "HELLO") api.press(ch);
-    await new Promise((r) => setTimeout(r, 400));
+    await new Promise((r) => setTimeout(r, 2500)); // software GL with shadows: give the loop a few frames
     const outRow = document.querySelector(".en-tape-out");
     return {
       progress: api.progress(),
