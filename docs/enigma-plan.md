@@ -147,17 +147,20 @@ the U-110 and U-559 pinches; the Shark blackout of 1942; Mavis Batey and
 Matapan; what a shift in the Hut 6 machine room actually did with a decrypt
 (Registration → Machine Room → Decoding Room → Hut 3).
 
-## Phase 5 — approach Bletchley Park (Jack's call)
+## Phase 5 — approach Bletchley Park
 
-Bletchley Park Trust runs a learning programme and has taken digital
-interactives before. Likely route: a short note to their Learning /
-Collections team with the live URL, the kiosk build, and an offer of the
-source under MIT. Needs Jack to decide the framing (personal project vs APE)
-and who sends it. Tracked as a Decision Desk item.
+**Decided 2026-09-07 (Jack):** framed as an Adapt Progress Evolve project,
+sent by Jack personally. Draft note, route (Trust contact form to the
+Learning / Public Engagement team, plus a LinkedIn line to the Director of
+Public Engagement) and the reply playbook are in `docs/bletchley-approach.md`.
+The entry page now carries the APE credit and schema.org publisher. Sending is
+Jack's action; nothing goes out from here.
 
 ## Backfill to jstov.uk/lab
 
-When phase 2/3 land: copy `src/enigma/` back into
-`jstov/src/pages/lab/enigma/` + `Enigma.tsx`, restoring the react-router
-links and the `noindex` meta (the lab is hidden by design), and keep the
-`/lab/enigma` share-link path there.
+**Done 2026-09-07.** `src/enigma/*` copied to `jstov/src/pages/lab/enigma/`
++ `Enigma.tsx`; only the lab differences restored (react-router links,
+`noindex` meta, `/lab/enigma` share path); models under `jstov/public/models/`.
+The service worker stays jarvising-only (its shell path is
+`/projects/enigma/live/`). jarvising remains the primary; repeat the same copy
++ three edits for future syncs.
