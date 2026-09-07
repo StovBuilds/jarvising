@@ -5,7 +5,12 @@
 // smaller file is not worth loosening it. Uses the gltf-transform install in
 // ~/repos/3d-kit-design (override with GLTF_TOOLS_ROOT).
 //
-//   node tools/optimize-glb.mjs public/models/bombe.glb
+//   node tools/optimize-glb.mjs public/models/bombe.glb [--no-quantize]
+//
+// --no-quantize for a PARTS LIBRARY whose geometries get pulled out of their
+// nodes at runtime: quantize() stores positions as normalised int16 and moves
+// the real scale onto the node, so baking the node matrix back into the
+// attribute clamps every coordinate past 1.0 (the Enigma case collapsed).
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "node:path";
@@ -17,11 +22,12 @@ const { ALL_EXTENSIONS } = req("@gltf-transform/extensions");
 const { weld, quantize, prune, dedup } = req("@gltf-transform/functions");
 
 const file = process.argv[2];
+const noQuant = process.argv.includes("--no-quantize");
 if (!file) { console.error("usage: optimize-glb.mjs <file.glb>"); process.exit(2); }
 const before = fs.statSync(file).size;
 const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
 const doc = await io.read(file);
-await doc.transform(dedup(), weld(), quantize(), prune());
+await doc.transform(...(noQuant ? [dedup(), weld(), prune()] : [dedup(), weld(), quantize(), prune()]));
 await io.write(file, doc);
 const after = fs.statSync(file).size;
 let tris = 0;

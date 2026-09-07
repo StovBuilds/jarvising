@@ -42,10 +42,17 @@ then `node tools/optimize-glb.mjs public/models/bombe.glb`.
 
 Procedural primitives cap the fidelity. Remaining candidates, in order of payoff:
 
-1. **The Enigma itself** as a GLB: proper rotor thumb-wheel serrations,
-   bakelite key stems, the lamp-panel bezel, plug-board sockets with real
-   cable sag, the case's dovetail corners and hinges. Keep the *same part
-   names* so the explode choreography and anchors keep working.
+1. ~~The Enigma itself~~ — done 2026-09-07 as a **parts library**
+   (`tools/blender/enigma-parts.py` → `public/models/enigma.glb`, 20 parts,
+   ~10k tris, 387 kB, `--no-quantize`). `buildMachine(lib?)` swaps each
+   primitive for the named library geometry via `libMesh()` and keeps every
+   position/anchor/trace; primitives remain the fallback (6 s load timeout).
+   ⚠️ Trap hit: quantised positions are normalised int16 with the scale on the
+   node — baking the node matrix into them clamps at 1.0 and flattened the
+   case/lid/deck. The loader now converts positions to float first and the
+   library is exported unquantised. Still to do on the machine: rotor-ring
+   letter orientation check at close range, engraved (geometry) key letters,
+   the rotor cover plate with three windows (needs choreography changes).
 2. ~~The bombe~~ — done (above). Next for it: a letter ring texture on the
    drum faces, the back-side menu plugging for a reverse shot, and a slow drum
    spin during chapter 008 (drums are joined per colour; spinning needs them

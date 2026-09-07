@@ -14,7 +14,7 @@ import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/700.css";
 import "@fontsource/jetbrains-mono";
 import "@fontsource/special-elite";
-import { buildMachine, ROWS, type MachineBuild } from "./machine";
+import { buildMachine, ROWS, type MachineBuild, type PartsLib } from "./machine";
 import { Enigma as EnigmaCipher } from "./cipher";
 import { EnigmaAudio } from "./sound";
 import { buildRoom } from "./room";
@@ -221,6 +221,7 @@ const Enigma = () => {
   const startKeyRef = useRef<[number, number, number]>([0, 0, 0]);
   const bridgeRef = useRef<{ spawnTrace: (press: string, lamp: string) => void; traceInfo?: () => unknown } | null>(null);
   const grainRef = useRef<HTMLDivElement>(null);
+  const partsLibRef = useRef<string>("unknown");
   const [noAnim] = useState(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   autoRef.current = auto;
 
@@ -318,14 +319,49 @@ const Enigma = () => {
       return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     };
 
+    // The Blender parts library replaces the machine's primitives when it
+    // arrives; primitives remain the fallback (slow network, blocked file).
+    // Quantised GLBs carry the dequantise transform on the NODE, so bake each
+    // mesh's world matrix into the geometry before handing it over.
+    const loadParts = (): Promise<PartsLib | undefined> => new Promise((resolve) => {
+      const done = (v?: PartsLib) => { clearTimeout(timer); resolve(v); };
+      const timer = window.setTimeout(() => done(undefined), 6000);
+      new GLTFLoader().load("/models/enigma.glb", (gltf) => {
+        const lib: PartsLib = new Map();
+        gltf.scene.updateMatrixWorld(true);
+        gltf.scene.traverse((o) => {
+          const m = o as THREE.Mesh;
+          if (!m.isMesh) return;
+          const g = m.geometry.clone();
+          // positions must be float before the bake: a normalised-int attribute
+          // clamps at 1.0 and silently flattens anything larger than a unit
+          const p = g.attributes.position;
+          if (!(p.array instanceof Float32Array)) {
+            const f = new THREE.BufferAttribute(new Float32Array(p.count * 3), 3);
+            for (let i = 0; i < p.count; i++) f.setXYZ(i, p.getX(i), p.getY(i), p.getZ(i));
+            g.setAttribute("position", f);
+          }
+          g.applyMatrix4(m.matrixWorld);
+          lib.set(m.name, g);
+        });
+        done(lib);
+      }, undefined, () => done(undefined));
+    });
+
+    let partsLib: PartsLib | undefined;
     (async () => {
       try {
-        await Promise.all([
-          document.fonts.load("700 40px 'Space Grotesk'"),
-          document.fonts.load("400 14px 'JetBrains Mono'"),
-          document.fonts.load("400 16px 'Special Elite'"),
-          document.fonts.ready,
+        const [, lib] = await Promise.all([
+          Promise.all([
+            document.fonts.load("700 40px 'Space Grotesk'"),
+            document.fonts.load("400 14px 'JetBrains Mono'"),
+            document.fonts.load("400 16px 'Special Elite'"),
+            document.fonts.ready,
+          ]),
+          loadParts(),
         ]);
+        partsLib = lib;
+        partsLibRef.current = lib ? `library:${lib.size}` : "primitives";
       } catch { /* fallback stacks hold */ }
       if (dead || !stageRef.current) return;
       let gl: WebGLRenderingContext | null = null;
@@ -377,7 +413,7 @@ const Enigma = () => {
       fill.position.set(0, 2.2, 5);
       scene.add(fill);
 
-      build = buildMachine();
+      build = buildMachine(partsLib);
       scene.add(build.root);
       if (shadows) build.root.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } });
 
@@ -851,6 +887,7 @@ const Enigma = () => {
   useEffect(() => {
     (window as unknown as { __enigma?: object }).__enigma = {
       press: simPress,
+      parts: () => partsLibRef.current,
       reset: simReset,
       progress: () => progressRef.current,
       trace: () => bridgeRef.current?.traceInfo?.(),

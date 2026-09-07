@@ -107,8 +107,26 @@ function crinkleTex(): THREE.CanvasTexture {
 
 // ── Build ────────────────────────────────────────────────────────────────────
 
-export function buildMachine(): MachineBuild {
+/** Named geometries from the Blender parts library (tools/blender/enigma-parts.py),
+ *  each authored centred on the same local origin as the primitive it replaces. */
+export type PartsLib = Map<string, THREE.BufferGeometry>;
+
+export function buildMachine(lib?: PartsLib): MachineBuild {
   const root = new THREE.Group();
+  // Library part if we have it, primitive if not. `fallbackRot` is the rotation
+  // the PRIMITIVE needs (library parts are authored already oriented).
+  const libMesh = (
+    name: string,
+    fallback: () => THREE.BufferGeometry,
+    material: THREE.Material | THREE.Material[],
+    fallbackRot?: [number, number, number],
+  ): THREE.Mesh => {
+    const g = lib?.get(name);
+    const m = new THREE.Mesh(g ?? fallback(), material);
+    if (!g && fallbackRot) m.rotation.set(...fallbackRot);
+    return m;
+  };
+  const has = (name: string) => !!lib?.has(name);
   const parts = new Map<string, PartDef>();
   const rotorSub = new Map<string, PartDef>();
   const keys = new Map<string, THREE.Group>();
@@ -128,6 +146,7 @@ export function buildMachine(): MachineBuild {
   const brass = new THREE.MeshStandardMaterial({ color: "#8a6b32", roughness: 0.35, metalness: 0.85 });
   const bakelite = new THREE.MeshStandardMaterial({ color: "#3a2b20", roughness: 0.5, metalness: 0.1 });
   const nickel = new THREE.MeshStandardMaterial({ color: "#9aa0a8", roughness: 0.3, metalness: 0.9 });
+  const leather = new THREE.MeshStandardMaterial({ color: "#2a1a10", roughness: 0.85, metalness: 0.02 });
 
   const addPart = (name: string, dir: THREE.Vector3, lag: number): THREE.Group => {
     const g = new THREE.Group();
@@ -139,31 +158,37 @@ export function buildMachine(): MachineBuild {
   // ── Case (open oak box) ────────────────────────────────────────────────────
   const caseG = addPart("case", new THREE.Vector3(0, -1.2, 0), 0.05);
   const W = 3.0, D = 3.6, H = 1.1, T = 0.09;
-  const bottom = new THREE.Mesh(new THREE.BoxGeometry(W, T, D), oak);
-  bottom.position.y = -H / 2 + T / 2;
-  caseG.add(bottom);
-  // walls run past the deck so the closed lid clears the rotor crowns
   const WALL_H = 1.3, WALL_CY = 0.1;
-  for (const [sx, sw, sz, sd] of [
-    [0, W, -D / 2 + T / 2, T], [0, W, D / 2 - T / 2, T],
-    [-W / 2 + T / 2, T, 0, D - 2 * T], [W / 2 - T / 2, T, 0, D - 2 * T],
-  ] as const) {
-    const wall = new THREE.Mesh(new THREE.BoxGeometry(sw, WALL_H, sd), oak);
-    wall.position.set(sx, WALL_CY, sz);
-    caseG.add(wall);
+  if (has("case")) {
+    caseG.add(new THREE.Mesh(lib!.get("case")!, oak));
+    if (has("caseHardware")) caseG.add(new THREE.Mesh(lib!.get("caseHardware")!, brass));
+    if (has("handle")) caseG.add(new THREE.Mesh(lib!.get("handle")!, leather));
+  } else {
+    const bottom = new THREE.Mesh(new THREE.BoxGeometry(W, T, D), oak);
+    bottom.position.y = -H / 2 + T / 2;
+    caseG.add(bottom);
+    // walls run past the deck so the closed lid clears the rotor crowns
+    for (const [sx, sw, sz, sd] of [
+      [0, W, -D / 2 + T / 2, T], [0, W, D / 2 - T / 2, T],
+      [-W / 2 + T / 2, T, 0, D - 2 * T], [W / 2 - T / 2, T, 0, D - 2 * T],
+    ] as const) {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(sw, WALL_H, sd), oak);
+      wall.position.set(sx, WALL_CY, sz);
+      caseG.add(wall);
+    }
+    // carry handle on the left face
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 8, 20, Math.PI), blackMetal);
+    handle.position.set(-W / 2 - 0.02, 0.05, 0);
+    handle.rotation.y = Math.PI / 2;
+    caseG.add(handle);
   }
-  // carry handle on the left face
-  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 8, 20, Math.PI), blackMetal);
-  handle.position.set(-W / 2 - 0.02, 0.05, 0);
-  handle.rotation.y = Math.PI / 2;
-  caseG.add(handle);
 
   // ── Lid (hinged at the back edge) ─────────────────────────────────────────
   const lidPart = addPart("lid", new THREE.Vector3(0, 1.7, -0.6), 0); // low enough to stay in the assembly shot
   const lidPivot = new THREE.Group();
   lidPivot.position.set(0, 0.75, -D / 2);
   lidPart.add(lidPivot);
-  const lidBoard = new THREE.Mesh(new THREE.BoxGeometry(W, 0.08, D), oakDark);
+  const lidBoard = libMesh("lidBoard", () => new THREE.BoxGeometry(W, 0.08, D), oakDark);
   lidBoard.position.set(0, 0.04, D / 2);
   lidPivot.add(lidBoard);
   anchor("lid", lidBoard, -0.5, -0.06, 0.2);
@@ -234,17 +259,24 @@ export function buildMachine(): MachineBuild {
 
   // ── Chassis face plate ────────────────────────────────────────────────────
   const chassis = addPart("chassis", new THREE.Vector3(0, 0.55, 0), 0.12);
-  const deck = new THREE.Mesh(new THREE.BoxGeometry(W - 0.26, 0.05, D - 0.5), crinkle);
+  const deck = libMesh("deck", () => new THREE.BoxGeometry(W - 0.26, 0.05, D - 0.5), crinkle);
   deck.position.set(0, 0.42, 0.05);
   chassis.add(deck);
   // power selector knob (right, by the rotors)
-  const knobBase = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.05, 20), blackMetal);
-  knobBase.position.set(1.08, 0.47, -1.0);
-  chassis.add(knobBase);
-  const knob = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.2), bakelite);
-  knob.position.set(1.08, 0.51, -1.0);
-  knob.rotation.y = 0.6;
-  chassis.add(knob);
+  if (has("knob")) {
+    const knob = new THREE.Mesh(lib!.get("knob")!, blackMetal);
+    knob.position.set(1.08, 0.47, -1.0);
+    knob.rotation.y = 0.6;
+    chassis.add(knob);
+  } else {
+    const knobBase = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.05, 20), blackMetal);
+    knobBase.position.set(1.08, 0.47, -1.0);
+    chassis.add(knobBase);
+    const knob = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.2), bakelite);
+    knob.position.set(1.08, 0.51, -1.0);
+    knob.rotation.y = 0.6;
+    chassis.add(knob);
+  }
 
   // ── Inner guts (visible mid-explode) ──────────────────────────────────────
   const guts = addPart("guts", new THREE.Vector3(0, 0.3, 0), 0.14);
@@ -261,7 +293,7 @@ export function buildMachine(): MachineBuild {
 
   // ── Lamp panel ────────────────────────────────────────────────────────────
   const lampPanel = addPart("lampPanel", new THREE.Vector3(0, 1.55, 0), 0.06);
-  const lampPlate = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.04, 1.05), crinkle);
+  const lampPlate = libMesh("lampPlate", () => new THREE.BoxGeometry(2.7, 0.04, 1.05), crinkle);
   lampPlate.position.set(0, 0.47, -0.42);
   lampPanel.add(lampPlate);
   anchor("lampPanel", lampPlate, -1.0, 0.03, 0.1);
@@ -277,8 +309,7 @@ export function buildMachine(): MachineBuild {
     [...row].forEach((ch, i) => {
       const x = (i - (row.length - 1) / 2) * 0.29;
       const z = lampRowsZ[ri];
-      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.018, 8, 22), blackMetal);
-      rim.rotation.x = Math.PI / 2;
+      const rim = libMesh("lampBezel", () => new THREE.TorusGeometry(0.1, 0.018, 8, 22), blackMetal, [Math.PI / 2, 0, 0]);
       rim.position.set(x, 0.495, z);
       lampPanel.add(rim);
       const faceTex = canvasTex(64, 64, (g) => {
@@ -312,7 +343,7 @@ export function buildMachine(): MachineBuild {
       const x = (i - (row.length - 1) / 2) * 0.29;
       const z = keyRowsZ[ri];
       const key = new THREE.Group();
-      const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.1, 10), blackMetal);
+      const stem = libMesh("keyStem", () => new THREE.CylinderGeometry(0.045, 0.045, 0.1, 10), blackMetal);
       stem.position.y = 0.47;
       key.add(stem);
       const capTex = canvasTex(64, 64, (g) => {
@@ -326,14 +357,22 @@ export function buildMachine(): MachineBuild {
         g.textBaseline = "middle";
         g.fillText(ch, 32, 35);
       });
-      const cap = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.1, 0.1, 0.035, 22),
-        [blackMetal, new THREE.MeshStandardMaterial({ map: capTex, roughness: 0.5 }), blackMetal],
-      );
-      cap.position.y = 0.54;
-      key.add(cap);
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.098, 0.012, 8, 22), nickel);
-      ring.rotation.x = Math.PI / 2;
+      const capFace = new THREE.MeshStandardMaterial({ map: capTex, roughness: 0.5 });
+      if (has("keyCap")) {
+        // library cap = the dished body; the lettered face is a disc on top
+        const cap = new THREE.Mesh(lib!.get("keyCap")!, blackMetal);
+        cap.position.y = 0.54;
+        key.add(cap);
+        const face = new THREE.Mesh(new THREE.CircleGeometry(0.086, 24), capFace);
+        face.rotation.x = -Math.PI / 2;
+        face.position.y = 0.54 + 0.0175 + 0.002;
+        key.add(face);
+      } else {
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.035, 22), [blackMetal, capFace, blackMetal]);
+        cap.position.y = 0.54;
+        key.add(cap);
+      }
+      const ring = libMesh("keyRing", () => new THREE.TorusGeometry(0.098, 0.012, 8, 22), nickel, [Math.PI / 2, 0, 0]);
       ring.position.y = 0.557;
       key.add(ring);
       key.position.set(x, 0, z);
@@ -344,7 +383,7 @@ export function buildMachine(): MachineBuild {
 
   // ── Plugboard (front face) ────────────────────────────────────────────────
   const plugboard = addPart("plugboard", new THREE.Vector3(0, -0.1, 1.3), 0.1);
-  const pbPlate = new THREE.Mesh(new THREE.BoxGeometry(2.72, 0.78, 0.05), crinkle);
+  const pbPlate = libMesh("pbPlate", () => new THREE.BoxGeometry(2.72, 0.78, 0.05), crinkle);
   pbPlate.position.set(0, -0.06, D / 2 + 0.03);
   plugboard.add(pbPlate);
   anchor("plugboard", pbPlate, 1.0, 0.2, 0.04);
@@ -364,11 +403,17 @@ export function buildMachine(): MachineBuild {
       const tag = new THREE.Mesh(new THREE.PlaneGeometry(0.07, 0.07), new THREE.MeshBasicMaterial({ map: letterTex, transparent: true }));
       tag.position.set(x, y + 0.075, zc + 0.005);
       plugboard.add(tag);
-      for (const dy of [0, -0.075]) {
-        const jack = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.05, 10), bakelite);
-        jack.rotation.x = Math.PI / 2;
-        jack.position.set(x, y + dy, zc);
-        plugboard.add(jack);
+      if (has("plugSocket")) {
+        const boss = new THREE.Mesh(lib!.get("plugSocket")!, bakelite);
+        boss.position.set(x, y - 0.0375, zc + 0.01);
+        plugboard.add(boss);
+      } else {
+        for (const dy of [0, -0.075]) {
+          const jack = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.05, 10), bakelite);
+          jack.rotation.x = Math.PI / 2;
+          jack.position.set(x, y + dy, zc);
+          plugboard.add(jack);
+        }
       }
       sockets.set(ch, new THREE.Vector3(x, y - 0.037, zc + 0.02));
     });
@@ -383,8 +428,7 @@ export function buildMachine(): MachineBuild {
     const cable = new THREE.Mesh(new THREE.TubeGeometry(curve, 24, 0.02, 6), cableMat);
     plugboard.add(cable);
     for (const p of [pa, pb]) {
-      const plug = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.09, 10), bakelite);
-      plug.rotation.x = Math.PI / 2;
+      const plug = libMesh("plug", () => new THREE.CylinderGeometry(0.032, 0.032, 0.09, 10), bakelite, [Math.PI / 2, 0, 0]);
       plug.position.copy(p);
       plugboard.add(plug);
     }
@@ -403,13 +447,11 @@ export function buildMachine(): MachineBuild {
     cheek.position.set(sx, axleY - 0.02, axleZ);
     basket.add(cheek);
   }
-  const reflector = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.12, 26), bakelite);
-  reflector.rotation.z = Math.PI / 2;
+  const reflector = libMesh("reflector", () => new THREE.CylinderGeometry(0.26, 0.26, 0.12, 26), bakelite, [0, 0, Math.PI / 2]);
   reflector.position.set(-0.58, axleY, axleZ);
   basket.add(reflector);
   anchor("reflector", reflector, 0, 0, 0);
-  const entry = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.09, 26), blackMetal);
-  entry.rotation.z = Math.PI / 2;
+  const entry = libMesh("entryWheel", () => new THREE.CylinderGeometry(0.26, 0.26, 0.09, 26), blackMetal, [0, 0, Math.PI / 2]);
   entry.position.set(0.82, axleY, axleZ);
   basket.add(entry);
 
@@ -454,23 +496,21 @@ export function buildMachine(): MachineBuild {
       }
     };
     // thumbwheel (serrated, pokes up through the deck line)
-    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.055, 40), new THREE.MeshStandardMaterial({ map: knurlTex, roughness: 0.6, metalness: 0.3 }));
-    wheel.rotation.z = Math.PI / 2;
+    const wheel = libMesh("rotorWheel", () => new THREE.CylinderGeometry(0.3, 0.3, 0.055, 40),
+      has("rotorWheel") ? blackMetal : new THREE.MeshStandardMaterial({ map: knurlTex, roughness: 0.6, metalness: 0.3 }), [0, 0, Math.PI / 2]);
     wheel.position.x = 0.12;
     mk("rt_wheel", wheel, 0.85);
     // alphabet ring
-    const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.085, 52), new THREE.MeshStandardMaterial({ map: alphaTex(), roughness: 0.55 }));
-    ring.rotation.z = Math.PI / 2;
+    const ring = libMesh("rotorRing", () => new THREE.CylinderGeometry(0.27, 0.27, 0.085, 52), new THREE.MeshStandardMaterial({ map: alphaTex(), roughness: 0.55 }), [0, 0, Math.PI / 2]);
     ring.position.x = 0.035;
     mk("rt_ring", ring, 0.45);
     // bakelite core with cross-wiring
     const coreG = new THREE.Group();
-    const core = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.1, 32), bakelite);
-    core.rotation.z = Math.PI / 2;
+    const core = libMesh("rotorCore", () => new THREE.CylinderGeometry(0.24, 0.24, 0.1, 32), bakelite, [0, 0, Math.PI / 2]);
     coreG.add(core);
     const r = rng(400 + x * 100);
     const wireCols = ["#b06a3a", "#c4b598", "#7a2e2a", "#4a5a3a"];
-    for (let i = 0; i < 13; i++) {
+    for (let i = 0; i < (has("rotorCore") ? 0 : 13); i++) {
       const a1 = r() * Math.PI * 2, a2 = a1 + 1 + r() * 4;
       const p1 = new THREE.Vector3(-0.05, Math.cos(a1) * 0.17, Math.sin(a1) * 0.17);
       const p2 = new THREE.Vector3(0.05, Math.cos(a2) * 0.17, Math.sin(a2) * 0.17);
@@ -495,8 +535,7 @@ export function buildMachine(): MachineBuild {
     pinsG.add(pins);
     mk("rt_pins", pinsG, -0.45);
     // flat contact plate
-    const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.03, 32), nickel);
-    plate.rotation.z = Math.PI / 2;
+    const plate = libMesh("rotorPlate", () => new THREE.CylinderGeometry(0.22, 0.22, 0.03, 32), nickel, [0, 0, Math.PI / 2]);
     plate.position.x = -0.17;
     mk("rt_plate", plate, -0.85);
     return rg;
