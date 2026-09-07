@@ -4,10 +4,27 @@
   "type": "module",
   "description": "jarvising.com — open portfolio of test projects. Static site, no framework.",
   "scripts": {
-    "build": "rm -rf dist && cp -r public dist",
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "og": "node tools/render-og.mjs"
   },
   "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/three": "^0.185.4",
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
     "wrangler": "^4.118.0"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "@fontsource/special-elite": "^5.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.185.1"
   }
 }

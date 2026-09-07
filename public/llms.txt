@@ -2,16 +2,18 @@
 
 > jarvising (verb, present participle of *jarvis*; also noun): 1. The act of creating innovative projects at scale. 2. Giving people the tools to do it themselves.
 
-jarvising.com is an open portfolio of test projects, experiments and tools built by Jack Stovell (https://jstov.uk/). Projects are published here as they are built, each showing what it does, how it was made, and how to make your own.
+jarvising.com is an open portfolio of test projects, experiments and tools built by Jack Stovell (https://jstov.uk/). Each entry shows what it does, how it was made, and how to make your own.
 
-## Status
+## Entries
 
-- Holding page live (September 2026). First project entries are in progress.
+- [Entry 001 — Enigma](https://jarvising.com/projects/enigma/): a scroll-driven, fully procedural Three.js teardown of the Enigma I that ends in a faithful, typeable machine (rotors I·II·III, reflector B, ten plug pairs, double-step). The entry page explains what it does, how it was made (one scroll-derived progress value drives every beat; named parts with explode vectors; labels projected from 3D; WebAudio-synthesised sound) and a seven-step recipe for making your own, plus the complete cipher core as code. First shipped 2026-08-27 as jstov.uk lab experiment 008.
+- [Entry 001 — live piece](https://jarvising.com/projects/enigma/live/): the teardown itself. Needs WebGL and JavaScript.
 
 ## Pages
 
-- [Home](https://jarvising.com/): the dictionary entry for "jarvising" and the portfolio index.
+- [Home](https://jarvising.com/): the dictionary entry for "jarvising" and the index of entries.
 
 ## Related
 
 - [jstov.uk](https://jstov.uk/): Jack Stovell's personal site.
+- [adaptprogressevolve.com](https://adaptprogressevolve.com/): Adapt Progress Evolve.

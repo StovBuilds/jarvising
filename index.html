@@ -307,6 +307,12 @@
     color: var(--ink-soft);
   }
   .slots li small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+  .slots li.live { border: 1px solid var(--line-strong); background: var(--paper); padding: 0; }
+  .slots li.live a { display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 12px; height: 100%; text-decoration: none; color: inherit; border-radius: 12px; }
+  .slots li.live a:hover, .slots li.live a:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .slots li.live small { color: var(--accent); }
+  .slots li.live span { color: var(--ink); font-weight: 600; font-size: 17px; }
+  .slots li.live em { font-style: normal; font-size: 12.5px; line-height: 1.4; color: var(--ink-soft); letter-spacing: 0; }
 
   footer {
     margin-top: auto;
@@ -359,11 +365,11 @@
     <section class="see-also fade fade-4" aria-labelledby="see-also-h">
       <h2 id="see-also-h">See also</h2>
       <p>This site is the open portfolio of what jarvising produces: test projects, experiments and tools, published here as they are built.</p>
-      <p class="sub">The first entries are on their way. Each one will show what it does, how it was made, and how to make your own.</p>
-      <ul class="slots" aria-label="Upcoming entries">
-        <li><small>Entry 1</small><span>in progress</span></li>
-        <li><small>Entry 2</small><span>in progress</span></li>
-        <li><small>Entry 3</small><span>in progress</span></li>
+      <p class="sub">Each entry shows what it does, how it was made, and how to make your own.</p>
+      <ul class="slots" aria-label="Entries">
+        <li class="live"><a href="/projects/enigma/"><small>Entry 001</small><span>Enigma</span><em>A teardown in scroll: the machine comes apart, then you type on it.</em></a></li>
+        <li><small>Entry 002</small><span>in progress</span></li>
+        <li><small>Entry 003</small><span>in progress</span></li>
       </ul>
     </section>
   </main>

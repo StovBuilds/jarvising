@@ -8,10 +8,31 @@ repo is the holding page: a single dictionary-entry landing page, no framework,
 no third-party requests.
 
 ```
-public/            the site (static). index.html, fonts, og.png, robots, sitemap, llms.txt
-functions/         Cloudflare Pages Functions: _middleware.js = canonical-host 301
-tools/             render-og.mjs regenerates og.png + apple-touch-icon.png from tools/og.html
+index.html                    the holding page (hand-written HTML, no JS)
+projects/<slug>/index.html    entry page: what it does / how it was made / how to make your own
+projects/<slug>/live/         the live piece (mounts a React/three bundle from src/<slug>/)
+src/<slug>/                   the piece's TypeScript
+public/                       static: fonts, og images, _headers, robots, sitemap, llms.txt,
+                              projects/<slug>/{hero.jpg,og.png}
+functions/_middleware.js      Cloudflare Pages Function: canonical-host 301
+tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test)
 ```
+
+Vite multi-page build (`vite.config.ts` lists every HTML entry). The hand-written
+pages stay JS-free; only `live/` pages load a bundle. `bun run typecheck` is
+strict TS.
+
+## Entries
+
+| # | Slug | What | Origin |
+|---|---|---|---|
+| 001 | `enigma` | Scroll-driven procedural Three.js teardown of the Enigma I, ending in a faithful typeable machine | ported from `jstov/src/pages/lab/Enigma.tsx` (lab experiment 008, 2026-08-27); links changed, nothing else |
+
+Adding an entry: copy `projects/enigma/` (entry page + live shell), put the code
+in `src/<slug>/`, add both HTML files to `rollupOptions.input`, render
+`public/projects/<slug>/{hero.jpg,og.png}`, add the card to the home page's
+"See also" block, and add both URLs to `public/sitemap.xml` + `public/llms.txt`
+(CI checks every sitemap URL has a built page).
 
 ## Hosting
 

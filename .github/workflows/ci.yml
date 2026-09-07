@@ -10,19 +10,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
       - run: bun run build
       - name: sanity-check dist
         run: |
           set -e
-          test -f dist/index.html
-          test -f dist/_headers
-          test -f dist/og.png
-          test -f dist/robots.txt
-          test -f dist/sitemap.xml
-          test -f dist/llms.txt
+          for f in index.html projects/enigma/index.html projects/enigma/live/index.html \
+                   _headers og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png; do
+            test -f "dist/$f" || { echo "missing dist/$f"; exit 1; }
+          done
           test -f functions/_middleware.js
-          # every self-hosted asset the page references must exist in dist
-          for f in $(grep -oE "(/fonts/[a-z0-9.-]+\.woff2|/favicon\.svg|/apple-touch-icon\.png|/og\.png)" dist/index.html | sort -u); do
+          # every self-hosted asset the hand-written pages reference must exist in dist
+          for f in $(grep -ohE "(/fonts/[a-z0-9.-]+\.woff2|/favicon\.svg|/apple-touch-icon\.png|/og\.png|/projects/enigma/[a-z0-9.-]+\.(png|jpg))" dist/index.html dist/projects/enigma/index.html | sort -u); do
             test -f "dist$f" || { echo "missing dist$f"; exit 1; }
+          done
+          # the live page must reference a built module, not the source path
+          grep -q 'src="/assets/' dist/projects/enigma/live/index.html
+          # every URL in the sitemap must have a built page behind it
+          for u in $(grep -oE '<loc>[^<]+</loc>' dist/sitemap.xml | sed -E 's#</?loc>##g; s#https://jarvising.com##'); do
+            test -f "dist${u}index.html" || { echo "sitemap URL without a page: $u"; exit 1; }
           done
           node -e "import('./functions/_middleware.js').then(m => { if (typeof m.onRequest !== 'function') process.exit(1) })"

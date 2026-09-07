@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enigma — entry 001 · Jarvising</title>
+<meta name="description" content="Entry 001: a scroll-driven teardown of the Enigma I that ends in a faithful machine you can type on. What it does, how it was made, and how to make your own.">
+<link rel="canonical" href="https://jarvising.com/projects/enigma/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Jarvising">
+<meta property="og:title" content="Enigma — entry 001">
+<meta property="og:description" content="A scroll-driven teardown of the Enigma I that ends in a faithful machine you can type on. What it does, how it was made, how to make your own.">
+<meta property="og:url" content="https://jarvising.com/projects/enigma/">
+<meta property="og:image" content="https://jarvising.com/projects/enigma/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Enigma — entry 001 · Jarvising">
+<meta name="twitter:description" content="Scroll to take an Enigma I apart, then type on a faithful one.">
+<meta name="twitter:image" content="https://jarvising.com/projects/enigma/og.png">
+<meta name="theme-color" content="#F6F1E7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": "https://jarvising.com/projects/enigma/#work",
+  "name": "Enigma — a teardown in scroll",
+  "url": "https://jarvising.com/projects/enigma/",
+  "description": "A scroll-driven, fully procedural Three.js teardown of the Enigma I that ends in a faithful, typeable machine.",
+  "author": { "@type": "Person", "name": "Jack Stovell", "url": "https://jstov.uk/" },
+  "datePublished": "2026-08-27",
+  "dateModified": "2026-09-07",
+  "isPartOf": { "@id": "https://jarvising.com/#website" },
+  "image": "https://jarvising.com/projects/enigma/og.png",
+  "keywords": ["Enigma", "Three.js", "WebGL", "scroll-driven", "procedural", "cipher"]
+}
+</script>
+
+<style>
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin-ext.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin-ext.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+  :root {
+    --paper: #F6F1E7; --paper-deep: #EFE8D9; --line: #DED5C2; --line-strong: #C9BEA5;
+    --ink: #1B1D20; --ink-soft: #4E5259; --ink-faint: #7A7E86;
+    --accent: #B5451B; --accent-soft: #F1D9CC; --code-bg: #1B1D20; --code-ink: #EDE7DA;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #15171A; --paper-deep: #1C1F23; --line: #2C3036; --line-strong: #3B4048;
+      --ink: #EDE7DA; --ink-soft: #B8B2A6; --ink-faint: #858079;
+      --accent: #E8845A; --accent-soft: #3A2A22; --code-bg: #0E1012; --code-ink: #DDD6C8;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--accent-soft); }
+  a { color: inherit; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 72px 24px 56px; min-height: 100vh; display: flex; flex-direction: column; }
+  @media (max-width: 600px) { .wrap { padding-top: 40px; } }
+
+  .fade { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .fade-2 { animation-delay: .09s; } .fade-3 { animation-delay: .18s; } .fade-4 { animation-delay: .27s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade, .fade-2, .fade-3, .fade-4 { animation: none; } }
+
+  .running-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); }
+  .running-head b { font-weight: 600; color: var(--ink-soft); }
+  .running-head a { text-decoration: none; }
+  .running-head a:hover { color: var(--ink); }
+
+  .entry { margin-top: 48px; }
+  .headword { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 600; font-variation-settings: 'opsz' 144; font-size: clamp(56px, 12vw, 104px); line-height: .95; letter-spacing: -0.03em; margin: 0; color: var(--ink); }
+  .headword .dot { color: var(--accent); }
+  .pron { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; color: var(--ink-soft); font-size: 17px; }
+  .pron .ipa { font-family: 'Fraunces', Georgia, serif; font-size: 20px; color: var(--ink); }
+  .pron .pos { font-family: 'Fraunces', Georgia, serif; font-style: italic; }
+  .pron .tag { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: 3px 9px 2px; font-weight: 600; }
+
+  .sense { margin: 32px 0 0; font-family: 'Fraunces', Georgia, serif; font-variation-settings: 'opsz' 40; font-size: clamp(22px, 3.4vw, 28px); line-height: 1.3; letter-spacing: -0.008em; font-weight: 500; max-width: 26em; }
+
+  /* hero figure = the door into the live piece */
+  .door { margin: 32px 0 0; position: relative; border-radius: 18px; overflow: hidden; background: #0b0b0d; border: 1px solid var(--line); aspect-ratio: 16 / 9; display: block; text-decoration: none; color: #ddd6c8; }
+  .door img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .92; transition: opacity .3s, transform .6s cubic-bezier(.2,.7,.2,1); }
+  .door:hover img { opacity: 1; transform: scale(1.015); }
+  .door .cta { position: absolute; left: 20px; bottom: 18px; right: 20px; display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+  .door .btn { background: #d9a441; color: #0b0b0d; font-weight: 700; font-size: 14px; letter-spacing: .04em; padding: 12px 18px; border-radius: 999px; white-space: nowrap; }
+  .door:hover .btn { background: #ffd98a; }
+  .door .meta { font-family: 'Inter', system-ui, sans-serif; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #a89f8e; text-align: right; }
+  @media (max-width: 520px) { .door .meta { display: none; } .door { aspect-ratio: 4 / 3; } }
+  .door:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  .facts { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 600px) { .facts { grid-template-columns: repeat(2, 1fr); } }
+  .facts li { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 4px; }
+  .facts small { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .facts span { font-family: 'Fraunces', Georgia, serif; font-size: 18px; color: var(--ink); line-height: 1.2; }
+
+  .note { margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 112px 1fr; gap: 6px 20px; align-items: baseline; }
+  @media (max-width: 560px) { .note { grid-template-columns: 1fr; gap: 6px; } }
+  .note h2 { margin: 0; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding-top: 5px; }
+  .note > div { color: var(--ink-soft); max-width: 62ch; min-width: 0; }
+  code { font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace; font-size: .88em; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; overflow-wrap: anywhere; color: var(--ink); }
+  pre code { background: none; border: 0; padding: 0; }
+  .note p { margin: 0 0 12px; }
+  .note p:last-child { margin-bottom: 0; }
+  .note i { font-family: 'Fraunces', Georgia, serif; color: var(--ink); font-size: 1.04em; }
+  .note strong { color: var(--ink); font-weight: 600; }
+  .note ul { margin: 0; padding-left: 18px; }
+  .note li { margin: 6px 0; }
+
+  .recipe { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .recipe li { counter-increment: step; position: relative; padding-left: 40px; margin: 0 0 16px; }
+  .recipe li::before { content: counter(step); position: absolute; left: 0; top: 1px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 20px; line-height: 1; color: var(--accent); }
+  .recipe b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 2px; }
+
+  pre { margin: 14px 0 0; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 16px 18px; font-size: 12.5px; line-height: 1.55; overflow-x: auto; font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace; }
+  pre .c { color: #8a8272; }
+  pre .k { color: #d9a441; }
+  .caption { font-size: 12.5px; color: var(--ink-faint); margin-top: 8px; }
+
+  .see-also { margin-top: 48px; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 18px; padding: 24px 28px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; }
+  .see-also h2 { margin: 0; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .see-also p { margin: 6px 0 0; font-family: 'Fraunces', Georgia, serif; font-size: 19px; color: var(--ink); }
+  .see-also a.back { text-decoration: none; color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); font-size: 15px; }
+  .see-also a.back:hover { color: var(--ink); border-color: var(--ink); }
+
+  footer { margin-top: auto; padding-top: 48px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 13.5px; color: var(--ink-faint); }
+  footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  footer a:hover { color: var(--ink); border-color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="running-head fade">
+    <span><a href="/"><b>jarvising</b></a> · entry 001</span>
+    <span>jarvising.com</span>
+  </header>
+
+  <main class="entry">
+    <h1 class="headword fade fade-2">e<span class="dot">·</span>nig<span class="dot">·</span>ma</h1>
+    <div class="pron fade fade-2">
+      <span class="ipa" lang="en-fonipa">/ɪˈnɪɡ.mə/</span>
+      <span class="pos">noun; here, a teardown in scroll</span>
+      <span class="tag">Entry 001</span>
+    </div>
+
+    <p class="sense fade fade-3">A scroll-driven teardown of the Enigma I, from oak lid to reflector, ending in a faithful machine you can type on.</p>
+
+    <a class="door fade fade-3" href="/projects/enigma/live/">
+      <img src="/projects/enigma/hero.jpg" width="1600" height="900" alt="The Enigma I lifted apart into six layers: oak lid, rotor basket, lamp panel, keyboard, plug board and case, lit from above against black." fetchpriority="high">
+      <span class="cta">
+        <span class="btn">Open the teardown →</span>
+        <span class="meta">WebGL · about two minutes<br>sound optional · keyboard works</span>
+      </span>
+    </a>
+
+    <ul class="facts fade fade-4" aria-label="Facts">
+      <li><small>Stack</small><span>Three.js + TypeScript</span></li>
+      <li><small>Assets</small><span>None. All procedural</span></li>
+      <li><small>Code</small><span>≈1,800 lines</span></li>
+      <li><small>First shipped</small><span>27 Aug 2026</span></li>
+    </ul>
+
+    <section class="note fade fade-4">
+      <h2>What it does</h2>
+      <div>
+        <p>You scroll, and the machine comes apart. Seven chapters run from the hero orbit through a timeline of Scherbius's patent, then the oak case lifts into six labelled layers, the middle rotor slides offstage and explodes into its own stack, one keypress is traced as glowing current through plug board, rotors and reflector and back, and the rotors step like an odometer.</p>
+        <p>The last beat is a working <i>Enigma I</i>: rotors I·II·III, reflector B, ten plug pairs, the double-step anomaly included. Type on your keyboard or tap the keys; the lamps answer and a paper tape keeps both alphabets. "Copy secret link" bundles the start position and ciphertext into a URL, and because Enigma is reciprocal, whoever opens it watches the machine type the plaintext back out.</p>
+        <p>Sound is opt-in and synthesised live: key clacks, lamp thunks, rotor ratchets, a lid creak, and faint Morse under the hero. No audio files either.</p>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>How it was made</h2>
+      <div>
+        <p><strong>Everything is generated at runtime.</strong> The oak grain, the crinkle-paint chassis, the alphabet rings and the key caps are all 2D canvases drawn on the fly and used as textures. The machine is built from primitives as named parts, each carrying a resting position, a full explode vector and a small lag, so one scalar can pull the whole thing apart in a staggered order.</p>
+        <p><strong>One number drives the page.</strong> Scroll position becomes a 0–1 progress value, smoothed per frame. Every effect is a smoothstep window on that value: the explode envelope, the lid hinge, the rotor solo, the two current tubes revealed by advancing their draw range, the camera path sampled from ten orbit keyframes, the chapter copy, the callout fade-ins. Nothing is on a timer, so scrubbing backwards just works.</p>
+        <p><strong>The labels are 3D points.</strong> Each callout is anchored to a part in world space, projected through the camera each frame, and drawn as an HTML label with an SVG leader line back to the projected point.</p>
+        <p><strong>The cipher is separate from the picture.</strong> An 80-line class holds the historical wirings and does the encryption; the scene only asks it which lamp lit. The live current trace reuses the same path factory the authored chapter uses, evaluated at an explode value of zero.</p>
+        <p>Built with Claude Code from a one-line brief, in the same session that shipped it as experiment 008 on jstov.uk's lab. Ported here unchanged apart from its links.</p>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>How to make your own</h2>
+      <div>
+        <ol class="recipe">
+          <li><b>Write the mechanism first, with no graphics.</b> A pure function you can test against a known vector. For Enigma: at AAA with no plugs, pressing A five times gives BDZGO.</li>
+          <li><b>Model in named parts, not one mesh.</b> Give every part a base position, an explode direction and a lag. The teardown is then <code>base + dir × clamp(e × (1 + lag) − lag)</code> for one scalar <code>e</code>.</li>
+          <li><b>Derive everything from one progress value.</b> Read scroll, normalise to 0–1, ease it a little each frame, and express each beat as a smoothstep between two progress values. Never start a timer.</li>
+          <li><b>Keyframe the camera in spherical coordinates.</b> A short list of <code>{p, theta, phi, r, target}</code> entries, interpolated by progress, reads far better than any free-fly control.</li>
+          <li><b>Put labels in 3D and project them.</b> Anchor to a part, call <code>project()</code>, position an HTML element, draw the leader line in one SVG you rewrite per frame.</li>
+          <li><b>Add a debug parameter that pins progress.</b> <code>?p=0.42</code> lets you screenshot any beat on a machine with software GL, where smoothed values never settle.</li>
+          <li><b>Make sound opt-in and synthesised.</b> Create the AudioContext on the user's click, and build clacks and ratchets from filtered noise bursts. Zero downloads, and no autoplay policy to fight.</li>
+        </ol>
+        <p>The whole cipher, for the taking:</p>
+<pre><span class="c">// Enigma I: rotors I·II·III, reflector B. Historical wirings, public domain.</span>
+<span class="k">const</span> WIRINGS = [<span class="c">"EKMFLGDQVZNTOWYHXUSPAIBRCJ"</span>, <span class="c">"AJDKSIRUXBLHWTMCQGZNPYFVOE"</span>, <span class="c">"BDFHJLCPRTXVZNYEIWGAKMUSQO"</span>];
+<span class="k">const</span> NOTCHES = [16, 4, 21];           <span class="c">// Q, E, V</span>
+<span class="k">const</span> REFLECTOR = <span class="c">"YRUHQSLDPXNGOKMIEBFZCWVJAT"</span>;
+<span class="k">const</span> mod = (n) =&gt; ((n % 26) + 26) % 26;
+
+<span class="k">const</span> fwd = WIRINGS.map((w) =&gt; [...w].map((c) =&gt; c.charCodeAt(0) - 65));
+<span class="k">const</span> rev = fwd.map((f) =&gt; { <span class="k">const</span> r = []; f.forEach((v, i) =&gt; (r[v] = i)); <span class="k">return</span> r; });
+<span class="k">const</span> ref = [...REFLECTOR].map((c) =&gt; c.charCodeAt(0) - 65);
+<span class="k">let</span> pos = [0, 0, 0];                  <span class="c">// left → right, 0 = 'A' in the window</span>
+
+<span class="k">function</span> step() {                     <span class="c">// includes the double-step anomaly</span>
+  <span class="k">if</span> (pos[1] === NOTCHES[1]) { pos[0] = mod(pos[0] + 1); pos[1] = mod(pos[1] + 1); }
+  <span class="k">else if</span> (pos[2] === NOTCHES[2]) pos[1] = mod(pos[1] + 1);
+  pos[2] = mod(pos[2] + 1);
+}
+
+<span class="k">function</span> press(letter, plug = new Map()) {
+  <span class="k">let</span> x = letter.toUpperCase().charCodeAt(0) - 65;
+  step();
+  x = plug.get(x) ?? x;
+  <span class="k">for</span> (<span class="k">let</span> i = 2; i &gt;= 0; i--) x = mod(fwd[i][mod(x + pos[i])] - pos[i]);
+  x = ref[x];
+  <span class="k">for</span> (<span class="k">let</span> i = 0; i &lt;= 2; i++) x = mod(rev[i][mod(x + pos[i])] - pos[i]);
+  x = plug.get(x) ?? x;
+  <span class="k">return</span> String.fromCharCode(65 + x);
+}</pre>
+        <p class="caption">Plug pairs go in the map both ways. Reset <code>pos</code> to the same start position to decrypt.</p>
+      </div>
+    </section>
+
+    <section class="see-also">
+      <div>
+        <h2>See also</h2>
+        <p>Entry 002 is in progress.</p>
+      </div>
+      <a class="back" href="/">← all entries</a>
+    </section>
+  </main>
+
+  <footer class="fade fade-4">
+    <span>© 2026 Jarvising. Built in the open.</span>
+    <span>by <a href="https://jstov.uk/" rel="me">Jack Stovell</a> · <a href="https://adaptprogressevolve.com/">adaptprogressevolve.com</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
