@@ -135,13 +135,30 @@ for bank in range(3):
 # and different banks ran different wheel orders — vary by bank + row.
 ROW_TYPES = ["I", "II", "III", "IV", "V", "I", "II", "III", "V"]
 
-drums = {k: [] for k in M_DRUM}
+# Drums are LINKED DUPLICATES (one mesh datablock per colour) parented to one
+# Empty, which the exporter turns into EXT_mesh_gpu_instancing — five
+# InstancedMeshes at runtime, so each drum can spin on its own axis. Do not
+# transform_apply them (shared data); the rotation lives in the instance.
+drum_proto = {}
+for k, m in M_DRUM.items():
+    bpy.ops.mesh.primitive_cylinder_add(vertices=28, radius=0.58, depth=0.62, location=(0, 0, -50))
+    o = bpy.context.active_object
+    o.name = f"drumProto_{k}"; o.data.name = f"drum_{k}"
+    o.data.materials.append(m)
+    drum_proto[k] = o
+drums_parent = bpy.data.objects.new("drums", None)
+bpy.context.scene.collection.objects.link(drums_parent)
+drum_instances = []
 nuts, rings = [], []
 for ri, zc in enumerate(ROW_Z):
     t = ROW_TYPES[ri]
     for x in COL_X:
-        d = cyl("drum", 0.58, 0.62, (x, FACE - 0.31, zc), M_DRUM[t])
-        drums[t].append(d)
+        d = bpy.data.objects.new(f"drum_{t}", drum_proto[t].data)
+        bpy.context.scene.collection.objects.link(d)
+        d.location = (x, FACE - 0.31, zc)
+        d.rotation_euler = (math.pi / 2, 0, 0)
+        d.parent = drums_parent
+        drum_instances.append(d)
         ring = cyl("ring", 0.62, 0.10, (x, FACE - 0.05, zc), M_BRASS, verts=28)
         rings.append(ring)
         nut = cyl("nut", 0.13, 0.18, (x, FACE - 0.62 - 0.09, zc), M_STEEL, verts=12)
@@ -153,10 +170,8 @@ for ri, zc in enumerate(ROW_Z):
         b = cyl("band", 0.585, 0.12, (x, FACE - 0.50, zc), M_LABEL, verts=28)
         bands.append(b)
 
-for k, lst in drums.items():
-    if lst:
-        o = join(lst, f"drums_{k}")
-        apply_all(o); parts.append(o)
+for o in drum_proto.values():
+    bpy.data.objects.remove(o)          # prototypes gone; the mesh data lives on in the instances
 o = join(rings, "rings"); apply_all(o); parts.append(o)
 o = join(nuts, "nuts"); apply_all(o); parts.append(o)
 o = join(bands, "bands"); apply_all(o); parts.append(o)
@@ -179,11 +194,12 @@ o = join(switches, "switches"); apply_all(o); parts.append(o)
 
 # ── export ─────────────────────────────────────────────────────────────────
 for o in bpy.data.objects:
-    o.select_set(o in parts)
+    o.select_set(o in parts or o is drums_parent or o in drum_instances)
 bpy.ops.export_scene.gltf(
     filepath=args.out,
     export_format="GLB",
     use_selection=True,
+    export_gpu_instances=True,
     export_apply=True,
     export_yup=True,
     export_cameras=False,
@@ -192,8 +208,8 @@ bpy.ops.export_scene.gltf(
     export_texcoords=False,
     export_materials="EXPORT",
 )
-tris = sum(len(p.data.polygons) for p in parts)
-print(f"[bombe] parts={len(parts)} faces={tris} → {args.out}")
+tris = sum(len(p.data.polygons) for p in parts) + sum(len(d.data.polygons) for d in drum_instances)
+print(f"[bombe] parts={len(parts)} drums={len(drum_instances)} (instanced, {len(drum_proto)} meshes) faces={tris} → {args.out}")
 
 # ── optional preview render (Cycles CPU, transparent film) ─────────────────
 if args.preview:

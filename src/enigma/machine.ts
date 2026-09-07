@@ -147,6 +147,7 @@ export function buildMachine(lib?: PartsLib): MachineBuild {
   const bakelite = new THREE.MeshStandardMaterial({ color: "#3a2b20", roughness: 0.5, metalness: 0.1 });
   const nickel = new THREE.MeshStandardMaterial({ color: "#9aa0a8", roughness: 0.3, metalness: 0.9 });
   const leather = new THREE.MeshStandardMaterial({ color: "#2a1a10", roughness: 0.85, metalness: 0.02 });
+  const ivory = new THREE.MeshStandardMaterial({ color: "#efe8d6", roughness: 0.45, metalness: 0.0 });
 
   const addPart = (name: string, dir: THREE.Vector3, lag: number): THREE.Group => {
     const g = new THREE.Group();
@@ -363,10 +364,17 @@ export function buildMachine(lib?: PartsLib): MachineBuild {
         const cap = new THREE.Mesh(lib!.get("keyCap")!, blackMetal);
         cap.position.y = 0.54;
         key.add(cap);
-        const face = new THREE.Mesh(new THREE.CircleGeometry(0.086, 24), capFace);
-        face.rotation.x = -Math.PI / 2;
-        face.position.y = 0.54 + 0.0175 + 0.002;
-        key.add(face);
+        if (has(`keyLetter_${ch}`)) {
+          // engraved: the letter is real geometry standing 4 mm proud of the cap
+          const letter = new THREE.Mesh(lib!.get(`keyLetter_${ch}`)!, ivory);
+          letter.position.y = 0.54 + 0.0175 + 0.004;
+          key.add(letter);
+        } else {
+          const face = new THREE.Mesh(new THREE.CircleGeometry(0.086, 24), capFace);
+          face.rotation.x = -Math.PI / 2;
+          face.position.y = 0.54 + 0.0175 + 0.002;
+          key.add(face);
+        }
       } else {
         const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.035, 22), [blackMetal, capFace, blackMetal]);
         cap.position.y = 0.54;

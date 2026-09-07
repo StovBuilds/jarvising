@@ -216,7 +216,27 @@ wheel = cyl(0.3, 0.055, (0, 0, 0), axis="X", verts=80)
 finish(wheel); knurl(wheel, (1, 0, 0), 80, 0.018)
 rotor_wheel = join([wheel], "rotorWheel", uv=None)
 parts.append(rotor_wheel)
-rotor_ring = join([cyl(0.27, 0.085, (0, 0, 0), axis="X", verts=52)], "rotorRing", uv=None)  # cylinder UVs: side strip wraps once
+rotor_ring = join([cyl(0.27, 0.085, (0, 0, 0), axis="X", verts=52)], "rotorRing", uv=None)
+# Explicit UVs: the runtime letter canvas expects u = angle around the axis
+# (0..1, one full wrap) and v = position across the ring width (0..1). Blender's
+# primitive UVs put the side strip in half the texture with the caps over the
+# other half, which sliced the letters and streaked cap texels across them.
+bm = bmesh.new(); bm.from_mesh(rotor_ring.data)
+uv_layer = bm.loops.layers.uv.verify()
+xmin = min(v.co.x for v in bm.verts); xmax = max(v.co.x for v in bm.verts)
+for f in bm.faces:
+    if abs(f.normal.x) > 0.9:                       # cap: park it on one texel column
+        for l in f.loops: l[uv_layer].uv = (0.001, 0.5)
+        continue
+    us = []
+    for l in f.loops:
+        ang = math.atan2(l.vert.co.z, l.vert.co.y)  # around the X axis (Blender Y/Z plane)
+        us.append((ang / (2 * math.pi)) % 1.0)
+    if max(us) - min(us) > 0.5:                     # seam face: unwrap past 1.0 instead of folding back
+        us = [u + 1.0 if u < 0.5 else u for u in us]
+    for l, u in zip(f.loops, us):
+        l[uv_layer].uv = (u, (l.vert.co.x - xmin) / (xmax - xmin))
+bm.to_mesh(rotor_ring.data); bm.free()
 parts.append(rotor_ring)
 core = cyl(0.24, 0.1, (0, 0, 0), axis="X", verts=32, bevel=0.01)
 core_objs = [core] + [cyl(0.012, 0.012, (-0.052, math.cos(a) * 0.19, math.sin(a) * 0.19), axis="X", verts=6) for a in [i / 26 * 2 * math.pi for i in range(26)]]
@@ -236,6 +256,21 @@ parts.append(entry)
 # ── power knob (chassis-local, centred at knob base position) ──────────────
 knob = join([cyl(0.14, 0.05, (0, 0, 0), verts=24, r2=0.16), box((0.06, 0.06, 0.2), (0, 0.045, 0), bevel=0.008)], "knob", uv=None)
 parts.append(knob)
+
+# ── key letters: real geometry, one part per letter (face up, cap-local) ──
+for ch in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+    bpy.ops.object.text_add(location=(0, 0, 0))
+    t = bpy.context.active_object
+    t.data.body = ch
+    t.data.size = 0.125
+    t.data.extrude = 0.004
+    t.data.align_x = "CENTER"
+    t.data.align_y = "CENTER"
+    bpy.ops.object.convert(target="MESH")
+    t = bpy.context.active_object
+    t.name = f"keyLetter_{ch}"; t.data.name = t.name
+    finish(t)
+    parts.append(t)
 
 # ── export ─────────────────────────────────────────────────────────────────
 for o in bpy.data.objects:

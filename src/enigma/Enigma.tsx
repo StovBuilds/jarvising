@@ -312,6 +312,9 @@ const Enigma = () => {
     };
 
     let loadBombe: (() => void) | null = null;
+    const drumSets: { mesh: THREE.InstancedMesh; rest: Float32Array; ys: number[]; row?: number[] }[] = [];
+    let drumAngle = 0;
+    const drumM = new THREE.Matrix4(), drumR = new THREE.Matrix4();
     const forced = parseFloat(new URLSearchParams(window.location.search).get("p") ?? "");
     const targetProgress = () => {
       if (!Number.isNaN(forced)) return Math.min(1, Math.max(0, forced));
@@ -425,6 +428,31 @@ const Enigma = () => {
       bombeAnchor.position.copy(room.bombeSlot.position).add(new THREE.Vector3(-2.8, 9.5, -1.5));
       scene.add(bombeAnchor);
       build.anchors.set("bombe", bombeAnchor);
+      // Room props (tools/blender/props.py): small, so they load right after
+      // first paint; runtime materials by part name, like the machine.
+      {
+        const propMats: Record<string, THREE.Material> = {
+          telephone: new THREE.MeshStandardMaterial({ color: "#151315", roughness: 0.25, metalness: 0.05 }),
+          typewriter: new THREE.MeshStandardMaterial({ color: "#2f3a33", roughness: 0.7, metalness: 0.3 }),
+          stove: new THREE.MeshStandardMaterial({ color: "#17181a", roughness: 0.6, metalness: 0.55 }),
+          coat: new THREE.MeshStandardMaterial({ color: "#4a4636", roughness: 1.0, metalness: 0.0 }),
+        };
+        new GLTFLoader().load("/models/props.glb", (gltf) => {
+          if (dead) return;
+          gltf.scene.traverse((o) => {
+            const m = o as THREE.Mesh;
+            if (!m.isMesh) return;
+            const slot = room.propSlots[m.name];
+            if (!slot) return;
+            const mesh = new THREE.Mesh(m.geometry, propMats[m.name] ?? new THREE.MeshStandardMaterial({ color: "#333" }));
+            mesh.position.copy(slot.position);
+            mesh.rotation.y = slot.rotationY;
+            mesh.castShadow = shadows; mesh.receiveShadow = shadows;
+            scene.add(mesh);
+          });
+        }, undefined, () => { /* dressing only */ });
+      }
+
       let bombeRequested = false;
       loadBombe = () => {
         if (bombeRequested) return;
@@ -437,7 +465,20 @@ const Enigma = () => {
           g.traverse((o) => {
             const m = o as THREE.Mesh;
             if (m.isMesh) { m.castShadow = shadows; m.receiveShadow = shadows; }
+            const im = o as THREE.InstancedMesh;
+            if (im.isInstancedMesh) {
+              // one InstancedMesh per drum colour; remember each drum's rest
+              // matrix and which row of its bank it sits in (0 = top = fast)
+              const rest = new Float32Array(im.instanceMatrix.array);
+              const ys: number[] = [];
+              const mtx = new THREE.Matrix4(), pos = new THREE.Vector3();
+              for (let i = 0; i < im.count; i++) { mtx.fromArray(rest, i * 16); pos.setFromMatrixPosition(mtx); ys.push(pos.y); }
+              drumSets.push({ mesh: im, rest, ys });
+            }
           });
+          // rows: nine distinct heights, top first; row-in-bank = index % 3
+          const allY = [...new Set(drumSets.flatMap((d) => d.ys.map((y) => Math.round(y * 10) / 10)))].sort((a, b2) => b2 - a);
+          for (const d of drumSets) d.row = d.ys.map((y) => allY.indexOf(Math.round(y * 10) / 10) % 3);
           scene.add(g);
         }, undefined, () => { /* no bombe: the chapter still reads from the copy */ });
       };
@@ -666,6 +707,24 @@ const Enigma = () => {
         if (fade <= 0) {
           killTrace();
           pulse.visible = false;
+        }
+      }
+
+      // the bombe runs while the hut chapters play: top drum of each stack
+      // spins, the middle steps once per revolution, the bottom sits still
+      if (drumSets.length && b > 0.79 && !reduced) {
+        drumAngle += dt * 7;
+        const midAngle = Math.floor(drumAngle / (Math.PI * 2)) * (Math.PI * 2 / 26);
+        for (const d of drumSets) {
+          for (let i = 0; i < d.mesh.count; i++) {
+            const r = d.row?.[i] ?? 2;
+            if (r === 2) continue;
+            drumM.fromArray(d.rest, i * 16);
+            drumR.makeRotationY(r === 0 ? drumAngle : midAngle); // the shared drum mesh's own axis is Y
+            drumM.multiply(drumR);
+            d.mesh.setMatrixAt(i, drumM);
+          }
+          d.mesh.instanceMatrix.needsUpdate = true;
         }
       }
 

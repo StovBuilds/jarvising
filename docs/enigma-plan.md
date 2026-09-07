@@ -50,16 +50,21 @@ Procedural primitives cap the fidelity. Remaining candidates, in order of payoff
    ⚠️ Trap hit: quantised positions are normalised int16 with the scale on the
    node — baking the node matrix into them clamps at 1.0 and flattened the
    case/lid/deck. The loader now converts positions to float first and the
-   library is exported unquantised. Still to do on the machine: rotor-ring
-   letter orientation check at close range, engraved (geometry) key letters,
-   the rotor cover plate with three windows (needs choreography changes).
-2. ~~The bombe~~ — done (above). Next for it: a letter ring texture on the
-   drum faces, the back-side menu plugging for a reverse shot, and a slow drum
-   spin during chapter 008 (drums are joined per colour; spinning needs them
-   as instances — export with linked duplicates + `EXT_mesh_gpu_instancing`).
-3. Room dressing that primitives do badly: the pendant lamp's enamel shade,
-   a Bakelite telephone, a Typex-style typewriter on the second desk, a
-   coat on a hook, a stove.
+   library is exported unquantised. Engraved key letters added the same day
+   (26 `keyLetter_X` parts from Blender text). Not done: the rotor cover
+   plate with three windows (needs choreography changes).
+2. ~~The bombe~~ — done, and it **runs** (2026-09-07): drums exported as
+   linked duplicates under one Empty with `export_gpu_instances=True` →
+   `EXT_mesh_gpu_instancing` → five `InstancedMesh`es; the loop rewrites
+   instance matrices (rest × rotation about the shared mesh's own Y) while
+   beat > 0.79: top row spins, middle steps once per rev, bottom still. Not
+   done: a letter-ring texture on the drum faces, the back-side menu plugging.
+3. ~~Room dressing~~ — done: `tools/blender/props.py` → `public/models/props.glb`
+   (telephone, typewriter, stove, coat; 293 kB, `--no-quantize`), placed via
+   `room.propSlots`, loaded right after first paint, runtime materials by name.
+
+**Phase 2 is complete.** Assets total ≈ 1.56 MB (bombe 697 kB quantised,
+enigma parts 568 kB, props 293 kB), all reproducible from the three scripts.
 
 Budget: GLBs ≤ 2 MB total, quantised only (no Draco/meshopt while the CSP
 stays strict — see phase 2 note above); lazy-load anything not needed before

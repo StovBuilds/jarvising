@@ -12,6 +12,8 @@ export interface RoomBuild {
   root: THREE.Group;
   /** where the bombe (a lazily loaded GLB) stands: floor point + yaw */
   bombeSlot: { position: THREE.Vector3; rotationY: number };
+  /** where each prop from props.glb goes (base-centre point + yaw), by part name */
+  propSlots: Record<string, { position: THREE.Vector3; rotationY: number }>;
   /** where the pendant bulb hangs — put the key light here */
   lampPos: THREE.Vector3;
   /** second pendant, over the bombe — a plain point light will do */
@@ -456,5 +458,11 @@ export function buildRoom(): RoomBuild {
     root, lampPos, lampPos2, receivers,
     moonDir: new THREE.Vector3(-6.4, 3.6, WALL_Z),
     bombeSlot: { position: new THREE.Vector3(WALL_X - 2.9, FLOOR_Y + 0.12, 4.0), rotationY: -Math.PI / 2 }, // 19.4 long: z −5.7…13.7 stays inside the back wall
+    propSlots: {
+      telephone: { position: new THREE.Vector3(-4.9, DESK_Y, -2.4), rotationY: 0.35 },          // main desk, back-left
+      typewriter: { position: new THREE.Vector3(-11.5, DESK_Y, -2.2), rotationY: 0.12 },        // the second desk
+      stove: { position: new THREE.Vector3(-13.2, FLOOR_Y, -3.9), rotationY: 0.6 },             // back-left corner, flue into the wall
+      coat: { position: new THREE.Vector3(-WALL_X + 0.35, 9.6, 6.5), rotationY: Math.PI / 2 },   // hook on the left wall
+    },
   };
 }

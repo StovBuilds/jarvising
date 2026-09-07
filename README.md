@@ -18,7 +18,9 @@ src/<slug>/                   the piece's TypeScript
 public/                       static: fonts, og images, _headers, robots, sitemap, llms.txt,
                               projects/<slug>/{hero.jpg,og.png}
 functions/_middleware.js      Cloudflare Pages Function: canonical-host 301
-tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test)
+tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
+                              qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
+                              blender/*.py (parametric assets → public/models/*.glb via ~/bin/blender-run.mjs)
 ```
 
 Vite multi-page build (`vite.config.ts` lists every HTML entry). The hand-written
