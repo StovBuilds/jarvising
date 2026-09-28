@@ -23,7 +23,7 @@ self.addEventListener("activate", (e) => {
       const html = await shell.clone().text();
       await cache.put(SHELL, shell);
       const urls = new Set(MODELS);
-      for (const m of html.matchAll(/(?:src|href)="(\/assets\/[^"]+|\/fonts\/[^"]+|\/favicon\.svg)"/g)) urls.add(m[1]);
+      for (const m of html.matchAll(/(?:src|href)="(\/assets\/[^"]+|\/fonts\/[^"]+|\/favicon\.svg|\/analytics\.js)"/g)) urls.add(m[1]);
       const cssUrls = [...urls].filter((u) => u.endsWith(".css"));
       for (const css of cssUrls) {
         const r = await fetch(css).catch(() => null);
@@ -60,7 +60,7 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  if (/^\/(assets|fonts|models)\//.test(url.pathname) || url.pathname === "/favicon.svg") {
+  if (/^\/(assets|fonts|models)\//.test(url.pathname) || url.pathname === "/favicon.svg" || url.pathname === "/analytics.js") {
     e.respondWith((async () => {
       const cache = await caches.open(CACHE);
       const hit = await cache.match(req, { ignoreSearch: true });

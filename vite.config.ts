@@ -3,7 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import { resolve } from "node:path";
 
 // Multi-page build. The holding page and the entry pages are hand-written HTML
-// (no JS); only the live pieces mount a React/three bundle. public/ is copied
+// (no JS beyond the /analytics.js page counter in public/); only the live
+// pieces mount a React/three bundle. public/ is copied
 // through untouched (fonts, og images, _headers, robots, sitemap, llms.txt).
 export default defineConfig({
   plugins: [react()],

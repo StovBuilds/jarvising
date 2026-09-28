@@ -55,8 +55,9 @@
 </script>
 
 <style>
-  /* Self-hosted fonts. No third-party requests anywhere on this page, so
-     there is nothing to consent to and no banner. */
+  /* Self-hosted fonts. No third-party requests anywhere on this page, and the
+     only script is /analytics.js: anonymous first-party page counts, no
+     cookies, no third parties. Nothing to consent to, so no banner. */
   @font-face {
     font-family: 'Fraunces';
     src: url('/fonts/fraunces-latin.woff2') format('woff2');
@@ -323,7 +324,11 @@
   }
   footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
   footer a:hover { color: var(--ink); border-color: var(--ink); }
+  footer .privacy { flex-basis: 100%; }
+  footer button { font: inherit; color: var(--ink-soft); background: none; border: 0; border-bottom: 1px solid var(--line-strong); padding: 0; cursor: pointer; }
+  footer button:hover { color: var(--ink); border-color: var(--ink); }
 </style>
+<script src="/analytics.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -378,6 +383,7 @@
     <span>© 2026 Jarvising. Built in the open.</span>
     <span>by <a href="https://jstov.uk/" rel="me">Jack Stovell</a> · <a href="https://adaptprogressevolve.com/">adaptprogressevolve.com</a></span>
     <span>Operated by <a href="https://adaptprogressevolve.com/">Adapt Progress Evolve Limited</a>. Registered in England and Wales, company no. 10047328. VAT GB362654684.</span>
+    <span class="privacy" id="privacy">Privacy: this site counts page views itself, anonymously. No cookies, no IP addresses, no third parties, nothing to consent to. <button type="button" data-analytics-optout hidden>Switch page counts off for this browser</button></span>
   </footer>
 
 </div>

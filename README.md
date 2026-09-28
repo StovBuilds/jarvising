@@ -5,26 +5,30 @@
 
 An open portfolio of test projects, published as they are built. The home page
 is the dictionary entry; each project is an entry page plus a live piece. No
-third-party requests anywhere (fonts self-hosted, no analytics).
+third-party requests anywhere (fonts self-hosted; analytics are anonymous
+first-party page counts, no cookies, no third parties; see [Analytics](#analytics)).
 
 Public repo (2026-09-07): the site says "how to make your own", so the source is
 here to read. Live at [jarvising.com](https://jarvising.com/).
 
 ```
-index.html                    the holding page (hand-written HTML, no JS)
+index.html                    the holding page (hand-written HTML; only script is /analytics.js)
 projects/<slug>/index.html    entry page: what it does / how it was made / how to make your own
 projects/<slug>/live/         the live piece (mounts a React/three bundle from src/<slug>/)
 src/<slug>/                   the piece's TypeScript
 public/                       static: fonts, og images, _headers, robots, sitemap, llms.txt,
                               projects/<slug>/{hero.jpg,og.png}
 functions/_middleware.js      Cloudflare Pages Function: canonical-host 301
+functions/api/track.js        POST: first-party analytics collector (D1 `jarvising-events`)
+functions/api/export-data.js  GET: aggregates for the Jarvis dashboard (x-api-key)
+migrations/                   D1 schema (site_events)
 tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
                               qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
                               blender/*.py (parametric assets → public/models/*.glb via ~/bin/blender-run.mjs)
 ```
 
 Vite multi-page build (`vite.config.ts` lists every HTML entry). The hand-written
-pages stay JS-free; only `live/` pages load a bundle. `bun run typecheck` is
+pages load no JS beyond the tiny `/analytics.js` tracker; only `live/` pages load a bundle. `bun run typecheck` is
 strict TS.
 
 ## Entries
@@ -81,6 +85,26 @@ progress for setup. Launch with a kiosk browser, e.g.
 chromium --kiosk --noerrdialogs --disable-infobars --autoplay-policy=no-user-gesture-required \
   "https://jarvising.com/projects/enigma/live/?kiosk=1"
 ```
+
+## Analytics
+
+Anonymous, first-party page counts, no cookies, no third parties, nothing to
+consent to. `public/analytics.js` (loaded `defer` on every page) posts small
+batches to `/api/track` on the same origin: event type (pageview, scroll depth,
+page_leave with visible seconds, clicks into an entry, outbound host + path), the
+path, the first external referrer, utm tags, a device bucket and a random per-tab
+id held in `sessionStorage`. The collector adds the country Cloudflare reports and
+never stores IP or user agent. It drops bots, headless browsers and the fleet VPS's
+own IP by design, so a request from the VPS answers `stored: 0`. Global Privacy
+Control, Do Not Track and the opt-out button in the home page footer
+(`localStorage.analytics_opt_out`) all switch it off. Kiosk boots are tagged
+`kiosk: true`; offline, events are simply dropped.
+
+Storage is D1 `jarvising-events` (binding `SITE_EVENTS`, schema in
+`migrations/`), bound on the Pages project with the `EXPORT_API_KEY` secret. The
+Jarvis dashboard (jarvis.jstov.uk/analytics) reads
+`/api/export-data?action=analytics&days=N` through claude-web-api's
+`SITE_DATA_JARVISING_*` target.
 
 ## Regenerating the social image
 

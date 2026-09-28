@@ -17,6 +17,10 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 - [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`.
 
+## Privacy
+
+- The site makes no third-party requests. Analytics are anonymous first-party page counts: no cookies, no IP addresses, no third parties, nothing to consent to. Opt-out switch in the home page footer; Global Privacy Control and Do Not Track are honoured.
+
 ## Related
 
 - [jstov.uk](https://jstov.uk/): Jack Stovell's personal site.
