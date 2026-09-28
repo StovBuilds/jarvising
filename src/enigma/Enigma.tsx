@@ -27,6 +27,7 @@ const SCROLL_VH = 1400;
 // first touch, service worker for offline. ?p= still pins progress for setup.
 const QS = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
 const KIOSK = QS.get("kiosk") === "1";
+const PROBE = QS.get("probe") === "1";
 const IDLE_MS = Math.max(3, Number(QS.get("idle") ?? 60)) * 1000;
 const START_MS = Math.min(IDLE_MS, 8000);
 
@@ -769,6 +770,11 @@ const Enigma = () => {
       if (Math.abs(camera.fov - (o.fov ?? FOV)) > 0.01) { camera.fov = o.fov ?? FOV; camera.updateProjectionMatrix(); }
       build.root.position.y = 7 * solo; // on the desk at rest; lifted clear during the rotor solo
       renderer!.render(scene, camera);
+      if (PROBE) {
+        // ?probe=1 only: tools/measure-rig.mjs reads the last frame's renderer.info
+        const i = renderer!.info, w = window as unknown as { __enigmaProbe?: Record<string, number> };
+        w.__enigmaProbe = { frames: (w.__enigmaProbe?.frames ?? 0) + 1, firstFrameMs: w.__enigmaProbe?.firstFrameMs ?? performance.now(), calls: i.render.calls, triangles: i.render.triangles, geometries: i.memory.geometries, textures: i.memory.textures, programs: i.programs?.length ?? 0 };
+      }
 
       // HUD
       if (readoutRef.current) {

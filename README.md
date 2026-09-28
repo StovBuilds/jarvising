@@ -26,14 +26,19 @@ tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 
                               qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
                               render-build-frames.mjs (an entry's build replayed: the piece rebuilt at
                               real commits, shot at a pinned ?p=, + manifest; config in build-frames/),
+                              measure-rig.mjs (home-page test-rig strips → public/projects/rig.json),
                               blender/*.py (parametric assets → public/models/*.glb via ~/bin/blender-run.mjs)
 ```
 
 Vite multi-page build (`vite.config.ts` lists every HTML entry). The hand-written
-pages load no JS beyond the tiny `/analytics.js` tracker and, on entry pages, the small
-`src/entry/scrubber.ts` (the "Etymology" build replay; reads `public/projects/<slug>/build/manifest.json`,
-and the section reads fully without it); only `live/` pages load a React/three bundle. `bun run typecheck` is
-strict TS.
+pages are progressive: they read fully with no JS, and load only small vanilla modules on top.
+Every page loads `/analytics.js` (the anonymous tracker) and `public/motion/early.js` + `transitions.css`
+(ink-bleed View Transitions, and the once-per-browser hot-metal headword). The home page also loads
+`src/home/exploded.ts` (the "anatomy" section) and `src/home/rig.ts` (test-rig strips). Entry pages load
+`src/entry/scrubber.ts` (the "Etymology" build replay, which reads `public/projects/<slug>/build/manifest.json`).
+Only `live/` pages load a React/three bundle. Every motion honours `prefers-reduced-motion`, and the CSP forbids
+inline scripts, so none are used. The full motion menu is in `docs/motion-directions.md`. `bun run typecheck`
+is strict TS.
 
 ## Entries
 
