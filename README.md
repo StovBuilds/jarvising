@@ -24,11 +24,15 @@ functions/api/export-data.js  GET: aggregates for the Jarvis dashboard (x-api-ke
 migrations/                   D1 schema (site_events)
 tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
                               qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
+                              render-build-frames.mjs (an entry's build replayed: the piece rebuilt at
+                              real commits, shot at a pinned ?p=, + manifest; config in build-frames/),
                               blender/*.py (parametric assets → public/models/*.glb via ~/bin/blender-run.mjs)
 ```
 
 Vite multi-page build (`vite.config.ts` lists every HTML entry). The hand-written
-pages load no JS beyond the tiny `/analytics.js` tracker; only `live/` pages load a bundle. `bun run typecheck` is
+pages load no JS beyond the tiny `/analytics.js` tracker and, on entry pages, the small
+`src/entry/scrubber.ts` (the "Etymology" build replay; reads `public/projects/<slug>/build/manifest.json`,
+and the section reads fully without it); only `live/` pages load a React/three bundle. `bun run typecheck` is
 strict TS.
 
 ## Entries

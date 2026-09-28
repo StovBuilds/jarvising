@@ -1,0 +1,110 @@
+{
+  "entry": "enigma",
+  "out": "public/projects/enigma/build",
+  "livePath": "/projects/enigma/live/",
+  "viewport": {
+    "width": 1200,
+    "height": 675
+  },
+  "progress": [
+    0.31,
+    0.45
+  ],
+  "brief": {
+    "text": "Enigma machine parallax — what it did / when created / how it works piece by piece.",
+    "label": "The brief, as logged",
+    "paraphrase": true,
+    "source": "claude-state.md, entry headed 2026-08-27 ~10:20Z (home-repo commit e31c6fc). The session's paraphrase of Jack's ask, not his words."
+  },
+  "milestones": [
+    {
+      "label": "Promise logged",
+      "iso": "2026-08-27T10:09:49Z",
+      "source": "commitment ledger, acbc1db5 opened"
+    },
+    {
+      "label": "State log: starting",
+      "iso": "2026-08-27T10:11:23Z",
+      "source": "home-repo commit e31c6fc (entry text says ~10:20Z)"
+    },
+    {
+      "label": "First commit",
+      "iso": "2026-08-27T10:38:30Z",
+      "sha": "6054eaf",
+      "repo": "jstov",
+      "source": "git -C jstov log 6054eaf"
+    },
+    {
+      "label": "Lint fix",
+      "iso": "2026-08-27T10:45:08Z",
+      "sha": "f99c5ba",
+      "repo": "jstov",
+      "source": "git -C jstov log f99c5ba"
+    },
+    {
+      "label": "Live, verified, promise closed",
+      "iso": "2026-08-27T10:46:08Z",
+      "source": "commitment ledger, acbc1db5 closed; state entry 'SHIPPED' committed 10:46:29Z as fdfa4e2 (entry text says ~11:55Z)"
+    }
+  ],
+  "frames": [
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "6054eaf",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/Enigma.tsx",
+        "dir": "src/pages/lab/enigma"
+      },
+      "note": "Rendered from the commit's own Enigma.tsx + enigma/* in a throwaway harness (react-router's Link stubbed); the rest of jstov.uk was not built."
+    },
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "8736c28",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/Enigma.tsx",
+        "dir": "src/pages/lab/enigma"
+      },
+      "note": "Rendered from the commit's own Enigma.tsx + enigma/* in a throwaway harness (react-router's Link stubbed); the rest of jstov.uk was not built."
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "164c3d0",
+      "kind": "site"
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "ce3614f",
+      "kind": "site"
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "734e5bb",
+      "kind": "site"
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "e442ad6",
+      "kind": "site"
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "46aba59",
+      "kind": "site"
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "9210418",
+      "kind": "site"
+    }
+  ]
+}
