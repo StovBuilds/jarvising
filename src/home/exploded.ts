@@ -209,3 +209,6 @@ if (sec) {
     else if (!rm.matches && !unmount) unmount = mount(sec);
   });
 }
+
+// A module, not a global script: keeps its names out of the shared TS scope.
+export {};

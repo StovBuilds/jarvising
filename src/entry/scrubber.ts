@@ -343,3 +343,6 @@ async function mount(root: HTMLElement) {
 }
 
 document.querySelectorAll<HTMLElement>("[data-scrubber]").forEach((el) => void mount(el));
+
+// A module, not a global script: keeps its names out of the shared TS scope.
+export {};
