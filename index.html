@@ -272,7 +272,7 @@
     font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
     color: var(--ink-faint); font-weight: 600;
   }
-  .see-also p {
+  .see-also > p {
     margin: 12px 0 0;
     font-family: 'Fraunces', Georgia, serif;
     font-variation-settings: 'opsz' 30;
@@ -292,7 +292,7 @@
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
   }
   @media (max-width: 520px) { .slots { grid-template-columns: 1fr; } }
-  .slots li {
+  .slots > li {
     border: 1px dashed var(--line-strong);
     border-radius: 12px;
     padding: 14px 14px 12px;
@@ -302,18 +302,18 @@
     display: flex; flex-direction: column; gap: 6px;
     min-height: 74px;
   }
-  .slots li span {
+  .slots > li > span {
     font-family: 'Fraunces', Georgia, serif;
     font-size: 15px;
     color: var(--ink-soft);
   }
-  .slots li small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
-  .slots li.live { border: 1px solid var(--line-strong); background: var(--paper); padding: 0; }
-  .slots li.live a { display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 12px; height: 100%; text-decoration: none; color: inherit; border-radius: 12px; }
-  .slots li.live a:hover, .slots li.live a:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
-  .slots li.live small { color: var(--accent); }
-  .slots li.live span { color: var(--ink); font-weight: 600; font-size: 17px; }
-  .slots li.live em { font-style: normal; font-size: 12.5px; line-height: 1.4; color: var(--ink-soft); letter-spacing: 0; }
+  .slots > li > small, .slots > li > a > small { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+  .slots > li.live { border: 1px solid var(--line-strong); background: var(--paper); padding: 0; }
+  .slots > li.live > a { display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 12px; height: 100%; text-decoration: none; color: inherit; border-radius: 12px; }
+  .slots > li.live > a:hover, .slots > li.live > a:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .slots > li.live > a > small { color: var(--accent); }
+  .slots > li.live > a > span { color: var(--ink); font-weight: 600; font-size: 17px; }
+  .slots > li.live > a > em { font-style: normal; font-size: 12.5px; line-height: 1.4; color: var(--ink-soft); letter-spacing: 0; }
 
   footer {
     margin-top: auto;
@@ -329,6 +329,8 @@
   footer button:hover { color: var(--ink); border-color: var(--ink); }
 </style>
 <script src="/analytics.js" defer></script>
+<link rel="stylesheet" href="/src/home/rig.css">
+<script type="module" src="/src/home/rig.ts"></script>
 </head>
 <body>
 <div class="wrap">
@@ -372,9 +374,63 @@
       <p>This site is the open portfolio of what jarvising produces: test projects, experiments and tools, published here as they are built.</p>
       <p class="sub">Each entry shows what it does, how it was made, and how to make your own.</p>
       <ul class="slots" aria-label="Entries">
-        <li class="live"><a href="/projects/enigma/"><small>Entry 001</small><span>Enigma</span><em>A teardown in scroll: the machine comes apart, then you type on it.</em></a></li>
-        <li><small>Entry 002</small><span>in progress</span></li>
-        <li><small>Entry 003</small><span>in progress</span></li>
+        <li class="live"><a href="/projects/enigma/"><small>Entry 001</small><span>Enigma</span><em>A teardown in scroll: the machine comes apart, then you type on it.</em></a>
+    <!-- rig:001 -->
+    <div class="rig" data-rig>
+      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">measured <time datetime="2026-09-28T20:50:46.966Z">28 Sep 2026</time> · <a href="/projects/rig.json">rig.json</a></span></div>
+      <div class="rig-bench">
+        <figure class="rig-film" data-film>
+          <div class="rig-frames" tabindex="0" aria-label="QA frames at 6 pinned scroll positions; hover or focus to flick through">
+          <img src="/projects/enigma/rig/p0_04.webp" width="480" height="300" data-p="0.04" data-name="The machine" alt="Headless render of the live piece at p 0.04: the machine" loading="lazy" decoding="async" class="on">
+          <img src="/projects/enigma/rig/p0_31.webp" width="480" height="300" data-p="0.31" data-name="The assembly" alt="Headless render of the live piece at p 0.31: the assembly" loading="lazy" decoding="async">
+          <img src="/projects/enigma/rig/p0_45.webp" width="480" height="300" data-p="0.45" data-name="The rotor" alt="Headless render of the live piece at p 0.45: the rotor" loading="lazy" decoding="async">
+          <img src="/projects/enigma/rig/p0_6.webp" width="480" height="300" data-p="0.60" data-name="The path" alt="Headless render of the live piece at p 0.60: the path" loading="lazy" decoding="async">
+          <img src="/projects/enigma/rig/p0_83.webp" width="480" height="300" data-p="0.83" data-name="The bombe" alt="Headless render of the live piece at p 0.83: the bombe" loading="lazy" decoding="async">
+          <img src="/projects/enigma/rig/p0_95.webp" width="480" height="300" data-p="0.95" data-name="Your turn" alt="Headless render of the live piece at p 0.95: your turn" loading="lazy" decoding="async">
+          </div>
+          <figcaption><span class="rig-p" data-cap-p>p 0.04</span><span data-cap-name>The machine</span><span class="rig-of" data-cap-of>1/6</span></figcaption>
+          <ol class="rig-ticks" aria-label="Frames"><li><button type="button" data-i="0" aria-label="Show frame at p 0.04, the machine" aria-current="true"></button></li><li><button type="button" data-i="1" aria-label="Show frame at p 0.31, the assembly"></button></li><li><button type="button" data-i="2" aria-label="Show frame at p 0.45, the rotor"></button></li><li><button type="button" data-i="3" aria-label="Show frame at p 0.60, the path"></button></li><li><button type="button" data-i="4" aria-label="Show frame at p 0.83, the bombe"></button></li><li><button type="button" data-i="5" aria-label="Show frame at p 0.95, your turn"></button></li></ol>
+        </figure>
+        <div class="rig-trace">
+          <div class="rig-label"><span>Triangles per frame</span><span class="rig-scale">0–300k</span></div>
+          <div class="rig-plot" aria-hidden="true">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="rig-grid" d="M0 25H100M0 50H100M0 75H100"/><polyline class="rig-line" points="3.00,41.61 30.89,45.03 45.35,93.11 60.85,16.90 84.60,43.68 97.00,15.09"/></svg>
+            <span class="rig-dots"><i class="on" style="left:3.00%;top:41.61%" data-i="0" title="p 0.04: 175,156 triangles, 588 draw calls"></i><i style="left:30.89%;top:45.03%" data-i="1" title="p 0.31: 164,916 triangles, 526 draw calls"></i><i style="left:45.35%;top:93.11%" data-i="2" title="p 0.45: 20,674 triangles, 53 draw calls"></i><i style="left:60.85%;top:16.90%" data-i="3" title="p 0.60: 249,298.667 triangles, 533 draw calls"></i><i style="left:84.60%;top:43.68%" data-i="4" title="p 0.83: 168,966 triangles, 302 draw calls"></i><i style="left:97.00%;top:15.09%" data-i="5" title="p 0.95: 254,718 triangles, 608 draw calls"></i></span>
+            <span class="rig-sweep"></span>
+          </div>
+          <ol class="rig-axis" aria-hidden="true"><li style="left:3.00%">0.04</li><li style="left:30.89%">0.31</li><li style="left:45.35%">0.45</li><li style="left:60.85%">0.60</li><li style="left:84.60%">0.83</li><li style="left:97.00%">0.95</li></ol>
+          <p class="rig-sr">Triangles per frame at p 0.04: 175,156; 0.31: 164,916; 0.45: 20,674; 0.60: 249,298.667; 0.83: 168,966; 0.95: 254,718.</p>
+        </div>
+      </div>
+      <dl class="rig-ch">
+        <div><dt>Payload</dt><dd class="rig-v"><b class="rig-n" data-n="234" data-d="1">234.0</b><u>kB</u></dd><dd class="rig-fn">JS, gzip · + 3 GLB, 1.60 MB<span class="rig-sr"> (bombe.glb 0.71 MB, enigma.glb 0.58 MB, props.glb 0.30 MB)</span></dd></div>
+        <div><dt>Draw calls</dt><dd class="rig-v"><b class="rig-n" data-n="608" data-d="0">608</b><u>peak</u></dd><dd class="rig-fn">max 255k tris · 69 textures</dd></div>
+        <div><dt>First frame</dt><dd class="rig-v"><b class="rig-n" data-n="11.24" data-d="2">11.24</b><u>s</u></dd><dd class="rig-fn">median of 3 cold loads · 6.7–16.3 s</dd></div>
+        <div><dt>CI · main</dt><dd class="rig-v"><b class="rig-txt rig-ci" data-ci="success">pass</b></dd><dd class="rig-fn">28 Sep · 3fac714</dd></div>
+        <div><dt>Cipher</dt><dd class="rig-v rig-code"><b class="rig-txt">HELLO</b><u>→</u><b class="rig-txt" data-scramble>FDJDQ</b></dd><dd class="rig-fn">typed headless; no letter maps to itself</dd></div>
+      </dl>
+      <p class="rig-foot">Chromium 149.0.7827.55, headless on SwiftShader at 1440×900 @1x: a bench for comparing builds, not a device frame rate.</p>
+    </div>
+    <!-- /rig:001 -->
+        </li>
+        <li><small>Entry 002</small><span>in progress</span>
+    <!-- rig:idle -->
+    <div class="rig rig-idle" data-rig>
+      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">idle</span></div>
+      <div class="rig-plot rig-flat" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="rig-grid" d="M0 50H100"/></svg></div>
+      <p class="rig-foot">Not yet measured. Numbers appear here once there is something to measure.</p>
+    </div>
+    <!-- /rig:idle -->
+        </li>
+        <li><small>Entry 003</small><span>in progress</span>
+    <!-- rig:idle -->
+    <div class="rig rig-idle" data-rig>
+      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">idle</span></div>
+      <div class="rig-plot rig-flat" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="rig-grid" d="M0 50H100"/></svg></div>
+      <p class="rig-foot">Not yet measured. Numbers appear here once there is something to measure.</p>
+    </div>
+    <!-- /rig:idle -->
+        </li>
       </ul>
     </section>
   </main>

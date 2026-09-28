@@ -24,6 +24,7 @@ functions/api/export-data.js  GET: aggregates for the Jarvis dashboard (x-api-ke
 migrations/                   D1 schema (site_events)
 tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
                               qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
+                              measure-rig.mjs (home-page test-rig strips → public/projects/rig.json),
                               blender/*.py (parametric assets → public/models/*.glb via ~/bin/blender-run.mjs)
 ```
 
