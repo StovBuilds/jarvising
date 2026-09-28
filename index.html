@@ -329,6 +329,8 @@
   footer button:hover { color: var(--ink); border-color: var(--ink); }
 </style>
 <script src="/analytics.js" defer></script>
+<link rel="stylesheet" href="/src/home/exploded.css">
+<script type="module" src="/src/home/exploded.ts"></script>
 </head>
 <body>
 <div class="wrap">
@@ -378,6 +380,128 @@
       </ul>
     </section>
   </main>
+
+  <section class="anat" id="anatomy" aria-labelledby="anat-h">
+    <div class="anat-head">
+      <h2 class="anat-hw" id="anat-h">an<span class="dot">·</span>at<span class="dot">·</span>o<span class="dot">·</span>my</h2>
+      <p class="anat-pron"><span class="ipa" lang="en-fonipa">/əˈnat.ə.mi/</span> <i>noun</i>, of this page: how it is put together, taken apart in five layers.</p>
+    </div>
+
+    <div class="anat-track">
+      <div class="anat-stage">
+        <div class="anat-rh" aria-hidden="true"><span>Fig. 1 · this page, exploded</span><span class="anat-e">e = 0.00</span></div>
+
+        <div class="anat-model" aria-hidden="true">
+          <!-- a. the type: the page as you read it, at half size -->
+          <div class="anat-layer l-type">
+            <div class="mp-head"><b>jarvising</b><span>jarvising.com</span></div>
+            <div class="mp-hw">jar<span>·</span>vis<span>·</span>ing</div>
+            <div class="mp-pron"><span class="ipa">/ˈdʒɑː.vɪ.sɪŋ/</span> <i>verb</i> <span class="tag">New entry</span></div>
+            <ol class="mp-senses">
+              <li>The act of creating innovative projects at scale.</li>
+              <li>Giving people the tools to do it themselves.</li>
+            </ol>
+            <dl class="mp-note">
+              <dt>Origin</dt><dd>Early 21st century: from <i>Jarvis</i>, the name given to a home-built assistant that grew into a fleet of small, cooperating agents.</dd>
+              <dt>Usage</dt><dd>Not to be confused with <i>tinkering</i>, which has no ambition of scale, or <i>shipping</i>, which has no obligation to teach.</dd>
+            </dl>
+            <div class="mp-card">
+              <b class="mp-sa">See also</b>
+              <p>This site is the open portfolio of what jarvising produces: test projects, experiments and tools, published here as they are built.</p>
+              <div class="mp-slots"><span class="live"><small>Entry 001</small>Enigma</span><span><small>Entry 002</small>in progress</span><span><small>Entry 003</small>in progress</span></div>
+            </div>
+            <span class="ann t-hw">Fraunces 600 · opsz 144</span>
+            <span class="ann t-sense">Fraunces 500 · opsz 40</span>
+            <span class="ann t-body">Inter 400 · 17/1.55</span>
+            <i class="anat-pin" data-pin="0"></i>
+          </div>
+
+          <!-- b. the grid -->
+          <div class="anat-layer l-grid">
+            <div class="g-rule"></div>
+            <div class="ann g-cols"></div>
+            <div class="ann g-dim g-outer"><span>720</span></div>
+            <div class="ann g-dim g-inner"><span>672</span></div>
+            <span class="ann g-gut g-gl">24</span>
+            <span class="ann g-gut g-gr">24</span>
+            <span class="ann g-rl">rule · 1px --line-strong</span>
+            <span class="ann g-gap">56</span>
+            <div class="ann g-indent"><span>56</span></div>
+            <i class="anat-pin" data-pin="1"></i>
+          </div>
+
+          <!-- c. the paper -->
+          <div class="anat-layer l-paper">
+            <div class="ann sw-grid">
+              <span class="sw" style="--c: var(--paper)"><i></i><b>paper</b><code class="hx-l">#F6F1E7</code><code class="hx-d">#15171A</code></span>
+              <span class="sw" style="--c: var(--paper-deep)"><i></i><b>paper-deep</b><code class="hx-l">#EFE8D9</code><code class="hx-d">#1C1F23</code></span>
+              <span class="sw" style="--c: var(--line)"><i></i><b>line</b><code class="hx-l">#DED5C2</code><code class="hx-d">#2C3036</code></span>
+              <span class="sw" style="--c: var(--line-strong)"><i></i><b>line-strong</b><code class="hx-l">#C9BEA5</code><code class="hx-d">#3B4048</code></span>
+              <span class="sw" style="--c: var(--ink)"><i></i><b>ink</b><code class="hx-l">#1B1D20</code><code class="hx-d">#EDE7DA</code></span>
+              <span class="sw" style="--c: var(--ink-soft)"><i></i><b>ink-soft</b><code class="hx-l">#4E5259</code><code class="hx-d">#B8B2A6</code></span>
+              <span class="sw" style="--c: var(--ink-faint)"><i></i><b>ink-faint</b><code class="hx-l">#7A7E86</code><code class="hx-d">#858079</code></span>
+              <span class="sw" style="--c: var(--accent)"><i></i><b>accent</b><code class="hx-l">#B5451B</code><code class="hx-d">#E8845A</code></span>
+              <span class="sw" style="--c: var(--accent-soft)"><i></i><b>accent-soft</b><code class="hx-l">#F1D9CC</code><code class="hx-d">#3A2A22</code></span>
+            </div>
+            <i class="anat-pin" data-pin="2"></i>
+          </div>
+
+          <!-- d. the markup: verbatim lines from this file -->
+          <div class="anat-layer l-markup">
+<pre><span class="c">&lt;!-- index.html, excerpt --&gt;</span>
+<span class="k">&lt;h1</span> <span class="a">class</span>=<span class="s">"headword fade fade-2"</span><span class="k">&gt;</span>jar<span class="k">&lt;span</span> <span class="a">class</span>=<span class="s">"dot"</span><span class="k">&gt;</span>·<span class="k">&lt;/span&gt;</span>vis<span class="k">&lt;span</span> <span class="a">class</span>=<span class="s">"dot"</span><span class="k">&gt;</span>·<span class="k">&lt;/span&gt;</span>ing<span class="k">&lt;/h1&gt;</span>
+
+<span class="k">&lt;script</span> <span class="a">type</span>=<span class="s">"application/ld+json"</span><span class="k">&gt;</span>
+<span class="c">  ⋯</span>
+    {
+      <span class="s">"@type"</span>: <span class="s">"DefinedTerm"</span>,
+      <span class="s">"@id"</span>: <span class="s">"https://jarvising.com/#term"</span>,
+      <span class="s">"name"</span>: <span class="s">"jarvising"</span>,
+      <span class="s">"url"</span>: <span class="s">"https://jarvising.com/"</span>,
+      <span class="s">"description"</span>: <span class="s">"1. The act of creating innovative projects at scale. 2. Giving people the tools to do it themselves."</span>,
+      <span class="s">"inDefinedTermSet"</span>: {
+        <span class="s">"@type"</span>: <span class="s">"DefinedTermSet"</span>,
+        <span class="s">"name"</span>: <span class="s">"Jarvising"</span>
+      }
+    }
+<span class="c">  ⋯</span>
+<span class="k">&lt;/script&gt;</span></pre>
+            <i class="anat-pin" data-pin="3"></i>
+          </div>
+
+          <!-- e. the machinery -->
+          <div class="anat-layer l-mach">
+            <div class="m-flow">
+              <span class="m-node">index.html · src/*.ts</span>
+              <span class="m-arr">vite build · multi-page</span>
+              <span class="m-node">dist/</span>
+              <span class="m-arr">*/10 cron · pages-deploy-all.sh</span>
+              <span class="m-node">wrangler pages deploy --branch main</span>
+              <span class="m-arr"></span>
+              <span class="m-node m-cf">Cloudflare Pages · jarvising.com</span>
+            </div>
+            <div class="m-side">
+              <span class="m-node">/analytics.js</span>
+              <span class="m-arr">POST /api/track</span>
+              <span class="m-node">D1 · jarvising-events</span>
+            </div>
+            <span class="m-foot">Built with Claude Code</span>
+            <i class="anat-pin" data-pin="4"></i>
+          </div>
+        </div>
+
+        <ol class="anat-labels">
+          <li><b>a.</b> <i>type.</i> Fraunces for the headword, weight 600 at optical size 144; the senses at 500, size 40. Inter for the body at 17/1.55. Both self-hosted as woff2, so the page asks nothing of anyone else.</li>
+          <li><b>b.</b> <i>grid.</i> One column, 720px wide with 24px gutters, leaving a 672px measure. A running head sits over a 1px rule, as a dictionary page has.</li>
+          <li><b>c.</b> <i>paper.</i> Nine colour tokens on <code>:root</code>, redefined for dark mode. Paper <code class="hx-l">#F6F1E7</code><code class="hx-d">#15171A</code>, ink <code class="hx-l">#1B1D20</code><code class="hx-d">#EDE7DA</code>, accent <code class="hx-l">#B5451B</code><code class="hx-d">#E8845A</code>.</li>
+          <li><b>d.</b> <i>markup.</i> Hand-written HTML, no framework. The word is declared for machines too: a schema.org <code>DefinedTerm</code> in <span class="nw">JSON-LD</span>.</li>
+          <li><b>e.</b> <i>machinery.</i> Vite builds the pages into <code>dist/</code>; a cron sweeps every ten minutes and ships it to Cloudflare Pages. Page counts go first-party to D1. Built with Claude Code.</li>
+        </ol>
+
+        <svg class="anat-leaders" aria-hidden="true"></svg>
+      </div>
+    </div>
+  </section>
 
   <footer class="fade fade-4">
     <span>© 2026 Jarvising. Built in the open.</span>
