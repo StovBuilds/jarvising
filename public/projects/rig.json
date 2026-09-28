@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "measured_at": "2026-09-28T21:05:54.530Z",
+  "commit": "3ec6c83",
+  "dirty": false,
+  "method": {
+    "tool": "tools/measure-rig.mjs",
+    "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
+    "viewport": "1440×900 @1x, dark scheme",
+    "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
+  },
+  "entries": {
+    "001": {
+      "slug": "enigma",
+      "payload": {
+        "js_gzip": 231760,
+        "js_bytes": 838960,
+        "js": [
+          {
+            "file": "/assets/enigmaLive-CKRKqrXk.js",
+            "bytes": 114609,
+            "gzip": 39513
+          },
+          {
+            "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "bytes": 711,
+            "gzip": 399
+          },
+          {
+            "file": "/assets/react-ppAWL3zK.js",
+            "bytes": 140726,
+            "gzip": 45132
+          },
+          {
+            "file": "/assets/three-CS48PHc5.js",
+            "bytes": 582914,
+            "gzip": 146716
+          }
+        ],
+        "glb_bytes": 1596220,
+        "glb": [
+          {
+            "file": "/models/bombe.glb",
+            "bytes": 714168
+          },
+          {
+            "file": "/models/enigma.glb",
+            "bytes": 582068
+          },
+          {
+            "file": "/models/props.glb",
+            "bytes": 299984
+          }
+        ],
+        "compression": "gzip -9 (node zlib); GLBs are raw file size"
+      },
+      "render": {
+        "beats": [
+          {
+            "p": 0.04,
+            "name": "The machine",
+            "frame": "/projects/enigma/rig/p0_04.webp",
+            "calls": 581,
+            "triangles": 173680,
+            "textures": 69,
+            "geometries": 148,
+            "programs": 15
+          },
+          {
+            "p": 0.31,
+            "name": "The assembly",
+            "frame": "/projects/enigma/rig/p0_31.webp",
+            "calls": 526,
+            "triangles": 164916,
+            "textures": 50,
+            "geometries": 146,
+            "programs": 15
+          },
+          {
+            "p": 0.45,
+            "name": "The rotor",
+            "frame": "/projects/enigma/rig/p0_45.webp",
+            "calls": 53,
+            "triangles": 20674,
+            "textures": 13,
+            "geometries": 46,
+            "programs": 8
+          },
+          {
+            "p": 0.6,
+            "name": "The path",
+            "frame": "/projects/enigma/rig/p0_6.webp",
+            "calls": 533,
+            "triangles": 249299,
+            "textures": 43,
+            "geometries": 152,
+            "programs": 17
+          },
+          {
+            "p": 0.83,
+            "name": "The bombe",
+            "frame": "/projects/enigma/rig/p0_83.webp",
+            "calls": 302,
+            "triangles": 168966,
+            "textures": 8,
+            "geometries": 143,
+            "programs": 12
+          },
+          {
+            "p": 0.95,
+            "name": "Your turn",
+            "frame": "/projects/enigma/rig/p0_95.webp",
+            "calls": 608,
+            "triangles": 254718,
+            "textures": 69,
+            "geometries": 158,
+            "programs": 19
+          }
+        ],
+        "source": "renderer.info after the last frame, at ?p=<beat>&probe=1, once the scene stopped growing"
+      },
+      "first_frame_ms": {
+        "median": 5275,
+        "runs": [
+          6391,
+          5589,
+          5165,
+          5199,
+          5275
+        ],
+        "source": "performance.now() after the first renderer.render, cold context, top of page"
+      },
+      "cipher": {
+        "typed": "HELLO",
+        "out": "FDJDQ",
+        "pass": true
+      },
+      "ci": {
+        "conclusion": "success",
+        "at": "2026-09-28T20:33:07Z",
+        "sha": "3fac714",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36480002787"
+      }
+    },
+    "002": null,
+    "003": null
+  }
+}
