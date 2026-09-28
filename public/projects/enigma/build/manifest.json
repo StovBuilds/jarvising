@@ -1,0 +1,143 @@
+{
+  "entry": "enigma",
+  "livePath": "/projects/enigma/live/",
+  "progress": [
+    0.31,
+    0.45
+  ],
+  "viewport": {
+    "width": 1200,
+    "height": 675
+  },
+  "base": "/projects/enigma/build/",
+  "milestones": [
+    {
+      "label": "Promise logged",
+      "iso": "2026-08-27T10:09:49Z",
+      "source": "commitment ledger, acbc1db5 opened"
+    },
+    {
+      "label": "State log: starting",
+      "iso": "2026-08-27T10:11:23Z",
+      "source": "home-repo commit e31c6fc (entry text says ~10:20Z)"
+    },
+    {
+      "label": "First commit",
+      "iso": "2026-08-27T10:38:30Z",
+      "sha": "6054eaf",
+      "repo": "jstov",
+      "source": "git -C jstov log 6054eaf"
+    },
+    {
+      "label": "Lint fix",
+      "iso": "2026-08-27T10:45:08Z",
+      "sha": "f99c5ba",
+      "repo": "jstov",
+      "source": "git -C jstov log f99c5ba"
+    },
+    {
+      "label": "Live, verified, promise closed",
+      "iso": "2026-08-27T10:46:08Z",
+      "source": "commitment ledger, acbc1db5 closed; state entry 'SHIPPED' committed 10:46:29Z as fdfa4e2 (entry text says ~11:55Z)"
+    }
+  ],
+  "brief": {
+    "text": "Enigma machine parallax — what it did / when created / how it works piece by piece.",
+    "label": "The brief, as logged",
+    "paraphrase": true,
+    "source": "claude-state.md, entry headed 2026-08-27 ~10:20Z (home-repo commit e31c6fc). The session's paraphrase of Jack's ask, not his words."
+  },
+  "generated": "2026-09-28T20:56:54.793Z",
+  "frames": [
+    {
+      "repo": "jstov",
+      "sha": "6054eaf",
+      "date": "2026-08-27T10:38:30+00:00",
+      "subject": "feat(lab): 008 — ENIGMA, a scroll-driven teardown",
+      "kind": "harness",
+      "note": "Rendered from the commit's own Enigma.tsx + enigma/* in a throwaway harness (react-router's Link stubbed); the rest of jstov.uk was not built.",
+      "shots": {
+        "0.31": "jstov-6054eaf-p0_31.jpg",
+        "0.45": "jstov-6054eaf-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jstov",
+      "sha": "8736c28",
+      "date": "2026-08-28T12:19:47+00:00",
+      "subject": "feat(lab): enigma polish — sound, live traces, shareable secrets, grade",
+      "kind": "harness",
+      "note": "Rendered from the commit's own Enigma.tsx + enigma/* in a throwaway harness (react-router's Link stubbed); the rest of jstov.uk was not built.",
+      "shots": {
+        "0.31": "jstov-8736c28-p0_31.jpg",
+        "0.45": "jstov-8736c28-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "164c3d0",
+      "date": "2026-09-07T06:50:08+00:00",
+      "subject": "Entry 001: Enigma — a teardown in scroll, ported from jstov.uk/lab",
+      "kind": "site",
+      "shots": {
+        "0.31": "jarvising-164c3d0-p0_31.jpg",
+        "0.45": "jarvising-164c3d0-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "ce3614f",
+      "date": "2026-09-07T08:16:09+00:00",
+      "subject": "Entry 001 polish: Hut 6 at night, anchored callouts, lid card, Bletchley chapters",
+      "kind": "site",
+      "shots": {
+        "0.31": "jarvising-ce3614f-p0_31.jpg",
+        "0.45": "jarvising-ce3614f-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "734e5bb",
+      "date": "2026-09-07T08:41:15+00:00",
+      "subject": "Phase 2: the bombe — a Blender-built GLB in Hut 6 for chapter 008",
+      "kind": "site",
+      "shots": {
+        "0.31": "jarvising-734e5bb-p0_31.jpg",
+        "0.45": "jarvising-734e5bb-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "e442ad6",
+      "date": "2026-09-07T09:22:38+00:00",
+      "subject": "Phase 2: the Enigma itself from a Blender parts library",
+      "kind": "site",
+      "shots": {
+        "0.31": "jarvising-e442ad6-p0_31.jpg",
+        "0.45": "jarvising-e442ad6-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "46aba59",
+      "date": "2026-09-07T09:43:41+00:00",
+      "subject": "Phase 2 complete: engraved key letters, running bombe, hut props, ring UVs",
+      "kind": "site",
+      "shots": {
+        "0.31": "jarvising-46aba59-p0_31.jpg",
+        "0.45": "jarvising-46aba59-p0_45.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "9210418",
+      "date": "2026-09-07T15:36:03+00:00",
+      "subject": "Rotor solo: lift the machine offstage, and keep the rotor on stage while the camera is there",
+      "kind": "site",
+      "shots": {
+        "0.31": "jarvising-9210418-p0_31.jpg",
+        "0.45": "jarvising-9210418-p0_45.jpg"
+      }
+    }
+  ]
+}
