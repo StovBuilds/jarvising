@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- An ink blot: a circle and a few satellite drops, edges roughened by turbulence.
+       Used as the mask for page transitions (motion/transitions.css). -->
+  <filter id="bleed" x="-25%" y="-25%" width="150%" height="150%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="11"/>
+    <feDisplacementMap in="SourceGraphic" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <g filter="url(#bleed)">
+    <circle cx="100" cy="100" r="64"/>
+    <circle cx="160" cy="62" r="9"/>
+    <circle cx="44" cy="150" r="7"/>
+    <circle cx="150" cy="152" r="5"/>
+    <circle cx="52" cy="48" r="4"/>
+  </g>
+</svg>

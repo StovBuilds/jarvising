@@ -1,0 +1,35 @@
+/* Ink-bleed page transitions (cross-document View Transitions).
+   The new page is revealed through an ink blot that spreads from where you clicked
+   (--ink-x/--ink-y, set by early.js). Browsers without cross-document view transitions
+   simply navigate. Reduced motion: no transition at all. */
+@view-transition { navigation: auto; }
+
+@property --ink-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) {
+  animation: jv-ink-in .8s cubic-bezier(.45, .05, .25, 1) both;
+  -webkit-mask-image: url("/motion/ink.svg");
+          mask-image: url("/motion/ink.svg");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: var(--ink-r) var(--ink-r);
+          mask-size: var(--ink-r) var(--ink-r);
+  -webkit-mask-position: calc(var(--ink-x, 50vw) - var(--ink-r) / 2) calc(var(--ink-y, 40vh) - var(--ink-r) / 2);
+          mask-position: calc(var(--ink-x, 50vw) - var(--ink-r) / 2) calc(var(--ink-y, 40vh) - var(--ink-r) / 2);
+}
+@keyframes jv-ink-in {
+  from { --ink-r: 0vmax; }
+  to   { --ink-r: 320vmax; }
+}
+
+/* The entry's name travels: card title on the index → headword on the entry page. */
+::view-transition-group(*) { animation-duration: .7s; animation-timing-function: cubic-bezier(.45, .05, .25, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
