@@ -21,6 +21,8 @@ export async function onRequestPost({ request, env }) {
   // Same-origin only: the page that loaded the tracker is the page that posts.
   const origin = request.headers.get('origin');
   if (origin && origin !== new URL(request.url).origin) return json({ ok: false, error: 'forbidden' }, 403);
+  // Branch previews (<branch>.jarvising.pages.dev) share this D1 binding: only the real site counts.
+  if (new URL(request.url).hostname !== 'jarvising.com') return json({ ok: true, stored: 0 });
   const ip = (request.headers.get('cf-connecting-ip') || '').trim();
   if (BOT_RE.test(request.headers.get('user-agent') || '') || INTERNAL_IPS.some((p) => ip === p || ip.startsWith(p + ':'))) return json({ ok: true, stored: 0 });
   if (Number(request.headers.get('content-length') || 0) > MAX_BODY) return json({ ok: false, error: 'too_large' }, 413);
