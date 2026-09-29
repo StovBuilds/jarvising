@@ -6,7 +6,7 @@
   "method": {
     "tool": "tools/measure-rig.mjs",
     "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-    "viewport": "1440×900 @1x, dark scheme",
+    "viewport": "1440\u00d7900 @1x, dark scheme",
     "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
   },
   "entries": {
@@ -160,7 +160,7 @@
       "method": {
         "tool": "tools/measure-rig.mjs --entry 002",
         "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-        "viewport": "1440×900 @1x, dark scheme",
+        "viewport": "1440\u00d7900 @1x, dark scheme",
         "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
       },
       "payload": {
@@ -246,7 +246,7 @@
             "gzip": 31006
           }
         ],
-        "compression": "gzip -9 (node zlib) of the JS files the page fetched; 3D at 1440×900, lite at 390×844"
+        "compression": "gzip -9 (node zlib) of the JS files the page fetched; 3D at 1440\u00d7900, lite at 390\u00d7844"
       },
       "data": {
         "nodes": "191",
@@ -329,7 +329,7 @@
       "method": {
         "tool": "tools/measure-rig.mjs",
         "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-        "viewport": "1440×900 @1x, dark scheme",
+        "viewport": "1440\u00d7900 @1x, dark scheme",
         "query": "?tier=HIGH on every load",
         "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
       },
@@ -469,7 +469,7 @@
       "method": {
         "tool": "tools/measure-rig.mjs --entry 004",
         "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-        "viewport": "1440×900 @1x, dark scheme",
+        "viewport": "1440\u00d7900 @1x, dark scheme",
         "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
       },
       "payload": {
@@ -517,10 +517,10 @@
       "render": {
         "states": [
           {
-            "tag": "periscope",
+            "tag": "40ft",
             "name": "Periscope depth",
             "qs": "depth=40",
-            "frame": "/projects/submarine/rig/periscope.webp",
+            "frame": "/projects/submarine/rig/40ft.webp",
             "calls": 182,
             "triangles": 186757,
             "textures": 17,
@@ -539,10 +539,10 @@
             "programs": 51
           },
           {
-            "tag": "below",
+            "tag": "280ft",
             "name": "Below the layer",
             "qs": "depth=280&ping=1.05",
-            "frame": "/projects/submarine/rig/below.webp",
+            "frame": "/projects/submarine/rig/280ft.webp",
             "calls": 186,
             "triangles": 204049,
             "textures": 17,
@@ -581,7 +581,7 @@
           "strength": 1,
           "word": "Strong",
           "range_m": 123,
-          "status": "Escort has a fix · echo in 0.16 s"
+          "status": "Escort has a fix \u00b7 echo in 0.16 s"
         },
         "below": {
           "qs": "depth=280&ping=1.05",

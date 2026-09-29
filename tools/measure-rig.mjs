@@ -101,9 +101,9 @@ const ENTRIES = {
     dirty: ["src/submarine", "projects/submarine"],
     // pinned, frozen states (the piece has no scroll): ?depth=<ft>&view=open&ping=<0..1 of the round trip>
     states: [
-      { tag: "periscope", name: "Periscope depth", qs: "depth=40" },
+      { tag: "40ft", name: "Periscope depth", qs: "depth=40" },
       { tag: "ping", name: "Ping at the hull", qs: "depth=110&ping=0.52" },
-      { tag: "below", name: "Below the layer", qs: "depth=280&ping=1.05" },
+      { tag: "280ft", name: "Below the layer", qs: "depth=280&ping=1.05" },
       { tag: "open", name: "Opened up", qs: "depth=280&view=open&ping=0.3" },
     ],
     // smoke: the same ping, echo home, above and below the layer
