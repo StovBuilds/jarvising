@@ -32,6 +32,7 @@ export default defineConfig({
         cortexLive: resolve(__dirname, "projects/cortex/live/index.html"),
         rig: resolve(__dirname, "projects/rig/index.html"),
         rigLive: resolve(__dirname, "projects/rig/live/index.html"),
+        submarineLive: resolve(__dirname, "projects/submarine/live/index.html"),
       },
       output: {
         manualChunks: {

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BELOW THE LAYER — a submarine hunted by sound · jarvising</title>
+<meta name="description" content="A British T-class submarine of the Second World War, opened up, while a surface escort hunts it with ASDIC. Take the boat down below the thermocline and watch the ping lose it. Depth, pressure and echo readouts, an echo trace, a cutaway of the compartments.">
+<link rel="canonical" href="https://jarvising.com/projects/submarine/live/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jarvising">
+<meta property="og:title" content="BELOW THE LAYER — a submarine hunted by sound">
+<meta property="og:description" content="A T-class submarine hunted by an escort's ASDIC. Dive under the layer and watch the ping lose it. Entry 004 on jarvising.com.">
+<meta property="og:url" content="https://jarvising.com/projects/submarine/live/">
+<meta property="og:image" content="https://jarvising.com/projects/submarine/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#050a12">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/big-shoulders-stencil-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/azeret-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>html, body { margin: 0; background: #050a12; color: #e3ebf1; }</style>
+<noscript><style>#loader, .ui, #stage, #labels { display: none !important; } body { overflow: auto !important; }</style></noscript>
+<script src="/motion/early.js"></script>
+<link rel="stylesheet" href="/motion/transitions.css">
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div id="stage" aria-hidden="true"></div>
+<div id="labels" aria-hidden="true"></div>
+
+<div class="ui">
+  <header class="head">
+    <h1>Below <b>the layer</b></h1>
+    <p class="lede">A British T-class submarine, opened up. An enemy escort on the surface is hunting it with sound. Take the boat down under the layer of cold water and watch the ping lose it.</p>
+    <dl class="read">
+      <div><dt>Depth</dt><dd id="rDepthDD"><span id="rDepth">40</span><small>ft</small></dd></div>
+      <div><dt>Pressure</dt><dd><span id="rPress">18</span><small>psi</small></dd></div>
+      <div><dt>Echo</dt><dd id="rEchoDD"><span id="rEcho">None</span><small id="rRange"></small></dd></div>
+    </dl>
+    <p class="status" id="status"><i class="dot"></i><span id="statusText">Escort is listening</span></p>
+  </header>
+
+  <div class="tools">
+    <a class="back" href="/projects/submarine/" aria-label="Back to the entry page">← Entry</a>
+    <button class="tbtn round" id="bInfo" aria-label="About this piece" title="About">?</button>
+    <button class="tbtn" id="bSound" aria-pressed="false" title="Sound">Sound</button>
+    <button class="tbtn" id="bCine" aria-pressed="false" title="Cinematic cameras (C)">Cinematic</button>
+    <button class="tbtn" id="bHide" aria-pressed="false" title="Hide the interface (/)">Hide</button>
+  </div>
+
+  <p class="keys" id="keys"><kbd>Space</kbd> ping · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> depth · <kbd>[</kbd><kbd>]</kbd> nudge · <kbd>X</kbd> open up · <kbd>C</kbd> cinematic · <kbd>R</kbd> reset · <kbd>/</kbd> hide · drag to orbit · scroll to zoom</p>
+
+  <section class="console" id="console" aria-label="Controls">
+    <div class="grp depth">
+      <label class="lab" for="depth">Depth <em>drag · 1 2 3</em><output id="depthOut" for="depth">40 ft · 12 m</output></label>
+      <div class="slider"><input id="depth" type="range" min="40" max="350" step="5" value="40" aria-describedby="layTag testTag"><span class="laytag" id="layTag">Layer 180 ft</span><span class="laytag test" id="testTag">Test depth 300 ft</span></div>
+      <div class="seg" role="group" aria-label="Depth presets">
+        <button data-d="40" aria-pressed="true">Periscope</button><button data-d="110" aria-pressed="false">Above layer</button><button data-d="280" aria-pressed="false">Below layer</button>
+      </div>
+    </div>
+    <div class="grp ping">
+      <span class="lab">Escort <em>space</em></span>
+      <div class="row">
+        <button class="pingbtn" id="bPing">Ping</button>
+        <button class="chip" id="bAuto" aria-pressed="true" title="Ping every few seconds">Auto</button>
+      </div>
+    </div>
+    <div class="grp hull">
+      <span class="lab">Boat <em>X</em></span>
+      <div class="seg" role="group" aria-label="Boat view">
+        <button id="bAsm" aria-pressed="true">Assembled</button><button id="bExp" aria-pressed="false">Opened up</button>
+      </div>
+    </div>
+    <div class="grp scope">
+      <span class="lab">Echo trace <em>escort's range, m</em></span>
+      <div class="scopewrap"><canvas id="scope" aria-label="Echo trace from the escort's sonar"></canvas></div>
+    </div>
+  </section>
+</div>
+
+<div id="loader"><span>Flooding the tanks…</span></div>
+
+<div class="sheet" id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle" hidden>
+  <article class="card">
+    <button class="close" id="bClose" aria-label="Close">×</button>
+    <h2 id="infoTitle">Hiding <b>in the sound</b></h2>
+    <p>Underwater, sight is useless beyond a few metres. Hunters and hunted work by sound. Here an enemy escort circles on the surface, sending pulses down to find a British submarine.</p>
+    <h3>The ping</h3>
+    <p>The escort's sonar sends a pulse of sound from a dome under its hull. It travels through seawater at about <strong>1,500 metres a second</strong>. The glowing shell is that pulse, and the bright line is where it is touching something: the hull, a mine cable, the seabed. Whatever it hits sends a faint echo back, and the time the echo takes gives the range. The British called this <strong>ASDIC</strong>, and fitted it to their own boats too.</p>
+    <h3>The layer</h3>
+    <p>Sun-warmed water sits on top of colder water. Sound bends where the temperature changes, so at that boundary, the <strong>thermocline</strong>, much of the ping is bent away, down and past what lies under it. Below it lies a shadow zone the sound barely reaches. A boat down there sends back only a whisper, and submarine captains dived under the layer on purpose. The layer's depth changes with the season and the sea; 180 feet here is illustrative.</p>
+    <h3>The pressure</h3>
+    <p>Every 33 feet of seawater adds about one atmosphere, another 14.7 lb on every square inch. The early T-class boats were riveted and rated to <strong>300 feet</strong>. At that depth the sea presses on the hull with about <strong>133 lb on every square inch</strong> more than at the surface.</p>
+    <h3>Opened up</h3>
+    <p>The outer hull is a thin, free-flooding shape for moving through water. A crew of around 60 lived inside the <strong>pressure hull</strong>, a steel cylinder split into compartments from bow to stern. Broadly: the tube space, torpedo stowage and the seamen's mess, the control room under the bridge, the wardroom and galley over the battery, the diesels, and the motor room.</p>
+    <p class="fine">The boat is modelled loosely on an early T-class, the Royal Navy's main ocean-going patrol submarine of the war: 84 m (276 ft) long, 53 built. It is shown with its original bulbous bow. That bulge held two of its ten torpedo tubes that faced forward, but it slowed the boats in rough seas; two boats had it cut away, and later groups were built with a finer bow. The Oerlikon aft of the bridge and the radar mast are mid-war additions. Depths are in feet, as the boats' own logs recorded them. The escort's range is in metres. Sound is shown about 36× slower than life so you can watch it travel. Sources are listed on the <a href="/projects/submarine/#sources">entry page</a>.<br><br><kbd>Space</kbd> ping · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> periscope, above or below the layer · <kbd>[</kbd> <kbd>]</kbd> nudge depth · <kbd>X</kbd> assembled or opened up · <kbd>C</kbd> cinematic cameras · <kbd>R</kbd> reset the view · <kbd>/</kbd> hide the interface · drag to orbit · right-drag to pan · scroll to zoom</p>
+  </article>
+</div>
+
+<noscript>
+  <div class="noscript">
+    <h1>Below the layer</h1>
+    <p>This is a WebGL scene of a British T-class submarine hunted by an escort's sonar, so it needs JavaScript. The written entry, with what it does, how it was made and its sources, is at <a href="/projects/submarine/">jarvising.com/projects/submarine</a>.</p>
+  </div>
+</noscript>
+<script type="module" src="/src/submarine/main.ts"></script>
+</body>
+</html>
