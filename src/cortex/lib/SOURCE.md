@@ -10,9 +10,13 @@ clone the repo and take `packages/cortex-map/src/`, or depend on the workspace p
 Changes made here, and nothing else:
 
 - a two-line provenance header on every file;
+- `import("three")` becomes `import("./three-subset")` (a named list of the classes used), so
+  the shared three.js chunk stays tree-shaken;
 - `CortexMapHandle` gains `wake(hold?)` and `graph()` (types.ts, CortexMap.tsx), so the page can
   drive the camera for the kiosk orbit and the arrow keys without the render-on-demand loop
   falling asleep mid-turn;
+- `useMediaQuery` starts from `matchMedia(query).matches` instead of `false`, so a small screen
+  (or reduced motion) goes straight to lite mode and never downloads the 3D renderer and three.js;
 - the three HUD panels get class hooks (`cm-legend`, `cm-stats`, `cm-hover`) so the page can
   rearrange them on a phone.
 

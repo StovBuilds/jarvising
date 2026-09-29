@@ -156,7 +156,9 @@ type GraphLink = { source: any; target: any; relation: string; strength: number;
 const linkEnd = (v: any): string => (typeof v === "string" ? v : v.id);
 
 function useMediaQuery(query: string): boolean {
-  const [match, setMatch] = useState(false);
+  // jarvising change (SOURCE.md): start from the real answer, not false, so a phone
+  // never fetches the 3D renderer and three.js only to swap to lite mode a tick later
+  const [match, setMatch] = useState(() => typeof window !== "undefined" && !!window.matchMedia && window.matchMedia(query).matches);
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
     const m = window.matchMedia(query);
