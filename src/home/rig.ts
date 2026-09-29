@@ -59,7 +59,7 @@ function filmstrip(rig: HTMLElement) {
     ticks.forEach((b, j) => b.setAttribute("aria-current", String(j === cur)));
     dots.forEach((d, j) => d.classList.toggle("on", j === cur));
     const im = imgs[cur];
-    if (capP) capP.textContent = `p ${im.dataset.p}`;
+    if (capP) capP.textContent = im.dataset.tag ?? `p ${im.dataset.p}`;
     if (capName) capName.textContent = im.dataset.name ?? "";
     if (capOf) capOf.textContent = `${cur + 1}/${imgs.length}`;
   };

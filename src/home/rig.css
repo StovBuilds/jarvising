@@ -158,6 +158,8 @@
 .rig-code b { font-size: 14px; letter-spacing: .08em; font-weight: 600; font-variant-numeric: normal; }
 .rig-code b[data-scramble] { color: var(--accent); }
 .rig-code u { margin: 0 2px; }
+.rig-code b.rig-hit { color: var(--accent); letter-spacing: .02em; }
+.rig-v.rig-code:has(.rig-hit) { white-space: normal; }
 .rig-ci { font-size: 15px !important; letter-spacing: .1em !important; text-transform: uppercase; font-weight: 600 !important; padding-top: 4px; }
 .rig-fn { margin-top: 3px !important; font-size: 11px; color: var(--ink-faint); line-height: 1.35; }
 

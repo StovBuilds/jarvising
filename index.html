@@ -365,6 +365,7 @@
   }
   /* The entry name travels from its card to the entry page's headword. */
   .slots li.live a[href="/projects/enigma/"] span { view-transition-name: entry-001; }
+  .slots li.live a[href="/projects/cortex/"] span { view-transition-name: entry-002; }
   @media (prefers-reduced-motion: reduce) {
     .headword .ch, .headword .set::after, .pron .tag { animation: none !important; }
   }
@@ -458,14 +459,42 @@
     </div>
     <!-- /rig:001 -->
         </li>
-        <li><small>Entry 002</small><span>in progress</span>
-    <!-- rig:idle -->
-    <div class="rig rig-idle" data-rig>
-      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">idle</span></div>
-      <div class="rig-plot rig-flat" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="rig-grid" d="M0 50H100"/></svg></div>
-      <p class="rig-foot">Not yet measured. Numbers appear here once there is something to measure.</p>
+        <li class="live"><a href="/projects/cortex/"><small>Entry 002</small><span>Cortex</span><em>A fleet's memory as a war table, handed on as a library you can use.</em></a>
+    <!-- rig:002 -->
+    <div class="rig" data-rig>
+      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">measured <time datetime="2026-09-29T08:13:11.733Z">29 Sep 2026</time> · <a href="/projects/rig.json">rig.json</a></span></div>
+      <div class="rig-bench">
+        <figure class="rig-film" data-film>
+          <div class="rig-frames" tabindex="0" aria-label="QA frames in 4 states; hover or focus to flick through">
+          <img src="/projects/cortex/rig/table.webp" width="480" height="300" data-tag="table" data-name="The table" alt="Headless render of the live piece: the table" loading="lazy" decoding="async" class="on">
+          <img src="/projects/cortex/rig/search.webp" width="480" height="300" data-tag="search" data-name="Search" alt="Headless render of the live piece: search" loading="lazy" decoding="async">
+          <img src="/projects/cortex/rig/live.webp" width="480" height="300" data-tag="live" data-name="Live stream" alt="Headless render of the live piece: live stream" loading="lazy" decoding="async">
+          <img src="/projects/cortex/rig/globe.webp" width="480" height="300" data-tag="globe" data-name="The globe" alt="Headless render of the live piece: the globe" loading="lazy" decoding="async">
+          </div>
+          <figcaption><span class="rig-p" data-cap-p>table</span><span data-cap-name>The table</span><span class="rig-of" data-cap-of>1/4</span></figcaption>
+          <ol class="rig-ticks" aria-label="Frames"><li><button type="button" data-i="0" aria-label="Show frame: the table" aria-current="true"></button></li><li><button type="button" data-i="1" aria-label="Show frame: search"></button></li><li><button type="button" data-i="2" aria-label="Show frame: live stream"></button></li><li><button type="button" data-i="3" aria-label="Show frame: the globe"></button></li></ol>
+        </figure>
+        <div class="rig-trace">
+          <div class="rig-label"><span>Triangles per frame</span><span class="rig-scale">0–100k</span></div>
+          <div class="rig-plot" aria-hidden="true">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="rig-grid" d="M0 25H100M0 50H100M0 75H100"/><polyline class="rig-line" points="3.00,11.57 34.33,38.22 65.67,11.57 97.00,53.00"/></svg>
+            <span class="rig-dots"><i class="on" style="left:3.00%;top:11.57%" data-i="0" title="The table: 88,428 triangles, 1079 draw calls"></i><i style="left:34.33%;top:38.22%" data-i="1" title="Search: 61,776 triangles, 94 draw calls"></i><i style="left:65.67%;top:11.57%" data-i="2" title="Live stream: 88,428 triangles, 1079 draw calls"></i><i style="left:97.00%;top:53.00%" data-i="3" title="The globe: 46,996 triangles, 1165 draw calls"></i></span>
+            <span class="rig-sweep"></span>
+          </div>
+          <ol class="rig-axis" aria-hidden="true"><li style="left:3.00%">table</li><li style="left:34.33%">search</li><li style="left:65.67%">live</li><li style="left:97.00%">globe</li></ol>
+          <p class="rig-sr">Triangles per frame, the table: 88,428; search: 61,776; live stream: 88,428; the globe: 46,996.</p>
+        </div>
+      </div>
+      <dl class="rig-ch">
+        <div><dt>Payload</dt><dd class="rig-v"><b class="rig-n" data-n="287" data-d="1">287.0</b><u>kB</u></dd><dd class="rig-fn">JS, gzip, in 3D · lite mode 134 kB · no assets</dd></div>
+        <div><dt>Draw calls</dt><dd class="rig-v"><b class="rig-n" data-n="1165" data-d="0">1,165</b><u>peak</u></dd><dd class="rig-fn">max 88k tris · bloom included</dd></div>
+        <div><dt>First frame</dt><dd class="rig-v"><b class="rig-n" data-n="0.5" data-d="2">0.50</b><u>s</u></dd><dd class="rig-fn">median of 5 cold loads · 0.5–1.2 s</dd></div>
+        <div><dt>CI · main</dt><dd class="rig-v"><b class="rig-txt rig-ci" data-ci="success">pass</b></dd><dd class="rig-fn">29 Sep · f1a1385</dd></div>
+        <div><dt>Search</dt><dd class="rig-v rig-code"><b class="rig-txt">/coyote</b><u>→</u><b class="rig-txt rig-hit">coyote time</b></dd><dd class="rig-fn">found headless · 191 nodes, 273 links</dd></div>
+      </dl>
+      <p class="rig-foot">Chromium 149.0.7827.55, headless on SwiftShader at 1440×900 @1x: a bench for comparing builds, not a device frame rate.</p>
     </div>
-    <!-- /rig:idle -->
+    <!-- /rig:002 -->
         </li>
         <li><small>Entry 003</small><span>in progress</span>
     <!-- rig:idle -->
@@ -507,7 +536,7 @@
             <div class="mp-card">
               <b class="mp-sa">See also</b>
               <p>This site is the open portfolio of what jarvising produces: test projects, experiments and tools, published here as they are built.</p>
-              <div class="mp-slots"><span class="live"><small>Entry 001</small>Enigma</span><span><small>Entry 002</small>in progress</span><span><small>Entry 003</small>in progress</span></div>
+              <div class="mp-slots"><span class="live"><small>Entry 001</small>Enigma</span><span class="live"><small>Entry 002</small>Cortex</span><span><small>Entry 003</small>in progress</span></div>
             </div>
             <span class="ann t-hw">Fraunces 600 · opsz 144</span>
             <span class="ann t-sense">Fraunces 500 · opsz 40</span>

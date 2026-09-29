@@ -142,7 +142,176 @@
         "url": "https://github.com/StovBuilds/jarvising/actions/runs/36480002787"
       }
     },
-    "002": null,
+    "002": {
+      "slug": "cortex",
+      "measured_at": "2026-09-29T08:13:11.733Z",
+      "commit": "8ffd62a",
+      "dirty": false,
+      "method": {
+        "tool": "tools/measure-rig.mjs --entry 002",
+        "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
+        "viewport": "1440×900 @1x, dark scheme",
+        "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
+      },
+      "payload": {
+        "js_gzip": 286979,
+        "js_bytes": 1030825,
+        "js": [
+          {
+            "file": "/assets/Pass-y7pdcnXa.js",
+            "bytes": 1131,
+            "gzip": 616
+          },
+          {
+            "file": "/assets/UnrealBloomPass-Dfou5NOF.js",
+            "bytes": 9249,
+            "gzip": 2380
+          },
+          {
+            "file": "/assets/client-Be93g9SH.js",
+            "bytes": 967,
+            "gzip": 606
+          },
+          {
+            "file": "/assets/cortexLive-Bt02ddt8.js",
+            "bytes": 77494,
+            "gzip": 25953
+          },
+          {
+            "file": "/assets/index-D8k111YP.js",
+            "bytes": 92196,
+            "gzip": 30586
+          },
+          {
+            "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "bytes": 711,
+            "gzip": 399
+          },
+          {
+            "file": "/assets/react-DsceW-4w.js",
+            "bytes": 140863,
+            "gzip": 45188
+          },
+          {
+            "file": "/assets/react-force-graph-3d-DxrLHK-u.js",
+            "bytes": 117750,
+            "gzip": 32073
+          },
+          {
+            "file": "/assets/three-Dap21nlP.js",
+            "bytes": 590464,
+            "gzip": 149178
+          }
+        ],
+        "lite_js_gzip": 133738,
+        "lite_js": [
+          {
+            "file": "/assets/client-Be93g9SH.js",
+            "bytes": 967,
+            "gzip": 606
+          },
+          {
+            "file": "/assets/cortexLive-Bt02ddt8.js",
+            "bytes": 77494,
+            "gzip": 25953
+          },
+          {
+            "file": "/assets/index-D8k111YP.js",
+            "bytes": 92196,
+            "gzip": 30586
+          },
+          {
+            "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "bytes": 711,
+            "gzip": 399
+          },
+          {
+            "file": "/assets/react-DsceW-4w.js",
+            "bytes": 140863,
+            "gzip": 45188
+          },
+          {
+            "file": "/assets/react-force-graph-2d-aFR4kNIB.js",
+            "bytes": 89535,
+            "gzip": 31006
+          }
+        ],
+        "compression": "gzip -9 (node zlib) of the JS files the page fetched; 3D at 1440×900, lite at 390×844"
+      },
+      "data": {
+        "nodes": "191",
+        "links": "273",
+        "clusters": "7",
+        "mode": "3D"
+      },
+      "render": {
+        "views": [
+          {
+            "tag": "table",
+            "name": "The table",
+            "frame": "/projects/cortex/rig/table.webp",
+            "calls": 1079,
+            "triangles": 88428,
+            "textures": 24,
+            "geometries": 429,
+            "programs": 22
+          },
+          {
+            "tag": "search",
+            "name": "Search",
+            "frame": "/projects/cortex/rig/search.webp",
+            "calls": 94,
+            "triangles": 61776,
+            "textures": 24,
+            "geometries": 294,
+            "programs": 23
+          },
+          {
+            "tag": "live",
+            "name": "Live stream",
+            "frame": "/projects/cortex/rig/live.webp",
+            "calls": 1079,
+            "triangles": 88428,
+            "textures": 24,
+            "geometries": 429,
+            "programs": 22
+          },
+          {
+            "tag": "globe",
+            "name": "The globe",
+            "frame": "/projects/cortex/rig/globe.webp",
+            "calls": 1165,
+            "triangles": 46996,
+            "textures": 19,
+            "geometries": 343,
+            "programs": 20
+          }
+        ],
+        "source": "renderer.info summed over the latest whole frame (scene + bloom passes), via ?probe=1, once the scene stopped changing"
+      },
+      "first_frame_ms": {
+        "median": 498,
+        "runs": [
+          1187,
+          474,
+          534,
+          496,
+          498
+        ],
+        "source": "performance.now() at the first WebGL draw call, cold context, ?intro=0"
+      },
+      "search": {
+        "query": "coyote",
+        "found": "coyote time",
+        "pass": true
+      },
+      "ci": {
+        "conclusion": "success",
+        "at": "2026-09-29T06:36:05Z",
+        "sha": "f1a1385",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
+      }
+    },
     "003": null
   }
 }
