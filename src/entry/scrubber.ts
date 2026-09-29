@@ -82,8 +82,10 @@ async function mount(root: HTMLElement) {
   // ---- stage: two stacked images, the upper one wiped in ------------------
   const stage = root.querySelector<HTMLElement>(".scrub-stage") ?? root.appendChild(h("div", "scrub-stage"));
   stage.textContent = "";
+  // "file" frames are a published page with no git history (entry 004's claude.ai artifact): a version, not a commit
+  const builtAt = (f: Frame) => (f.kind === "file" ? `as published (${f.repo}, version ${f.sha})` : `as built at ${f.repo} commit ${f.sha}`);
   const alt = (i: number) =>
-    `The ${m.entry} piece as built at ${frames[i].repo} commit ${frames[i].sha}, ${fmtDate(frames[i].date)}, ${
+    `The ${m.entry} piece ${builtAt(frames[i])}, ${fmtDate(frames[i].date)}, ${
       frames[i].shots[beat] ? (m.beatAlt?.[beat] ?? `pinned at ${beat} of the scroll`) : (m.beatAlt?.[full[0]] ?? `pinned at ${full[0]} of the scroll`)}.`;
   const lower = h("img", "scrub-img");
   const upper = h("img", "scrub-img scrub-upper");

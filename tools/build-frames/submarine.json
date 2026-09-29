@@ -1,0 +1,91 @@
+{
+  "entry": "submarine",
+  "out": "public/projects/submarine/build",
+  "livePath": "/projects/submarine/live/",
+  "viewport": {
+    "width": 1200,
+    "height": 675
+  },
+  "progress": [
+    "open",
+    "periscope"
+  ],
+  "ready": "#loader.gone",
+  "settleMs": 8000,
+  "states": {
+    "open": {
+      "query": "depth=280&view=open&ping=0.3"
+    },
+    "periscope": {
+      "query": "depth=40&ping=0.75"
+    }
+  },
+  "beatAlt": {
+    "open": "opened up below the layer, at 280 feet",
+    "periscope": "assembled at periscope depth, 40 feet"
+  },
+  "beatGroupLabel": "State",
+  "milestones": [
+    {
+      "label": "Artifact published",
+      "iso": "2026-09-29T07:18:17Z",
+      "inferred": true,
+      "source": "claude.ai artifact version id 1790666297 read as a Unix timestamp; the service does not document the id, so this is an inference"
+    },
+    {
+      "label": "Port logged",
+      "iso": "2026-09-29T10:22:13Z",
+      "source": "commitment ledger, a747b94e opened"
+    },
+    {
+      "label": "Port first commit",
+      "iso": "2026-09-29T11:04:09Z",
+      "sha": "155076a",
+      "repo": "jarvising",
+      "source": "git log 155076a (author date)"
+    }
+  ],
+  "frames": [
+    {
+      "repo": "claude.ai",
+      "kind": "file",
+      "sha": "1790666297",
+      "file": "tools/build-frames/sources/below-the-layer.artifact.html",
+      "date": "2026-09-29T07:18:17Z",
+      "subject": "Published as a claude.ai artifact",
+      "note": "The published file itself, with three 0.169 and its fonts from their CDNs; it has no pinned state, so it was driven with its own buttons and left to sink in real time. The time is the version id read as a Unix timestamp, an inference.",
+      "stateOverrides": {
+        "open": {
+          "query": "",
+          "actions": [
+            {
+              "clickText": "Below layer"
+            },
+            {
+              "clickText": "Opened up"
+            },
+            {
+              "waitFn": "Number(document.getElementById('rDepth').textContent) >= 278",
+              "timeout": 900000
+            }
+          ]
+        },
+        "periscope": {
+          "query": "",
+          "actions": [
+            {
+              "wait": 20000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/work/jv-entry-sub",
+      "sha": "155076a",
+      "kind": "site",
+      "note": "Ported: the same scene on the site's own three.js and fonts, shot in a pinned, frozen state."
+    }
+  ]
+}

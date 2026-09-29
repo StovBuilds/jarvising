@@ -19,6 +19,12 @@
 //            into a temp dir, install ITS lockfile (cfg.workspace.install, e.g.
 //            npm ci), run cfg.workspace.build in cfg.workspace.cwd, serve
 //            cfg.workspace.dist, shoot "/". The worktree is removed afterwards.
+//   file     a single published page with no git history (entry 004: the claude.ai artifact
+//            the piece started as). frame.file (repo path) is served as-is at "/", so it
+//            loads whatever it loaded when published (CDN scripts, web fonts); render it
+//            on a machine with network. It has no commit: frame.date, frame.subject and
+//            frame.sha (a version label, used in file names and citations) come from the
+//            config and must say where they came from (frame.note).
 //   harness  a commit of another repo where the piece was one page of a big
 //            app: `git show <sha>:<path>` the component + its folder into a
 //            temp Vite project that mounts only that component (react-router's
@@ -48,6 +54,8 @@
 // { "key": "g" } presses a key. "ready" (CSS selector that means "drawn", default
 // ".en-readout, [data-ready]"; "waitFor" is accepted as an alias), "settleMs" and
 // "jiggle" (keep nudging the pointer, for render-on-demand loops) tune the wait.
+// { "waitFn": "<js expression>", "timeout": ms } waits until the expression is true
+// (entry 004: a live page with no pin, left to sink to depth in real time).
 // "qs" is extra query appended to every shot (entry 003: tier=HIGH).
 // A frame that fails to build, or a shot that fails, is reported and left out;
 // the rest still render.
@@ -133,6 +141,13 @@ function buildSite(frame, repo) {
   }
 }
 
+function buildFile(frame) {
+  const dir = path.join(TMP, `file-${frame.sha}`);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.copyFileSync(path.join(ROOT, frame.file), path.join(dir, "index.html"));
+  return { dist: dir, url: "/" };
+}
+
 function buildWorkspace(frame, repo) {
   const ws = { ...cfg.workspace, ...frame.workspace };
   const dir = path.join(TMP, `${frame.repo}-${frame.sha}`);
@@ -211,17 +226,18 @@ export default defineConfig({ plugins: [react()], resolve: { alias: [${alias.joi
 // ---- main ------------------------------------------------------------------
 if (dryRun) {
   for (const frame of cfg.frames) {
-    const repo = home(frame.repoPath);
-    const full = git(repo, "rev-parse", frame.sha);
+    const repo = frame.kind === "file" ? null : home(frame.repoPath);
+    if (frame.kind === "file" && !fs.existsSync(path.join(ROOT, frame.file))) throw new Error(`file frame ${frame.sha}: ${frame.file} missing`);
+    const full = frame.kind === "file" ? frame.sha : git(repo, "rev-parse", frame.sha);
     const url = frame.kind === "site" ? cfg.livePath : "/";
-    if (!["site", "harness", "workspace"].includes(frame.kind)) throw new Error(`unknown frame kind "${frame.kind}" at ${frame.sha}`);
+    if (!["site", "harness", "workspace", "file"].includes(frame.kind)) throw new Error(`unknown frame kind "${frame.kind}" at ${frame.sha}`);
     if (frame.kind === "workspace" && !{ ...cfg.workspace, ...frame.workspace }.build) throw new Error(`workspace frame ${frame.sha} has no build command`);
     if (frame.kind === "harness") for (const stub of Object.values(frame.harness.aliases ?? {})) if (!fs.existsSync(path.join(ROOT, stub))) throw new Error(`alias stub ${stub} missing`);
     const extras = frame.kind === "harness" ? Object.keys(frame.harness).filter((k) => !["component", "dir"].includes(k)) : [];
-    console.log(`${frame.repo}@${full.slice(0, 7)} ${frame.kind}${extras.length ? ` [${extras.join(", ")}]` : ""}`);
+    console.log(`${frame.repo}@${frame.kind === "file" ? full : full.slice(0, 7)} ${frame.kind}${extras.length ? ` [${extras.join(", ")}]` : ""}`);
     for (const p of progress) {
       const st = stateFor(frame, p);
-      const f = `${frame.repo}-${full.slice(0, 7)}-${pTag(p)}.jpg`;
+      const f = `${frame.repo}-${frame.kind === "file" ? full : full.slice(0, 7)}-${pTag(p)}.jpg`;
       console.log(`  ${fs.existsSync(path.join(OUT, f)) ? "have" : "MISS"} ${f}  <- ${url}${st.query ? `?${st.query}` : ""}${st.actions.length ? `  then ${JSON.stringify(st.actions)}` : ""}`);
     }
   }
@@ -236,10 +252,11 @@ const previous = writeManifest && fs.existsSync(manifestPath) ? JSON.parse(fs.re
 const out = [];
 try {
   for (const frame of cfg.frames) {
-    const repo = home(frame.repoPath);
-    const full = git(repo, "rev-parse", frame.sha);
-    const [date, subject] = git(repo, "log", "-1", "--format=%aI%x00%s", full).split("\0");
-    const entry = { repo: frame.repo, sha: full.slice(0, 7), date, subject, kind: frame.kind, ...(frame.note ? { note: frame.note } : {}), shots: {} };
+    const isFile = frame.kind === "file";
+    const repo = isFile ? null : home(frame.repoPath);
+    const full = isFile ? frame.sha : git(repo, "rev-parse", frame.sha);
+    const [date, subject] = isFile ? [frame.date, frame.subject] : git(repo, "log", "-1", "--format=%aI%x00%s", full).split("\0");
+    const entry = { repo: frame.repo, sha: isFile ? full : full.slice(0, 7), date, subject, kind: frame.kind, ...(frame.note ? { note: frame.note } : {}), shots: {} };
     const want = progress.map((p) => [p, `${frame.repo}-${entry.sha}-${pTag(p)}.jpg`]);
     const skip = only && !only.includes(entry.sha);
     const missing = want.filter(([, f]) => force || !fs.existsSync(path.join(OUT, f)));
@@ -247,7 +264,7 @@ try {
       console.log(`build ${frame.repo}@${entry.sha} (${frame.kind}) …`);
       let built = null;
       try {
-        built = frame.kind === "harness" ? await buildHarness(frame, repo) : frame.kind === "workspace" ? buildWorkspace(frame, repo) : buildSite(frame, repo);
+        built = frame.kind === "harness" ? await buildHarness(frame, repo) : frame.kind === "workspace" ? buildWorkspace(frame, repo) : frame.kind === "file" ? buildFile(frame) : buildSite(frame, repo);
       } catch (e) {
         // an honest gap: say which commit would not build, and carry on with the rest
         console.error(`  could not build ${frame.repo}@${entry.sha}; left out:\n    ${String(e.message).split("\n").slice(0, 12).join("\n    ")}`);
@@ -270,6 +287,7 @@ try {
           for (const a of st.actions) {
             if (a.wait) await page.waitForTimeout(a.wait);
             if (a.key) await page.keyboard.press(a.key);
+            if (a.waitFn) await page.waitForFunction(a.waitFn, null, { timeout: a.timeout ?? 600000, polling: 1000 });
             if (a.clickText) {
               const btn = page.getByRole("button", { name: new RegExp(`^\\W*${a.clickText}`, "i") }).first();
               if (!(await btn.count())) { absent = true; break; }
