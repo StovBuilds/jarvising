@@ -8,6 +8,14 @@ import { resolve } from "node:path";
 // through untouched (fonts, og images, _headers, robots, sitemap, llms.txt).
 export default defineConfig({
   plugins: [react()],
+  resolve: {
+    // entry 002: keep three's WebGPU build out of the bundle (src/cortex/webgpu-stub.ts)
+    // and ngraph's eval-built layout out of it too (src/cortex/ngraph-stub.ts: CSP has no unsafe-eval)
+    alias: [
+      { find: /^three\/webgpu$/, replacement: resolve(__dirname, "src/cortex/webgpu-stub.ts") },
+      { find: /^ngraph\.forcelayout$/, replacement: resolve(__dirname, "src/cortex/ngraph-stub.ts") },
+    ],
+  },
   build: {
     target: "es2020",
     // Never inline assets as data: URIs — _headers ships `font-src 'self'`, and
@@ -20,10 +28,13 @@ export default defineConfig({
         home: resolve(__dirname, "index.html"),
         enigma: resolve(__dirname, "projects/enigma/index.html"),
         enigmaLive: resolve(__dirname, "projects/enigma/live/index.html"),
+        cortexLive: resolve(__dirname, "projects/cortex/live/index.html"),
       },
       output: {
         manualChunks: {
-          three: ["three"],
+          // entry 002's named three re-export (lib/three-subset.ts) rides in the same chunk, so importing them
+          // lazily never drags an extra chunk (or the modulepreload polyfill) into a page
+          three: ["three", "./src/cortex/lib/three-subset.ts"],
           react: ["react", "react-dom"],
         },
       },

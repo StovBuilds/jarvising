@@ -1,0 +1,90 @@
+/* Entry 002, live page. The map's own HUD styles are injected by the library
+   (lib/styles.ts); this is the frame around it. Fonts are the site's own,
+   self-hosted, so the page makes no third-party request. */
+@font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+
+html, body { margin: 0; height: 100%; background: #04060d; color: #e2ecfa; overscroll-behavior: none; }
+#root { height: 100%; }
+
+.cx { position: fixed; inset: 0; display: flex; flex-direction: column; font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; color: rgba(226, 236, 250, .92); }
+.cx-bar button, .cx-intro button { font: inherit; color: inherit; }
+
+/* ── the site bar ── */
+.cx-bar { position: relative; z-index: 30; flex: none; display: flex; align-items: center; gap: 10px 14px; min-height: 46px; padding: 6px 14px; box-sizing: border-box;
+  border-bottom: 1px solid rgba(120, 165, 210, .14); background: rgba(4, 6, 13, .92); font-size: 13px; }
+.cx-brand { color: inherit; text-decoration: none; white-space: nowrap; letter-spacing: .02em; }
+.cx-brand i { font-style: normal; color: rgba(148, 168, 198, .6); margin: 0 1px; }
+.cx-brand b { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 16px; letter-spacing: 0; }
+a.cx-brand:hover b { color: #ffcf7a; }
+.cx-note { color: rgba(148, 168, 198, .75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.cx-grow { flex: 1; }
+.cx-live { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border-radius: 999px; border: 1px solid rgba(120, 165, 210, .3); background: transparent; padding: 5px 14px; white-space: nowrap; font-size: 12.5px; }
+.cx-live:hover { border-color: rgba(143, 199, 255, .6); }
+.cx-live.on { background: rgba(90, 214, 160, .15); border-color: rgba(90, 214, 160, .5); }
+.cx-live-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(148, 168, 198, .7); }
+.cx-live.on .cx-live-dot { background: #5ad6a0; box-shadow: 0 0 8px #5ad6a0; animation: cx-pulse 1.3s ease-in-out infinite; }
+@keyframes cx-pulse { 50% { opacity: .35; } }
+.cx-help { width: 30px; height: 30px; flex: none; border-radius: 50%; cursor: pointer; border: 1px solid rgba(120, 165, 210, .3); background: transparent; font-weight: 600; }
+.cx-help:hover { border-color: rgba(143, 199, 255, .6); }
+.cx button:focus-visible, .cx a:focus-visible { outline: 2px solid #8fc7ff; outline-offset: 2px; }
+
+/* ── the stage ── */
+.cx-stage { position: relative; flex: 1; min-height: 0; outline: none; }
+.cx-stage > .cortex-map { position: absolute !important; inset: 0; }
+.cx-customise { position: absolute; top: 12px; right: 12px; z-index: 20; width: 268px; max-height: calc(100% - 70px); }
+/* the node inspector takes the right-hand column; the panel gives way to it */
+.cx-stage:has(.cm-pane) .cx-customise { display: none; }
+.cx-selected { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); z-index: 10; margin: 0; pointer-events: none;
+  color: rgba(148, 168, 198, .9); font-size: 11px; white-space: nowrap; }
+
+/* ── the intro card ── */
+.cx-intro { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; box-sizing: border-box;
+  background: radial-gradient(80% 70% at 50% 45%, rgba(4, 6, 13, .55), rgba(4, 6, 13, .88)); animation: cx-in .5s ease both; overflow-y: auto; }
+@keyframes cx-in { from { opacity: 0; } }
+.cx-card { width: min(520px, 100%); box-sizing: border-box; padding: 28px 28px 24px; border-radius: 16px; border: 1px solid rgba(120, 165, 210, .24);
+  background: rgba(7, 12, 22, .9); box-shadow: 0 30px 80px rgba(0, 0, 0, .55); font-size: 15px; line-height: 1.55; }
+.cx-card p { margin: 0 0 12px; color: rgba(210, 222, 240, .88); }
+.cx-kicker { font-size: 11px !important; letter-spacing: .16em; text-transform: uppercase; color: #ffcf7a !important; margin-bottom: 6px !important; }
+.cx-card h1 { margin: 0 0 14px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 54px; line-height: 1; letter-spacing: -.03em; color: #f3f6fb; }
+.cx-card h1 span { color: #ffcf7a; }
+.cx-keys { list-style: none; margin: 16px 0 0; padding: 12px 0 0; border-top: 1px solid rgba(120, 165, 210, .16); font-size: 13px; color: rgba(148, 168, 198, .95); display: grid; gap: 5px; }
+.cx-keys b { color: rgba(226, 236, 250, .95); font-weight: 600; }
+.cx-keys kbd { display: inline-block; min-width: 1.4em; text-align: center; border: 1px solid rgba(120, 165, 210, .35); border-radius: 4px; padding: 0 4px; font: 600 11px/1.5 ui-monospace, monospace; color: #e2ecfa; margin: 0 1px; }
+.cx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 20px; }
+.cx-enter { cursor: pointer; border: 0; border-radius: 999px; padding: 11px 20px; background: #ffcf7a; color: #04060d !important; font-weight: 700 !important; letter-spacing: .03em; }
+.cx-enter:hover { background: #ffe0a3; }
+.cx-actions a { color: #8fc7ff; font-size: 14px; }
+.cx-fine { margin: 14px 0 0 !important; font-size: 12.5px; color: rgba(148, 168, 198, .85) !important; }
+
+/* ── kiosk: bigger type, nothing to click away to ── */
+.cx-kiosk .cx-bar { font-size: 15px; min-height: 56px; }
+.cx-kiosk .cx-brand b { font-size: 20px; }
+
+/* ── small screens: the lib's panels are sized for a desktop; make room ── */
+@media (max-width: 700px) {
+  .cx-note { display: none; }
+  .cx-live { padding: 5px 11px; font-size: 12px; }
+  .cortex-map .cm-stats, .cortex-map .cm-hover { display: none; }
+  .cortex-map .cm-legend { bottom: 54px !important; width: 150px !important; padding: 8px 10px !important; }
+  .cortex-map .cm-legend .cm-title { margin-bottom: 4px; }
+  .cortex-map .cm-legend-row { padding: 1px 0; font-size: 10.5px; }
+  .cx-customise { width: min(268px, calc(100% - 24px)); }
+  .cortex-map .cm-pane { left: 12px; width: auto; top: auto; height: 58%; }
+  .cx-card { padding: 22px 20px 20px; font-size: 14.5px; }
+  .cx-card h1 { font-size: 44px; }
+}
+@media (max-width: 400px) {
+  .cx-bar { padding: 6px 10px; gap: 8px; }
+  .cx-brand { font-size: 12px; }
+  .cx-live { font-size: 11.5px; padding: 5px 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-intro { animation: none; }
+  .cx-live.on .cx-live-dot { animation: none; }
+}
+.cx-short { display: none; }
+@media (max-width: 480px) {
+  .cx-long { display: none; }
+  .cx-short { display: inline; }
+}
