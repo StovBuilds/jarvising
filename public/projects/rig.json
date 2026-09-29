@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "measured_at": "2026-09-28T21:05:54.530Z",
-  "commit": "3ec6c83",
+  "measured_at": "2026-09-29T09:02:17.202Z",
+  "commit": "6da0fcc",
   "dirty": false,
   "method": {
     "tool": "tools/measure-rig.mjs",
@@ -13,13 +13,13 @@
     "001": {
       "slug": "enigma",
       "payload": {
-        "js_gzip": 231760,
-        "js_bytes": 838960,
+        "js_gzip": 241106,
+        "js_bytes": 866589,
         "js": [
           {
-            "file": "/assets/enigmaLive-CKRKqrXk.js",
-            "bytes": 114609,
-            "gzip": 39513
+            "file": "/assets/enigmaLive--ptDNQ_K.js",
+            "bytes": 68866,
+            "gzip": 25473
           },
           {
             "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
@@ -27,14 +27,24 @@
             "gzip": 399
           },
           {
-            "file": "/assets/react-ppAWL3zK.js",
-            "bytes": 140726,
-            "gzip": 45132
+            "file": "/assets/react-DsceW-4w.js",
+            "bytes": 140863,
+            "gzip": 45188
           },
           {
-            "file": "/assets/three-CS48PHc5.js",
-            "bytes": 582914,
-            "gzip": 146716
+            "file": "/assets/client-Be93g9SH.js",
+            "bytes": 967,
+            "gzip": 606
+          },
+          {
+            "file": "/assets/three-CMwW_uWN.js",
+            "bytes": 610387,
+            "gzip": 155961
+          },
+          {
+            "file": "/assets/GLTFLoader-B63E8JrW.js",
+            "bytes": 44795,
+            "gzip": 13479
           }
         ],
         "glb_bytes": 1596220,
@@ -117,16 +127,16 @@
             "programs": 19
           }
         ],
-        "source": "renderer.info after the last frame, at ?p=<beat>&probe=1, once the scene stopped growing"
+        "source": "renderer.info after the last frame, at ?p=<beat>&probe=1 (or the beat's own query), once the scene stopped growing"
       },
       "first_frame_ms": {
-        "median": 5275,
+        "median": 5474,
         "runs": [
-          6391,
-          5589,
-          5165,
-          5199,
-          5275
+          7387,
+          5452,
+          5474,
+          5349,
+          5519
         ],
         "source": "performance.now() after the first renderer.render, cold context, top of page"
       },
@@ -137,9 +147,9 @@
       },
       "ci": {
         "conclusion": "success",
-        "at": "2026-09-28T20:33:07Z",
-        "sha": "3fac714",
-        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36480002787"
+        "at": "2026-09-29T06:36:05Z",
+        "sha": "f1a1385",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
       }
     },
     "002": {
