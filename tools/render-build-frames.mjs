@@ -8,6 +8,7 @@
 //        [--only 164c3d0,…]  render just these shas
 //        [--out <dir>]       write frames elsewhere and skip the manifest (exploring)
 //        [--force]           re-render frames that already exist
+//        [--dry-run]         list what would be built and shot, then stop
 //
 // Frame kinds (see tools/build-frames/*.json):
 //   site     a commit of THIS site's repo: `git worktree add --detach` into a
@@ -23,6 +24,15 @@
 //            temp Vite project that mounts only that component (react-router's
 //            Link stubbed to <a>), build, serve, shoot /?p=<x>. The source
 //            repo's working tree is never touched.
+//            Optional per frame (harness.*):
+//              aliases  { "module": "path/in/this/repo" }: stand-ins for modules
+//                       this repo does not have (private packages, fonts); a module's
+//                       subpaths map to the same file
+//              public   { "served/path": "repo/path" }: files copied from the commit
+//                       into the build's public dir, skipped if absent at that sha
+//              scrub    true: run every extracted text file through
+//                       tools/brand-scrub.mjs's scrubText, then refuse to build if
+//                       any denylisted name is left (entry 003 names no brands)
 // Dependencies come from this repo's node_modules (the pieces share react/three
 // versions), except for `workspace` frames, which install their own. WebGL runs
 // on SwiftShader through the Playwright in ~/repos/claude-design (PLAYWRIGHT_ROOT
@@ -35,8 +45,15 @@
 // that frame. Actions run after the page is ready: { "clickText": "Globe" }
 // clicks the first button whose name starts with that text (no such button =
 // the piece had no such state at that commit, so the shot is skipped), and
-// { "key": "g" } presses a key. "ready" (CSS selector), "settleMs" and "jiggle"
-// (keep nudging the pointer, for render-on-demand loops) tune the wait.
+// { "key": "g" } presses a key. "ready" (CSS selector that means "drawn", default
+// ".en-readout, [data-ready]"; "waitFor" is accepted as an alias), "settleMs" and
+// "jiggle" (keep nudging the pointer, for render-on-demand loops) tune the wait.
+// "qs" is extra query appended to every shot (entry 003: tier=HIGH).
+// A frame that fails to build, or a shot that fails, is reported and left out;
+// the rest still render.
+//
+//   --dry-run   resolve every frame's commit and print the URL each shot would load
+//               and whether its file exists; builds nothing, launches no browser
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -53,15 +70,16 @@ const home = (p) => p.replace(/^~(?=\/)/, os.homedir());
 
 const cfgPath = path.resolve(ROOT, arg("--config", "tools/build-frames/enigma.json"));
 const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
-const progress = (arg("--p", null)?.split(",").map(Number)) ?? cfg.progress;
+const progress = (arg("--p", null)?.split(",").map((v) => (Number.isNaN(Number(v)) ? v : Number(v)))) ?? cfg.progress;
 const only = arg("--only", null)?.split(",");
 const outArg = arg("--out", null);
 const OUT = outArg ? path.resolve(outArg) : path.join(ROOT, cfg.out);
 const writeManifest = !outArg;
 const force = has("--force");
+const dryRun = has("--dry-run");
 const VP = cfg.viewport ?? { width: 1200, height: 675 };
 const QUALITY = cfg.quality ?? 74;
-fs.mkdirSync(OUT, { recursive: true });
+if (!dryRun) fs.mkdirSync(OUT, { recursive: true });
 const TMP = fs.mkdtempSync(path.join(process.env.TMPDIR ?? os.tmpdir(), "build-frames-"));
 
 const run = (cmd, args, opts = {}) => {
@@ -71,15 +89,16 @@ const run = (cmd, args, opts = {}) => {
 };
 const git = (repo, ...args) => run("git", ["-C", repo, ...args]);
 const pTag = (p) => (typeof p === "number" ? "p" + String(p).replace(".", "_") : String(p));
-const READY = cfg.ready ?? ".en-readout, [data-ready]";
+const READY = cfg.ready ?? cfg.waitFor ?? ".en-readout, [data-ready]";
 const SETTLE_MS = cfg.settleMs ?? 7000;
 // where the pointer rests while shooting, as fractions of the viewport (default: centre)
 const PTR = { x: (cfg.pointer?.[0] ?? 0.5) * VP.width, y: (cfg.pointer?.[1] ?? 0.5) * VP.height };
+const withQs = (q) => [q, cfg.qs].filter(Boolean).join("&");
 const stateFor = (frame, p) => {
-  if (!cfg.states) return { query: `p=${p}`, actions: [] };
+  if (!cfg.states) return { query: withQs(`p=${p}`), actions: [] };
   const st = frame.stateOverrides?.[p] ?? cfg.states[p];
   if (!st) throw new Error(`no state "${p}" in ${cfgPath}`);
-  return { query: st.query ?? "", actions: st.actions ?? [] };
+  return { query: withQs(st.query ?? ""), actions: st.actions ?? [] };
 };
 
 // ---- static server over a dist folder ------------------------------------
@@ -131,16 +150,34 @@ function buildWorkspace(frame, repo) {
   }
 }
 
-function buildHarness(frame, repo) {
+async function buildHarness(frame, repo) {
   const dir = path.join(TMP, `${frame.repo}-${frame.sha}`);
-  const { component, dir: partsDir } = frame.harness;
+  const { component, dir: partsDir, aliases = {}, public: pub = {}, scrub = false } = frame.harness;
   const srcDir = path.join(dir, "src");
   fs.mkdirSync(srcDir, { recursive: true });
   const files = git(repo, "ls-tree", "-r", "--name-only", frame.sha, partsDir).split("\n").filter(Boolean);
-  for (const f of [component, ...files]) {
+  const brands = scrub ? await import("./brand-scrub.mjs") : null;
+  const left = [];
+  for (const f of [...new Set([component, ...files])]) {
     const dest = path.join(srcDir, path.relative(path.dirname(component), f));
     fs.mkdirSync(path.dirname(dest), { recursive: true });
-    fs.writeFileSync(dest, git(repo, "show", `${frame.sha}:${f}`) + "\n");
+    let text = git(repo, "show", `${frame.sha}:${f}`) + "\n";
+    if (brands) {
+      text = brands.scrubText(text);
+      for (const b of brands.findBrands(text)) left.push(`${f}: ${b}`);
+    }
+    fs.writeFileSync(dest, text);
+  }
+  if (left.length) throw new Error(`scrub left ${left.length} denylisted name(s) at ${frame.sha}:\n${left.join("\n")}`);
+  // each alias replaces the module AND any subpath of it ("@fontsource/x/400.css")
+  const alias = [["react-router-dom", "/src/router-stub.tsx"], ...Object.entries(aliases).map(([m, stub]) => [m, path.join(ROOT, stub)])]
+    .map(([m, to]) => `{ find: /^${m.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}(\\/.*)?$/, replacement: ${JSON.stringify(to)} }`);
+  for (const [served, from] of Object.entries(pub)) {
+    const r = spawnSync("git", ["-C", repo, "show", `${frame.sha}:${from}`], { maxBuffer: 256 << 20 });
+    if (r.status !== 0) continue; // not in the repo yet at this commit
+    const dest = path.join(dir, "public", served);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, r.stdout);
   }
   const compName = path.basename(component).replace(/\.tsx?$/, "");
   fs.writeFileSync(path.join(srcDir, "router-stub.tsx"),
@@ -163,14 +200,36 @@ createRoot(document.getElementById("root")!).render(<Piece />);
   fs.writeFileSync(path.join(dir, "vite.config.mjs"),
     `import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-export default defineConfig({ plugins: [react()], resolve: { alias: { "react-router-dom": "/src/router-stub.tsx" } }, build: { target: "es2020", assetsInlineLimit: 0 } });
+export default defineConfig({ plugins: [react()], resolve: { alias: [${alias.join(", ")}] }, build: { target: "es2020", assetsInlineLimit: 0 } });
 `);
   fs.symlinkSync(path.join(ROOT, "node_modules"), path.join(dir, "node_modules"));
   run("bun", ["x", "vite", "build", "--logLevel", "error"], { cwd: dir });
   return { dist: path.join(dir, "dist"), url: "/" };
 }
 
+
 // ---- main ------------------------------------------------------------------
+if (dryRun) {
+  for (const frame of cfg.frames) {
+    const repo = home(frame.repoPath);
+    const full = git(repo, "rev-parse", frame.sha);
+    const url = frame.kind === "site" ? cfg.livePath : "/";
+    if (!["site", "harness", "workspace"].includes(frame.kind)) throw new Error(`unknown frame kind "${frame.kind}" at ${frame.sha}`);
+    if (frame.kind === "workspace" && !{ ...cfg.workspace, ...frame.workspace }.build) throw new Error(`workspace frame ${frame.sha} has no build command`);
+    if (frame.kind === "harness") for (const stub of Object.values(frame.harness.aliases ?? {})) if (!fs.existsSync(path.join(ROOT, stub))) throw new Error(`alias stub ${stub} missing`);
+    const extras = frame.kind === "harness" ? Object.keys(frame.harness).filter((k) => !["component", "dir"].includes(k)) : [];
+    console.log(`${frame.repo}@${full.slice(0, 7)} ${frame.kind}${extras.length ? ` [${extras.join(", ")}]` : ""}`);
+    for (const p of progress) {
+      const st = stateFor(frame, p);
+      const f = `${frame.repo}-${full.slice(0, 7)}-${pTag(p)}.jpg`;
+      console.log(`  ${fs.existsSync(path.join(OUT, f)) ? "have" : "MISS"} ${f}  <- ${url}${st.query ? `?${st.query}` : ""}${st.actions.length ? `  then ${JSON.stringify(st.actions)}` : ""}`);
+    }
+  }
+  console.log(`ready "${READY}", settle ${SETTLE_MS} ms${cfg.jiggle ? " (jiggle)" : ""}, out ${path.relative(ROOT, OUT)}`);
+  fs.rmSync(TMP, { recursive: true, force: true });
+  process.exit(0);
+}
+
 const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 const manifestPath = path.join(OUT, "manifest.json");
 const previous = writeManifest && fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : null;
@@ -186,14 +245,14 @@ try {
     const missing = want.filter(([, f]) => force || !fs.existsSync(path.join(OUT, f)));
     if (!skip && missing.length) {
       console.log(`build ${frame.repo}@${entry.sha} (${frame.kind}) …`);
-      let built;
+      let built = null;
       try {
-        built = frame.kind === "harness" ? buildHarness(frame, repo) : frame.kind === "workspace" ? buildWorkspace(frame, repo) : buildSite(frame, repo);
+        built = frame.kind === "harness" ? await buildHarness(frame, repo) : frame.kind === "workspace" ? buildWorkspace(frame, repo) : buildSite(frame, repo);
       } catch (e) {
         // an honest gap: say which commit would not build, and carry on with the rest
-        console.log(`  ${frame.repo}@${entry.sha} did not build; left out:\n${String(e.message).split("\n").slice(0, 6).join("\n")}`);
-        continue;
+        console.error(`  could not build ${frame.repo}@${entry.sha}; left out:\n    ${String(e.message).split("\n").slice(0, 12).join("\n    ")}`);
       }
+      if (built) {
       const { dist, url } = built;
       const server = await serve(dist);
       const port = server.address().port;
@@ -201,6 +260,8 @@ try {
         for (const [p, f] of missing) {
           const page = await browser.newPage({ viewport: VP, deviceScaleFactor: 1, colorScheme: "dark" });
           page.on("pageerror", (e) => console.error(`  pageerror @${entry.sha}:`, e.message));
+          // headless Chromium hangs screenshots after a cross-document View Transition
+          await page.route("**/motion/transitions.css", (r) => r.fulfill({ status: 200, contentType: "text/css", body: "" }));
           const st = stateFor(frame, p);
           await page.goto(`http://127.0.0.1:${port}${url}${st.query ? `?${st.query}` : ""}`, { waitUntil: "networkidle", timeout: 180000 });
           await page.waitForSelector(READY, { timeout: 180000 });
@@ -223,11 +284,14 @@ try {
           } else {
             await page.waitForTimeout(SETTLE_MS); // several software-GL frames: late GLBs, callouts, lamps
           }
-          await page.screenshot({ path: path.join(OUT, f), type: "jpeg", quality: QUALITY, timeout: 180000 });
-          console.log(`  wrote ${f} (${Math.round(fs.statSync(path.join(OUT, f)).size / 1024)} kB)`);
+          try {
+            await page.screenshot({ path: path.join(OUT, f), type: "jpeg", quality: QUALITY, timeout: 420000 });
+            console.log(`  wrote ${f} (${Math.round(fs.statSync(path.join(OUT, f)).size / 1024)} kB)`);
+          } catch (e) { console.error(`  shot ${f} failed (left out): ${e.message.split("\n")[0]}`); }
           await page.close();
         }
       } finally { server.close(); }
+      }
     }
     for (const [p, f] of want) if (fs.existsSync(path.join(OUT, f))) entry.shots[String(p)] = f;
     if (Object.keys(entry.shots).length) out.push(entry);

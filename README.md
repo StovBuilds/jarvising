@@ -24,7 +24,8 @@ functions/api/export-data.js  GET: aggregates for the Jarvis dashboard (x-api-ke
 migrations/                   D1 schema (site_events)
 tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
                               render-cortex.mjs (entry 002 hero/og),
-                              qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
+                              qa-shots.mjs (pinned-progress screenshots, any live page), optimize-glb.mjs,
+                              brand-scrub.mjs (CI gate: entry 003 names no manufacturer or product),
                               render-build-frames.mjs (an entry's build replayed: the piece rebuilt at
                               real commits, shot at a pinned ?p=, + manifest; config in build-frames/),
                               measure-rig.mjs (home-page test-rig strips → public/projects/rig.json),
@@ -47,6 +48,7 @@ is strict TS.
 |---|---|---|---|
 | 001 | `enigma` | Scroll-driven procedural Three.js teardown of the Enigma I, ending in a faithful typeable machine | ported from `jstov/src/pages/lab/Enigma.tsx` (lab experiment 008, 2026-08-27); links changed, nothing else |
 | 002 | `cortex` | The Jarvis fleet's memory map as a living 3D war table, over a fictional studio's second brain; the entry's recipe hands on the library | [cortex-map](https://github.com/StovBuilds/cortex-map) (MIT, 2026-07-15) vendored in `src/cortex/lib/` at 68db7b1; changes listed in `src/cortex/lib/SOURCE.md` |
+| 003 | `rig` | Inside the Rig: scroll from inside the processor out to a flagship-class gaming PC, then an exploded, searchable atlas of 104 pieces | ported from jstov.uk lab page 011 (2026-09-07/08) with every brand removed; `tools/brand-scrub.mjs` keeps it that way in CI |
 
 Adding an entry: copy `projects/enigma/` (entry page + live shell), put the code
 in `src/<slug>/`, add both HTML files to `rollupOptions.input`, render

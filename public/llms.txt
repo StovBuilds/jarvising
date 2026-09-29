@@ -10,6 +10,8 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 - [Entry 001 — live piece](https://jarvising.com/projects/enigma/live/): the teardown itself. Needs WebGL and JavaScript.
 - [Entry 002 — Cortex](https://jarvising.com/projects/cortex/): the memory of an AI agent fleet drawn as a living 3D knowledge graph on a holographic "war table", and the open-source React library that draws it, cortex-map (MIT, https://github.com/StovBuilds/cortex-map; not published to npm, so you clone the repository and copy or build packages/cortex-map). The entry page covers what it does, where it comes from (the Jarvis fleet's shared pgvector memory, 3,183 nodes / 3,924 edges verified 2026-07-27 per the public architecture notes), how it was made (fixed deterministic layout on 3d-force-graph, render-on-demand, everything drawn in code) and a seven-step recipe for making your own. First released 2026-07-15. The first entry for sense 2 of the word.
 - [Entry 002 — live piece](https://jarvising.com/projects/cortex/live/): the map, over a fictional game studio's second brain (191 nodes, 273 links, 7 clusters; no real data). Needs WebGL and JavaScript; flat 2D on phones.
+- [Entry 003 — Inside the Rig](https://jarvising.com/projects/rig/): a scroll-driven Three.js teardown of a flagship-class gaming PC, 17 chapters from inside the processor (an abstract city of logic blocks, then the cache) out through memory, the motherboard, storage, PCIe, the graphics processor, cooling, power and airflow to the whole machine, ending in an exploded, searchable atlas of 104 modelled pieces in eight systems (filters, synonym search, isolate, deep dive, a four-stage explode slider). Parts are modelled at real published dimensions but named generically: no brands, on purpose, enforced in CI. The entry page explains how it was made (an id registry the copy and the builders are both typed against; explode as per-node data; camera keys stamped with scroll progress; a scripted Blender parts library swapped in by id) and an eight-step recipe. First shipped 2026-09-07 as jstov.uk lab page 011.
+- [Entry 003 — live piece](https://jarvising.com/projects/rig/live/): the teardown and atlas. Needs WebGL and JavaScript.
 
 ## Pages
 
@@ -17,7 +19,7 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 ## Source
 
-- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`, entry 002 in `src/cortex/` (the cortex-map source vendored in `src/cortex/lib/`).
+- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`, entry 002 in `src/cortex/` (the cortex-map source vendored in `src/cortex/lib/`), entry 003 in `src/rig/`.
 
 ## Privacy
 

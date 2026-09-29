@@ -22,7 +22,7 @@ export default defineConfig({
     // Vite's default (<4 kB → base64) turned three small font subsets into
     // CSP violations on the live page (found on prod 2026-09-07).
     assetsInlineLimit: 0,
-    chunkSizeWarningLimit: 600, // three.js alone is ~540 kB minified; it is its own cached chunk
+    chunkSizeWarningLimit: 650, // three.js alone is ~610 kB minified (entry 003 pulls in more of the core); it is its own cached chunk
     rollupOptions: {
       input: {
         home: resolve(__dirname, "index.html"),
@@ -30,6 +30,8 @@ export default defineConfig({
         enigmaLive: resolve(__dirname, "projects/enigma/live/index.html"),
         cortex: resolve(__dirname, "projects/cortex/index.html"),
         cortexLive: resolve(__dirname, "projects/cortex/live/index.html"),
+        rig: resolve(__dirname, "projects/rig/index.html"),
+        rigLive: resolve(__dirname, "projects/rig/live/index.html"),
       },
       output: {
         manualChunks: {
