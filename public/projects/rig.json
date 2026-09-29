@@ -143,6 +143,144 @@
       }
     },
     "002": null,
-    "003": null
+    "003": {
+      "measured_at": "2026-09-29T07:50:23.175Z",
+      "commit": "d276fd5",
+      "dirty": false,
+      "method": {
+        "tool": "tools/measure-rig.mjs",
+        "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
+        "viewport": "1440×900 @1x, dark scheme",
+        "query": "?tier=HIGH on every load",
+        "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
+      },
+      "slug": "rig",
+      "payload": {
+        "js_gzip": 274531,
+        "js_bytes": 999353,
+        "js": [
+          {
+            "file": "/assets/rigLive-CYSxJqiz.js",
+            "bytes": 203559,
+            "gzip": 59695
+          },
+          {
+            "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "bytes": 711,
+            "gzip": 399
+          },
+          {
+            "file": "/assets/react-ppAWL3zK.js",
+            "bytes": 140726,
+            "gzip": 45132
+          },
+          {
+            "file": "/assets/three-BipeY9T6.js",
+            "bytes": 608571,
+            "gzip": 155291
+          },
+          {
+            "file": "/assets/GLTFLoader-DuIyPH0N.js",
+            "bytes": 45786,
+            "gzip": 14014
+          }
+        ],
+        "glb_bytes": 384212,
+        "glb": [
+          {
+            "file": "/models/rig-parts.glb",
+            "bytes": 384212
+          }
+        ],
+        "compression": "gzip -9 (node zlib); GLBs are raw file size"
+      },
+      "render": {
+        "beats": [
+          {
+            "p": 0.1,
+            "name": "Inside the CPU",
+            "frame": "/projects/rig/rig/p0_1.webp",
+            "calls": 23,
+            "triangles": 19024,
+            "textures": 19,
+            "geometries": 23,
+            "programs": 19
+          },
+          {
+            "p": 0.21,
+            "name": "The package",
+            "frame": "/projects/rig/rig/p0_21.webp",
+            "calls": 605,
+            "triangles": 158826,
+            "textures": 19,
+            "geometries": 426,
+            "programs": 23
+          },
+          {
+            "p": 0.55,
+            "name": "Inside the GPU",
+            "frame": "/projects/rig/rig/p0_55.webp",
+            "calls": 27,
+            "triangles": 5446,
+            "textures": 21,
+            "geometries": 26,
+            "programs": 21
+          },
+          {
+            "p": 0.72,
+            "name": "Move the heat",
+            "frame": "/projects/rig/rig/p0_72.webp",
+            "calls": 693,
+            "triangles": 196056,
+            "textures": 23,
+            "geometries": 482,
+            "programs": 26
+          },
+          {
+            "p": 1,
+            "name": "The atlas",
+            "qs": "atlas=1&explode=0.75&flat=1",
+            "frame": "/projects/rig/rig/p1.webp",
+            "calls": 977,
+            "triangles": 259766,
+            "textures": 21,
+            "geometries": 489,
+            "programs": 26
+          }
+        ],
+        "source": "renderer.info after the last frame, at ?p=<beat>&probe=1 (or the beat's own query), once the scene stopped growing; counted across every post-processing pass"
+      },
+      "first_frame_ms": {
+        "median": 1767,
+        "runs": [
+          2413,
+          1756,
+          2338,
+          1743,
+          1767
+        ],
+        "source": "performance.now() after the first renderer.render, cold context, top of page"
+      },
+      "search": {
+        "query": "memory",
+        "results": 8,
+        "first": [
+          "RAM DIMM 1",
+          "RAM DIMM 2",
+          "DIMM Slots"
+        ],
+        "pass": true
+      },
+      "parts": {
+        "count": 104,
+        "source": "src/rig/ids.ts"
+      },
+      "ci": {
+        "conclusion": "success",
+        "at": "2026-09-29T06:36:05Z",
+        "sha": "f1a1385",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
+      }
+    }
   }
 }
