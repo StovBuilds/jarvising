@@ -460,6 +460,150 @@
         "sha": "f1a1385",
         "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
       }
+    },
+    "004": {
+      "slug": "submarine",
+      "measured_at": "2026-09-29T11:24:39.989Z",
+      "commit": "a947b90",
+      "dirty": false,
+      "method": {
+        "tool": "tools/measure-rig.mjs --entry 004",
+        "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
+        "viewport": "1440×900 @1x, dark scheme",
+        "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
+      },
+      "payload": {
+        "js_gzip": 188122,
+        "js_bytes": 705691,
+        "js": [
+          {
+            "file": "/assets/submarineLive-B-uaDDTa.js",
+            "bytes": 50149,
+            "gzip": 20011
+          },
+          {
+            "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "bytes": 711,
+            "gzip": 399
+          },
+          {
+            "file": "/assets/three-CCq634Q5.js",
+            "bytes": 616006,
+            "gzip": 157797
+          },
+          {
+            "file": "/assets/Pass-T1qavycg.js",
+            "bytes": 1130,
+            "gzip": 619
+          },
+          {
+            "file": "/assets/RenderPass-BMKPggHM.js",
+            "bytes": 25333,
+            "gzip": 5869
+          },
+          {
+            "file": "/assets/UnrealBloomPass-BwaN4D1v.js",
+            "bytes": 9249,
+            "gzip": 2382
+          },
+          {
+            "file": "/assets/OutputPass-BB48C9w8.js",
+            "bytes": 3113,
+            "gzip": 1045
+          }
+        ],
+        "compression": "gzip -9 (node zlib) of the module and its modulepreloads; no assets, the scene is built in code"
+      },
+      "render": {
+        "states": [
+          {
+            "tag": "periscope",
+            "name": "Periscope depth",
+            "qs": "depth=40",
+            "frame": "/projects/submarine/rig/periscope.webp",
+            "calls": 182,
+            "triangles": 186757,
+            "textures": 17,
+            "geometries": 102,
+            "programs": 49
+          },
+          {
+            "tag": "ping",
+            "name": "Ping at the hull",
+            "qs": "depth=110&ping=0.52",
+            "frame": "/projects/submarine/rig/ping.webp",
+            "calls": 185,
+            "triangles": 210969,
+            "textures": 17,
+            "geometries": 105,
+            "programs": 51
+          },
+          {
+            "tag": "below",
+            "name": "Below the layer",
+            "qs": "depth=280&ping=1.05",
+            "frame": "/projects/submarine/rig/below.webp",
+            "calls": 186,
+            "triangles": 204049,
+            "textures": 17,
+            "geometries": 106,
+            "programs": 51
+          },
+          {
+            "tag": "open",
+            "name": "Opened up",
+            "qs": "depth=280&view=open&ping=0.3",
+            "frame": "/projects/submarine/rig/open.webp",
+            "calls": 431,
+            "triangles": 241955,
+            "textures": 17,
+            "geometries": 256,
+            "programs": 58
+          }
+        ],
+        "source": "renderer.info summed over one whole frame (scene + bloom + finishing passes), via ?probe=1, in pinned frozen states"
+      },
+      "first_frame_ms": {
+        "median": 3273,
+        "runs": [
+          5925,
+          4024,
+          3273,
+          2145,
+          1971
+        ],
+        "source": "performance.now() after the first composer.render, cold context, unpinned"
+      },
+      "echo": {
+        "above": {
+          "qs": "depth=110&ping=1.05",
+          "depth_ft": 110,
+          "strength": 1,
+          "word": "Strong",
+          "range_m": 123,
+          "status": "Escort has a fix · echo in 0.16 s"
+        },
+        "below": {
+          "qs": "depth=280&ping=1.05",
+          "depth_ft": 280,
+          "strength": 0.13,
+          "word": "Faint",
+          "range_m": 143,
+          "status": "Hidden below the layer"
+        },
+        "round_trip": {
+          "shown_s": 0.16,
+          "expected_s": 0.164,
+          "pass": true
+        },
+        "pass": true
+      },
+      "ci": {
+        "conclusion": "success",
+        "at": "2026-09-29T09:12:10Z",
+        "sha": "27ca1d0",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36547626810"
+      }
     }
   }
 }

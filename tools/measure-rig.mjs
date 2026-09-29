@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Test rig: measure the entries and write the numbers the home page shows.
 //   node tools/measure-rig.mjs                 build dist/, measure every entry, write rig.json + frames + home HTML
-//   node tools/measure-rig.mjs --entry 003     measure only that entry (001, 002 or 003); the others keep
+//   node tools/measure-rig.mjs --entry 003     measure only that entry (001, 002, 003 or 004); the others keep
 //                                              their numbers in rig.json
 //   node tools/measure-rig.mjs --html          only re-render the home-page strips from rig.json
 //
@@ -93,6 +93,22 @@ const ENTRIES = {
     smoke: "search",
     parts: "src/rig/ids.ts",
   },
+  "004": {
+    slug: "submarine",
+    kind: "states",
+    live: "/projects/submarine/live/",
+    probe: "__subProbe",
+    dirty: ["src/submarine", "projects/submarine"],
+    // pinned, frozen states (the piece has no scroll): ?depth=<ft>&view=open&ping=<0..1 of the round trip>
+    states: [
+      { tag: "periscope", name: "Periscope depth", qs: "depth=40" },
+      { tag: "ping", name: "Ping at the hull", qs: "depth=110&ping=0.52" },
+      { tag: "below", name: "Below the layer", qs: "depth=280&ping=1.05" },
+      { tag: "open", name: "Opened up", qs: "depth=280&view=open&ping=0.3" },
+    ],
+    // smoke: the same ping, echo home, above and below the layer
+    echo: { above: "depth=110&ping=1.05", below: "depth=280&ping=1.05" },
+  },
 };
 const ONLY = arg("--entry", null);
 
@@ -108,7 +124,7 @@ async function measure() {
   for (const id of ids) {
     const E = ENTRIES[id];
     if (!E) throw new Error(`no entry ${id} in ENTRIES`);
-    const r = E.kind === "views" ? await measureViews(id, E) : await measureEntry(id, E);
+    const r = E.kind === "views" ? await measureViews(id, E) : E.kind === "states" ? await measureStates(id, E) : await measureEntry(id, E);
     const stamp = {
       measured_at: new Date().toISOString(),
       commit: sh("git", ["rev-parse", "--short", "HEAD"]),
@@ -117,7 +133,7 @@ async function measure() {
     results[id] = { stamp, meta: r.meta, entry: r.entry };
   }
   const first = Object.values(results)[0];
-  const rig = prev && ONLY ? prev : { schema: 1, ...first.stamp, method: first.meta, entries: { "001": null, "002": null, "003": null } };
+  const rig = prev && ONLY ? prev : { schema: 1, ...first.stamp, method: first.meta, entries: { "001": null, "002": null, "003": null, "004": null } };
   for (const [id, { stamp, meta, entry }] of Object.entries(results)) {
     if (id === "001") { Object.assign(rig, stamp, { method: meta }); rig.entries[id] = entry; }
     else rig.entries[id] = { slug: entry.slug, ...stamp, method: meta, ...entry };
@@ -413,6 +429,152 @@ async function measureViews(id, E) {
   };
 }
 
+// ── entry 004: Below the Layer ────────────────────────────────────────────────────
+//   payload   gzip -9 of the live page's module + modulepreloads (no assets: everything is
+//             built in code), from a fresh dist/
+//   render    renderer.info for the whole frame (scene + bloom + finishing passes), via
+//             ?probe=1, in pinned, frozen states (E.states): the clock stands still, so
+//             one frame is every frame; read after a few frames have drawn
+//   timing    first frame = performance.now() after the first composer.render, median of
+//             cold loads, unpinned (the page as a visitor opens it)
+//   echo      smoke: the same ping, echo home (?ping=1.05), with the boat above the layer
+//             (110 ft) and below it (280 ft); the page's own readout must say the echo
+//             got weaker, and the round-trip time it prints must equal 2 × range ÷ 1,500 m/s
+//   ci, frames  as for 001; frames -> public/projects/submarine/rig/
+async function measureStates(id, E) {
+  const OUT = path.join(ROOT, `public/projects/${E.slug}/rig`);
+  const liveHtml = fs.readFileSync(path.join(ROOT, `dist${E.live}index.html`), "utf8");
+  const refs = [...new Set([
+    ...[...liveHtml.matchAll(/<script[^>]+src="(\/assets\/[^"]+\.js)"/g)].map((m) => m[1]),
+    ...[...liveHtml.matchAll(/<link[^>]+rel="modulepreload"[^>]+href="([^"]+\.js)"/g)].map((m) => m[1]),
+  ])];
+  const js = refs.map((ref) => {
+    const buf = fs.readFileSync(path.join(ROOT, "dist", ref));
+    return { file: ref, bytes: buf.length, gzip: zlib.gzipSync(buf, { level: 9 }).length };
+  });
+  const { base, browser, close } = await bench(4700);
+  const chromiumVersion = browser.version();
+  const probeOf = (page) => page.evaluate((k) => window[k] ?? null, E.probe);
+  const open = async (qs) => {
+    const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, colorScheme: "dark" });
+    await ctx.route("**/motion/transitions.css", (r) => r.fulfill({ status: 200, contentType: "text/css", body: "" }));
+    const page = await ctx.newPage();
+    page.on("pageerror", (e) => console.error("pageerror:", e.message));
+    await page.goto(`${base}${E.live}?probe=1${qs ? "&" + qs : ""}`, { waitUntil: "load" });
+    await page.waitForFunction((k) => (window[k]?.frames ?? 0) >= 1, E.probe, { timeout: 180000, polling: 100 });
+    return { ctx, page };
+  };
+  const settle = async (page) => {
+    await page.waitForFunction((k) => (window[k]?.frames ?? 0) >= 6, E.probe, { timeout: 180000, polling: 250 });
+    await page.waitForTimeout(1500); // the loader's fade
+    return probeOf(page);
+  };
+  let states = [], cold = [], echo = null;
+  try {
+    for (let i = 0; i < COLD_RUNS; i++) {
+      const { ctx, page } = await open("");
+      cold.push(Math.round((await probeOf(page)).firstFrameMs));
+      await ctx.close();
+    }
+    fs.rmSync(OUT, { recursive: true, force: true });
+    fs.mkdirSync(OUT, { recursive: true });
+    for (const v of E.states) {
+      const { ctx, page } = await open(v.qs);
+      const pr = await settle(page);
+      const png = path.join(OUT, `${v.tag}.png`);
+      await page.screenshot({ path: png, timeout: 180000 });
+      toWebp(png, path.join(OUT, `${v.tag}.webp`));
+      fs.rmSync(png);
+      states.push({ tag: v.tag, name: v.name, qs: v.qs, frame: `/projects/${E.slug}/rig/${v.tag}.webp`, calls: pr.calls, triangles: Math.round(pr.triangles), textures: pr.textures, geometries: pr.geometries, programs: pr.programs });
+      console.log("state", v.tag, JSON.stringify(pr));
+      await ctx.close();
+    }
+    const read = async (qs) => {
+      const { ctx, page } = await open(qs);
+      const pr = await settle(page);
+      const r = { qs, depth_ft: Math.round(pr.depthFt), strength: pr.echo?.s ?? null, word: pr.echo?.word ?? null, range_m: pr.echo ? Math.round(pr.echo.R) : null, status: pr.echo?.status ?? null };
+      await ctx.close();
+      return r;
+    };
+    const above = await read(E.echo.above), below = await read(E.echo.below);
+    const t = Number(above.status?.match(/echo in ([\d.]+) s/)?.[1]);
+    const expectT = above.range_m != null ? (2 * above.range_m) / 1500 : NaN;
+    echo = {
+      above, below,
+      round_trip: { shown_s: t, expected_s: +expectT.toFixed(3), pass: Math.abs(t - expectT) < 0.006 },
+      pass: above.strength != null && below.strength != null && below.strength < above.strength && above.word === "Strong" && below.word === "Faint" && Math.abs(t - expectT) < 0.006,
+    };
+    console.log("echo", JSON.stringify(echo));
+  } finally {
+    await close();
+  }
+  const ci = ciOnMain();
+  const sorted = [...cold].sort((a, b) => a - b);
+  return {
+    meta: {
+      tool: `tools/measure-rig.mjs --entry ${id}`,
+      browser: `Chromium ${chromiumVersion} headless, SwiftShader (software GL)`,
+      viewport: `${W}×${H} @1x, dark scheme`,
+      note: METHOD_NOTE,
+    },
+    entry: {
+      slug: E.slug,
+      payload: { js_gzip: js.reduce((a, f) => a + f.gzip, 0), js_bytes: js.reduce((a, f) => a + f.bytes, 0), js, compression: "gzip -9 (node zlib) of the module and its modulepreloads; no assets, the scene is built in code" },
+      render: { states, source: "renderer.info summed over one whole frame (scene + bloom + finishing passes), via ?probe=1, in pinned frozen states" },
+      first_frame_ms: { median: sorted[Math.floor(sorted.length / 2)], runs: cold, source: "performance.now() after the first composer.render, cold context, unpinned" },
+      echo,
+      ci,
+    },
+  };
+}
+
+// entry 004's strip: pinned states, and the echo smoke test
+function statesStripHtml(e) {
+  const views = e.render.states;
+  const maxTri = Math.max(...views.map((b) => b.triangles));
+  const maxCalls = Math.max(...views.map((b) => b.calls));
+  const top = Math.ceil(maxTri / 50000) * 50000;
+  const X = (i) => 3 + (i / (views.length - 1)) * 94;
+  const Y = (t) => 100 - (t / top) * 100;
+  const pts = views.map((b, i) => `${X(i).toFixed(2)},${Y(b.triangles).toFixed(2)}`).join(" ");
+  const fmtK = (n) => (n >= 1000 ? `${Math.round(n / 1000)}k` : String(n));
+  const ci = e.ci, ec = e.echo;
+  const frames = views.map((b, i) => `<img src="${b.frame}" width="480" height="300" data-tag="${esc(b.tag)}" data-name="${esc(b.name)}" alt="Headless render of the live piece, pinned: ${esc(b.name.toLowerCase())}" loading="lazy" decoding="async"${i === 0 ? ' class="on"' : ""}>`).join("\n          ");
+  const ticks = views.map((b, i) => `<li><button type="button" data-i="${i}" aria-label="Show frame: ${esc(b.name.toLowerCase())}"${i === 0 ? ' aria-current="true"' : ""}></button></li>`).join("");
+  const dots = views.map((b, i) => `<i${i === 0 ? ' class="on"' : ""} style="left:${X(i).toFixed(2)}%;top:${Y(b.triangles).toFixed(2)}%" data-i="${i}" title="${esc(b.name)}: ${b.triangles.toLocaleString("en-GB")} triangles, ${b.calls} draw calls"></i>`).join("");
+  const axis = views.map((b, i) => `<li style="left:${X(i).toFixed(2)}%">${esc(b.tag)}</li>`).join("");
+  return `<div class="rig" data-rig>
+      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">measured <time datetime="${e.measured_at}">${day(e.measured_at)}</time> · <a href="/projects/rig.json">rig.json</a></span></div>
+      <div class="rig-bench">
+        <figure class="rig-film" data-film>
+          <div class="rig-frames" tabindex="0" aria-label="QA frames in ${views.length} pinned states; hover or focus to flick through">
+          ${frames}
+          </div>
+          <figcaption><span class="rig-p" data-cap-p>${esc(views[0].tag)}</span><span data-cap-name>${esc(views[0].name)}</span><span class="rig-of" data-cap-of>1/${views.length}</span></figcaption>
+          <ol class="rig-ticks" aria-label="Frames">${ticks}</ol>
+        </figure>
+        <div class="rig-trace">
+          <div class="rig-label"><span>Triangles per frame</span><span class="rig-scale">0–${fmtK(top)}</span></div>
+          <div class="rig-plot" aria-hidden="true">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path class="rig-grid" d="M0 25H100M0 50H100M0 75H100"/><polyline class="rig-line" points="${pts}"/></svg>
+            <span class="rig-dots">${dots}</span>
+            <span class="rig-sweep"></span>
+          </div>
+          <ol class="rig-axis" aria-hidden="true">${axis}</ol>
+          <p class="rig-sr">Triangles per frame, ${views.map((b) => `${b.name.toLowerCase()}: ${b.triangles.toLocaleString("en-GB")}`).join("; ")}.</p>
+        </div>
+      </div>
+      <dl class="rig-ch">
+        <div><dt>Payload</dt><dd class="rig-v">${num(+kB(e.payload.js_gzip).toFixed(1), 1)}<u>kB</u></dd><dd class="rig-fn">JS, gzip · no assets, built in code</dd></div>
+        <div><dt>Draw calls</dt><dd class="rig-v">${num(maxCalls)}<u>peak</u></dd><dd class="rig-fn">max ${fmtK(maxTri)} tris · bloom included</dd></div>
+        <div><dt>First frame</dt><dd class="rig-v">${num(+(e.first_frame_ms.median / 1000).toFixed(2), 2)}<u>s</u></dd><dd class="rig-fn">median of ${e.first_frame_ms.runs.length} cold loads · ${(Math.min(...e.first_frame_ms.runs) / 1000).toFixed(1)}–${(Math.max(...e.first_frame_ms.runs) / 1000).toFixed(1)} s</dd></div>
+        ${ci ? `<div><dt>CI · main</dt><dd class="rig-v"><b class="rig-txt rig-ci" data-ci="${esc(ci.conclusion)}">${esc(ci.conclusion === "success" ? "pass" : ci.conclusion || "running")}</b></dd><dd class="rig-fn">${day(ci.at, false)} · ${esc(ci.sha)}</dd></div>` : ""}
+        ${ec ? `<div><dt>Echo</dt><dd class="rig-v rig-code"><b class="rig-txt">${ec.above.depth_ft} ft ${esc(ec.above.word ?? "?")}</b><u>→</u><b class="rig-txt">${ec.below.depth_ft} ft ${esc(ec.below.word ?? "?")}</b></dd><dd class="rig-fn">${ec.pass ? `same ping, read headless · ${ec.above.range_m} m in ${ec.round_trip.shown_s} s = 2 × range ÷ 1,500 m/s` : "smoke test FAILED"}</dd></div>` : ""}
+      </dl>
+      <p class="rig-foot">${esc(e.method.browser.replace(/ headless.*/, ""))}, headless on SwiftShader at ${esc(e.method.viewport.replace(", dark scheme", ""))}, pinned states: a bench for comparing builds, not a device frame rate.</p>
+    </div>`;
+}
+
 // ── static HTML for the home page (the no-JS truth; src/home/rig.ts only animates it) ──
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -536,7 +698,7 @@ function writeHtml(rig) {
   };
   for (const [id, e] of Object.entries(rig.entries)) {
     if (!e) continue;
-    put(id, e.render.views ? viewsStripHtml(e) : stripHtml(e, id === "001" ? rig : e));
+    put(id, e.render.states ? statesStripHtml(e) : e.render.views ? viewsStripHtml(e) : stripHtml(e, id === "001" ? rig : e));
   }
   // the idle placeholder only stands while some entry is still unmeasured
   if (s.includes("<!-- rig:idle -->")) put("idle", idleHtml());
