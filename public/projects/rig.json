@@ -1,23 +1,23 @@
 {
   "schema": 1,
-  "measured_at": "2026-09-29T09:02:17.202Z",
-  "commit": "6da0fcc",
+  "measured_at": "2026-09-29T12:34:35.809Z",
+  "commit": "f283d1d",
   "dirty": false,
   "method": {
     "tool": "tools/measure-rig.mjs",
     "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-    "viewport": "1440\u00d7900 @1x, dark scheme",
+    "viewport": "1440×900 @1x, dark scheme",
     "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
   },
   "entries": {
     "001": {
       "slug": "enigma",
       "payload": {
-        "js_gzip": 241106,
-        "js_bytes": 866589,
+        "js_gzip": 242943,
+        "js_bytes": 872206,
         "js": [
           {
-            "file": "/assets/enigmaLive--ptDNQ_K.js",
+            "file": "/assets/enigmaLive-CxNjyK2-.js",
             "bytes": 68866,
             "gzip": 25473
           },
@@ -37,14 +37,14 @@
             "gzip": 606
           },
           {
-            "file": "/assets/three-CMwW_uWN.js",
-            "bytes": 610387,
-            "gzip": 155961
+            "file": "/assets/three-CCq634Q5.js",
+            "bytes": 616006,
+            "gzip": 157797
           },
           {
-            "file": "/assets/GLTFLoader-B63E8JrW.js",
-            "bytes": 44795,
-            "gzip": 13479
+            "file": "/assets/GLTFLoader-C86H0wSE.js",
+            "bytes": 44793,
+            "gzip": 13480
           }
         ],
         "glb_bytes": 1596220,
@@ -130,13 +130,13 @@
         "source": "renderer.info after the last frame, at ?p=<beat>&probe=1 (or the beat's own query), once the scene stopped growing"
       },
       "first_frame_ms": {
-        "median": 5474,
+        "median": 7164,
         "runs": [
-          7387,
-          5452,
-          5474,
-          5349,
-          5519
+          6383,
+          6145,
+          7177,
+          7164,
+          7300
         ],
         "source": "performance.now() after the first renderer.render, cold context, top of page"
       },
@@ -147,35 +147,40 @@
       },
       "ci": {
         "conclusion": "success",
-        "at": "2026-09-29T06:36:05Z",
-        "sha": "f1a1385",
-        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
+        "at": "2026-09-29T12:25:26Z",
+        "sha": "f283d1d",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36568004815"
       }
     },
     "002": {
       "slug": "cortex",
-      "measured_at": "2026-09-29T08:46:58.864Z",
-      "commit": "c370cc7",
+      "measured_at": "2026-09-29T12:38:31.187Z",
+      "commit": "f283d1d",
       "dirty": false,
       "method": {
         "tool": "tools/measure-rig.mjs --entry 002",
         "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-        "viewport": "1440\u00d7900 @1x, dark scheme",
+        "viewport": "1440×900 @1x, dark scheme",
         "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
       },
       "payload": {
-        "js_gzip": 286979,
-        "js_bytes": 1030825,
+        "js_gzip": 296711,
+        "js_bytes": 1056514,
         "js": [
           {
-            "file": "/assets/Pass-y7pdcnXa.js",
-            "bytes": 1131,
-            "gzip": 616
+            "file": "/assets/Pass-T1qavycg.js",
+            "bytes": 1130,
+            "gzip": 619
           },
           {
-            "file": "/assets/UnrealBloomPass-Dfou5NOF.js",
+            "file": "/assets/RenderPass-BMKPggHM.js",
+            "bytes": 25333,
+            "gzip": 5869
+          },
+          {
+            "file": "/assets/UnrealBloomPass-BwaN4D1v.js",
             "bytes": 9249,
-            "gzip": 2380
+            "gzip": 2382
           },
           {
             "file": "/assets/client-Be93g9SH.js",
@@ -183,9 +188,9 @@
             "gzip": 606
           },
           {
-            "file": "/assets/cortexLive-Bt02ddt8.js",
-            "bytes": 77494,
-            "gzip": 25953
+            "file": "/assets/cortexLive-Bp1WM1a0.js",
+            "bytes": 77528,
+            "gzip": 25974
           },
           {
             "file": "/assets/index-D8k111YP.js",
@@ -203,17 +208,17 @@
             "gzip": 45188
           },
           {
-            "file": "/assets/react-force-graph-3d-DxrLHK-u.js",
-            "bytes": 117750,
-            "gzip": 32073
+            "file": "/assets/react-force-graph-3d-CATIRmfN.js",
+            "bytes": 92531,
+            "gzip": 27291
           },
           {
-            "file": "/assets/three-Dap21nlP.js",
-            "bytes": 590464,
-            "gzip": 149178
+            "file": "/assets/three-CCq634Q5.js",
+            "bytes": 616006,
+            "gzip": 157797
           }
         ],
-        "lite_js_gzip": 133738,
+        "lite_js_gzip": 133759,
         "lite_js": [
           {
             "file": "/assets/client-Be93g9SH.js",
@@ -221,9 +226,9 @@
             "gzip": 606
           },
           {
-            "file": "/assets/cortexLive-Bt02ddt8.js",
-            "bytes": 77494,
-            "gzip": 25953
+            "file": "/assets/cortexLive-Bp1WM1a0.js",
+            "bytes": 77528,
+            "gzip": 25974
           },
           {
             "file": "/assets/index-D8k111YP.js",
@@ -246,7 +251,7 @@
             "gzip": 31006
           }
         ],
-        "compression": "gzip -9 (node zlib) of the JS files the page fetched; 3D at 1440\u00d7900, lite at 390\u00d7844"
+        "compression": "gzip -9 (node zlib) of the JS files the page fetched; 3D at 1440×900, lite at 390×844"
       },
       "data": {
         "nodes": "191",
@@ -300,13 +305,13 @@
         "source": "renderer.info summed over the latest whole frame (scene + bloom passes), via ?probe=1, once the scene stopped changing"
       },
       "first_frame_ms": {
-        "median": 902,
+        "median": 488,
         "runs": [
-          1285,
-          902,
-          913,
-          771,
-          574
+          1138,
+          471,
+          476,
+          492,
+          488
         ],
         "source": "performance.now() at the first WebGL draw call, cold context, ?intro=0"
       },
@@ -317,31 +322,31 @@
       },
       "ci": {
         "conclusion": "success",
-        "at": "2026-09-29T06:36:05Z",
-        "sha": "f1a1385",
-        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
+        "at": "2026-09-29T12:25:26Z",
+        "sha": "f283d1d",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36568004815"
       }
     },
     "003": {
-      "measured_at": "2026-09-29T07:50:23.175Z",
-      "commit": "d276fd5",
+      "slug": "rig",
+      "measured_at": "2026-09-29T12:46:05.916Z",
+      "commit": "f283d1d",
       "dirty": false,
       "method": {
         "tool": "tools/measure-rig.mjs",
         "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-        "viewport": "1440\u00d7900 @1x, dark scheme",
+        "viewport": "1440×900 @1x, dark scheme",
         "query": "?tier=HIGH on every load",
         "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
       },
-      "slug": "rig",
       "payload": {
-        "js_gzip": 274531,
-        "js_bytes": 999353,
+        "js_gzip": 278823,
+        "js_bytes": 1007395,
         "js": [
           {
-            "file": "/assets/rigLive-CYSxJqiz.js",
-            "bytes": 203559,
-            "gzip": 59695
+            "file": "/assets/rigLive-fcnMPOzn.js",
+            "bytes": 165230,
+            "gzip": 51438
           },
           {
             "file": "/assets/modulepreload-polyfill-B5Qt9EMX.js",
@@ -349,19 +354,44 @@
             "gzip": 399
           },
           {
-            "file": "/assets/react-ppAWL3zK.js",
-            "bytes": 140726,
-            "gzip": 45132
+            "file": "/assets/react-DsceW-4w.js",
+            "bytes": 140863,
+            "gzip": 45188
           },
           {
-            "file": "/assets/three-BipeY9T6.js",
-            "bytes": 608571,
-            "gzip": 155291
+            "file": "/assets/client-Be93g9SH.js",
+            "bytes": 967,
+            "gzip": 606
           },
           {
-            "file": "/assets/GLTFLoader-DuIyPH0N.js",
-            "bytes": 45786,
-            "gzip": 14014
+            "file": "/assets/three-CCq634Q5.js",
+            "bytes": 616006,
+            "gzip": 157797
+          },
+          {
+            "file": "/assets/Pass-T1qavycg.js",
+            "bytes": 1130,
+            "gzip": 619
+          },
+          {
+            "file": "/assets/RenderPass-BMKPggHM.js",
+            "bytes": 25333,
+            "gzip": 5869
+          },
+          {
+            "file": "/assets/UnrealBloomPass-BwaN4D1v.js",
+            "bytes": 9249,
+            "gzip": 2382
+          },
+          {
+            "file": "/assets/OutputPass-BB48C9w8.js",
+            "bytes": 3113,
+            "gzip": 1045
+          },
+          {
+            "file": "/assets/GLTFLoader-C86H0wSE.js",
+            "bytes": 44793,
+            "gzip": 13480
           }
         ],
         "glb_bytes": 384212,
@@ -389,8 +419,8 @@
             "p": 0.21,
             "name": "The package",
             "frame": "/projects/rig/rig/p0_21.webp",
-            "calls": 605,
-            "triangles": 158826,
+            "calls": 603,
+            "triangles": 158802,
             "textures": 19,
             "geometries": 426,
             "programs": 23
@@ -430,13 +460,13 @@
         "source": "renderer.info after the last frame, at ?p=<beat>&probe=1 (or the beat's own query), once the scene stopped growing; counted across every post-processing pass"
       },
       "first_frame_ms": {
-        "median": 1767,
+        "median": 1658,
         "runs": [
-          2413,
-          1756,
-          2338,
-          1743,
-          1767
+          1895,
+          1745,
+          1521,
+          1341,
+          1658
         ],
         "source": "performance.now() after the first renderer.render, cold context, top of page"
       },
@@ -456,9 +486,9 @@
       },
       "ci": {
         "conclusion": "success",
-        "at": "2026-09-29T06:36:05Z",
-        "sha": "f1a1385",
-        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36531911286"
+        "at": "2026-09-29T12:25:26Z",
+        "sha": "f283d1d",
+        "url": "https://github.com/StovBuilds/jarvising/actions/runs/36568004815"
       }
     },
     "004": {
@@ -469,7 +499,7 @@
       "method": {
         "tool": "tools/measure-rig.mjs --entry 004",
         "browser": "Chromium 149.0.7827.55 headless, SwiftShader (software GL)",
-        "viewport": "1440\u00d7900 @1x, dark scheme",
+        "viewport": "1440×900 @1x, dark scheme",
         "note": "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate."
       },
       "payload": {
@@ -581,7 +611,7 @@
           "strength": 1,
           "word": "Strong",
           "range_m": 123,
-          "status": "Escort has a fix \u00b7 echo in 0.16 s"
+          "status": "Escort has a fix · echo in 0.16 s"
         },
         "below": {
           "qs": "depth=280&ping=1.05",
