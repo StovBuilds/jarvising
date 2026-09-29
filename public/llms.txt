@@ -8,6 +8,8 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 - [Entry 001 — Enigma](https://jarvising.com/projects/enigma/): a scroll-driven, fully procedural Three.js teardown of the Enigma I that ends in a faithful, typeable machine (rotors I·II·III, reflector B, ten plug pairs, double-step). The entry page explains what it does, how it was made (one scroll-derived progress value drives every beat; named parts with explode vectors; labels projected from 3D; WebAudio-synthesised sound) and a seven-step recipe for making your own, plus the complete cipher core as code. First shipped 2026-08-27 as jstov.uk lab experiment 008.
 - [Entry 001 — live piece](https://jarvising.com/projects/enigma/live/): the teardown itself. Needs WebGL and JavaScript.
+- [Entry 002 — Cortex](https://jarvising.com/projects/cortex/): the memory of an AI agent fleet drawn as a living 3D knowledge graph on a holographic "war table", and the open-source React library that draws it, cortex-map (MIT, https://github.com/StovBuilds/cortex-map; not published to npm, so you clone the repository and copy or build packages/cortex-map). The entry page covers what it does, where it comes from (the Jarvis fleet's shared pgvector memory, 3,183 nodes / 3,924 edges verified 2026-07-27 per the public architecture notes), how it was made (fixed deterministic layout on 3d-force-graph, render-on-demand, everything drawn in code) and a seven-step recipe for making your own. First released 2026-07-15. The first entry for sense 2 of the word.
+- [Entry 002 — live piece](https://jarvising.com/projects/cortex/live/): the map, over a fictional game studio's second brain (191 nodes, 273 links, 7 clusters; no real data). Needs WebGL and JavaScript; flat 2D on phones.
 
 ## Pages
 
@@ -15,7 +17,7 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 ## Source
 
-- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`.
+- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`, entry 002 in `src/cortex/` (the cortex-map source vendored in `src/cortex/lib/`).
 
 ## Privacy
 

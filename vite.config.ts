@@ -28,6 +28,7 @@ export default defineConfig({
         home: resolve(__dirname, "index.html"),
         enigma: resolve(__dirname, "projects/enigma/index.html"),
         enigmaLive: resolve(__dirname, "projects/enigma/live/index.html"),
+        cortex: resolve(__dirname, "projects/cortex/index.html"),
         cortexLive: resolve(__dirname, "projects/cortex/live/index.html"),
       },
       output: {
