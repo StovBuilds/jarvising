@@ -193,8 +193,10 @@ try {
           await page.waitForSelector(WAIT_FOR, { timeout: 180000 });
           await page.mouse.move(VP.width / 2, VP.height / 2);
           await page.waitForTimeout(7000); // several software-GL frames: late GLBs, callouts, lamps
-          await page.screenshot({ path: path.join(OUT, f), type: "jpeg", quality: QUALITY, timeout: 180000 });
-          console.log(`  wrote ${f} (${Math.round(fs.statSync(path.join(OUT, f)).size / 1024)} kB)`);
+          try {
+            await page.screenshot({ path: path.join(OUT, f), type: "jpeg", quality: QUALITY, timeout: 420000 });
+            console.log(`  wrote ${f} (${Math.round(fs.statSync(path.join(OUT, f)).size / 1024)} kB)`);
+          } catch (e) { console.error(`  shot ${f} failed (left out): ${e.message.split("\n")[0]}`); }
           await page.close();
         }
       } finally { server.close(); }

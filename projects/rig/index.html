@@ -245,7 +245,7 @@
     <p class="sense fade fade-3">A flagship-class gaming PC taken apart in scroll: seventeen chapters from inside the processor out to the whole machine, then an exploded atlas you can search, isolate and pull apart piece by piece.</p>
 
     <a class="door fade fade-3" href="/projects/rig/live/">
-      <img src="/projects/rig/hero.jpg" width="1600" height="900" alt="A gaming PC pulled apart in mid-air above a pale lab floor: the tower case open, the graphics card, liquid cooler, memory, power supply and fans each floating clear of the motherboard." fetchpriority="high">
+      <img src="/projects/rig/hero.jpg" width="1600" height="900" alt="A gaming PC pulled apart on a pale lab floor: the front panel with its three fans, the side panels and the radiator with its tubes lifted clear of the open tower, the graphics card and power supply still inside." fetchpriority="high">
       <span class="cta">
         <span class="btn">Open the teardown →</span>
         <span class="meta">WebGL · about three minutes<br>sound optional · keyboard works</span>
@@ -277,7 +277,35 @@
         <p>First attested as lab page 011 on jstov.uk on 7 September 2026, built in four slices over two days; moved here on 29 September with every brand taken out. Below, the build replays itself: every frame is the piece rebuilt from git at that commit and photographed at the same point in its scroll.</p>
       </div>
       <div class="wide">
-        <!-- rig:brief -->
+        <figure class="slip">
+          <figcaption class="slip-label"><span>The brief, as written</span><span class="tag">Jack's words, cut</span></figcaption>
+          <blockquote>Create a premium interactive web experience that takes the viewer from inside a high-end gaming PC to the complete machine. […] The goal is not a one-off 3D animation. The goal is a reusable PC anatomy platform […]. Start where the frame begins. End with every physical piece that made it possible.</blockquote>
+          <p class="src">From Jack's master brief, version 0.1, 7 September 2026, sections 1 and 2, as copied into the jstov repo. Cuts are marked; the one inside a sentence drops the name of the private 3D kit the platform was to be built on. The brief's reference build, which named its products, is not quoted.</p>
+        </figure>
+
+        <ul class="facts day-one" aria-label="Day one, 7 September 2026 (UTC)">
+          <li><small>Promise logged</small><span>15:08 <em>UTC</em></span></li>
+          <li><small>First commit</small><span>15:36 <em>62f976e</em></span></li>
+          <li><small>Slice 1 live</small><span>17:21 <em>UTC</em></span></li>
+          <li class="total"><small>Logged to live</small><span>2 h 13 min</span></li>
+        </ul>
+        <p class="caption">Day one, from the records: the commitment ledger (opened 15:08:18, closed 17:21:03), <code>git log</code> on jstov and the commits that wrote the state log. The first code on record arrived by accident: another lane's <code>git add -A</code> swept the half-written folder into its own commit at 15:36:38, and a lint fix followed at 15:40:57. The state log's heading for the start says ~15:45; the commit that saved it says 15:36:44. Slices 2 and 3 shipped the same evening; slice 4, the Blender parts and the mobile and accessibility passes, closed at 07:02 the next morning.</p>
+
+        <div class="scrub" data-scrubber data-manifest="/projects/rig/build/manifest.json" data-progress="0.21" data-beat-names="The package|Move the heat">
+          <div class="scrub-stage">
+            <img src="/projects/rig/build/jarvising-cab6ce5-p0_21.jpg" width="1200" height="675" loading="lazy" decoding="async" alt="The rig piece as ported to jarvising at commit cab6ce5: the processor in its socket, memory modules beside it, lit in amber.">
+          </div>
+          <p class="scrub-caption">The latest frame, 29 Sep 2026. With JavaScript on, drag across the picture or use the slider to replay all six.</p>
+          <ol class="scrub-cites" aria-label="Citations: the commits replayed">
+            <li data-sha="d7f0a12"><time datetime="2026-09-07T15:40:57Z">7 Sep</time><code>d7f0a12</code><span class="fresh">jstov: the work in progress, swept in by accident, plus its lint fix</span></li>
+            <li data-sha="441d38a"><time datetime="2026-09-07T17:06:20Z">7 Sep</time><code>441d38a</code><span class="fresh">jstov: slice 1 — lighting, cameras, glass, the atlas</span></li>
+            <li data-sha="9fc8438"><time datetime="2026-09-07T18:06:22Z">7 Sep</time><code>9fc8438</code><span class="fresh">jstov: slice 2 — the cinematic half</span></li>
+            <li data-sha="cd8a6a8"><time datetime="2026-09-07T19:07:56Z">7 Sep</time><code>cd8a6a8</code><span class="fresh">jstov: slice 3 — every product opened up, deep dive, dark lab</span></li>
+            <li data-sha="b1524e5"><time datetime="2026-09-08T06:26:21Z">8 Sep</time><code>b1524e5</code><span class="fresh">jstov: slice 4 — Blender hero parts, mobile, accessibility</span></li>
+            <li data-sha="cab6ce5"><time datetime="2026-09-29T07:04:19Z">29 Sep</time><code>cab6ce5</code><span class="fresh">Ported to jarvising.com as entry 003, every brand removed</span></li>
+          </ol>
+          <p class="caption">Frames rendered by <a href="https://github.com/StovBuilds/jarvising/blob/main/tools/render-build-frames.mjs">tools/render-build-frames.mjs</a> in software WebGL at <code>?tier=HIGH</code>, pinned at <code>?p=0.21</code> (the package) and <code>?p=0.72</code> (moving the heat). The jstov frames come from that commit's own rig files mounted alone, with every product name scrubbed out of the sources before the build (the build refuses to run if one is left) and system fonts standing in for one font package; the lab's red accent is shown as it was. A commit adding the socket vocabulary as data (3b60ba1) changed nothing these beats show and is left out.</p>
+        </div>
       </div>
     </section>
 

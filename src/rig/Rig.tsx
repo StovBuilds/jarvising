@@ -980,7 +980,7 @@ const Rig = () => {
         </>
       )}
 
-      <a href="/projects/rig/" className="rg-escape">← jarvising · 003</a>
+      <a href="/projects/rig/" className="rg-escape" aria-label="Back to the entry page">← entry</a>
     </div>
   );
 };

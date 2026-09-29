@@ -130,6 +130,12 @@
         }
       },
       "note": "Rendered from the commit's own rig files and parts library in a throwaway harness, product names scrubbed from the sources first."
+    },
+    {
+      "repo": "jarvising",
+      "repoPath": "~/repos/jarvising",
+      "sha": "cab6ce5",
+      "kind": "site"
     }
   ]
 }
