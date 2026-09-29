@@ -1,22 +1,27 @@
 #!/usr/bin/env node
-// Test rig: measure entry 001 and write the numbers the home page shows.
-//   node tools/measure-rig.mjs            build dist/, measure, write rig.json + frames + home HTML
-//   node tools/measure-rig.mjs --html     only re-render the home-page strip from rig.json
+// Test rig: measure the entries and write the numbers the home page shows.
+//   node tools/measure-rig.mjs                 build dist/, measure every entry, write rig.json + frames + home HTML
+//   node tools/measure-rig.mjs --entry 003     measure only that entry; the others keep their numbers in rig.json
+//   node tools/measure-rig.mjs --html          only re-render the home-page strips from rig.json
 //
 // Everything on the strip comes from here and nowhere else:
 //   payload   gzip -9 of every JS file the live page loads (its module + modulepreloads),
 //             and the byte size of each GLB, all read from a fresh dist/
 //   render    renderer.info (draw calls, triangles, textures, programs) of the last frame
-//             at pinned ?p= beats, read through the ?probe=1 hook in src/enigma/Enigma.tsx
+//             at pinned ?p= beats, read through each piece's ?probe=1 hook (window.__enigmaProbe,
+//             window.__rigProbe)
 //   timing    time to first rendered frame (performance.now() at the end of the first
 //             renderer.render), median of cold loads. Headless Chromium on SwiftShader,
 //             i.e. SOFTWARE GL: a lab number for comparing builds, not a device frame rate
-//   cipher    a smoke test typed into the simulator at p=1 (same check as render-enigma.mjs)
+//   smoke     001: a cipher typed into the simulator at p=1 (same check as render-enigma.mjs);
+//             003: the atlas search, driven through its real input, must list the memory modules
 //   ci        conclusion + time of the latest ci.yml run on main (gh), taken at measure time
-//   frames    small WebP screenshots at the same beats -> public/projects/enigma/rig/
+//   frames    small WebP screenshots at the same beats -> public/projects/<slug>/rig/
 //
-// Writes public/projects/rig.json, then rewrites the <!-- rig:001 --> and
+// Writes public/projects/rig.json, then rewrites the <!-- rig:<nnn> --> and
 // <!-- rig:idle --> blocks in index.html so the page reads fully without JS.
+// Entry 001's numbers sit at the top level of rig.json (measured_at, commit,
+// method); later entries carry their own, since they can be measured separately.
 import { spawn, execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -26,26 +31,83 @@ import zlib from "node:zlib";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const JSON_OUT = path.join(ROOT, "public/projects/rig.json");
-const FRAMES = path.join(ROOT, "public/projects/enigma/rig");
 const W = 1440, H = 900;
-// pinned beats: page progress p (the chapters read p), one per chapter worth seeing
-const BEATS = [
-  { p: 0.04, name: "The machine" },
-  { p: 0.31, name: "The assembly" },
-  { p: 0.45, name: "The rotor" },
-  { p: 0.6, name: "The path" },
-  { p: 0.83, name: "The bombe" },
-  { p: 0.95, name: "Your turn" },
-];
 const COLD_RUNS = 5;
+const arg = (k, d) => { const i = process.argv.indexOf(k); return i > -1 ? process.argv[i + 1] : d; };
+
+// Each entry: its live page, where its GLBs are named, its probe, the pinned beats
+// (page progress p; `qs` adds to the query, e.g. the atlas, which ?p= cannot pin)
+// and its smoke test.
+const ENTRIES = {
+  "001": {
+    slug: "enigma",
+    live: "/projects/enigma/live/",
+    glbFrom: ["src/enigma/Enigma.tsx"],
+    probe: "__enigmaProbe",
+    qs: "",
+    beats: [
+      { p: 0.04, name: "The machine" },
+      { p: 0.31, name: "The assembly" },
+      { p: 0.45, name: "The rotor" },
+      { p: 0.6, name: "The path" },
+      { p: 0.83, name: "The bombe" },
+      { p: 0.95, name: "Your turn" },
+    ],
+    smoke: "cipher",
+  },
+  "003": {
+    slug: "rig",
+    live: "/projects/rig/live/",
+    glbFrom: ["src/rig/library.ts"],
+    probe: "__rigProbe",
+    // what a desktop GPU gets; the page's own guess on SwiftShader is LOW (no shadows, no bloom)
+    qs: "tier=HIGH",
+    beats: [
+      { p: 0.1, name: "Inside the CPU" },
+      { p: 0.21, name: "The package" },
+      { p: 0.55, name: "Inside the GPU" },
+      { p: 0.72, name: "Move the heat" },
+      { p: 1, name: "The atlas", qs: "atlas=1&explode=0.75&flat=1" },
+    ],
+    smoke: "search",
+    parts: "src/rig/ids.ts",
+  },
+};
+const ONLY = arg("--entry", null);
 
 const sh = (cmd, args, opts = {}) => String(execFileSync(cmd, args, { cwd: ROOT, encoding: "utf8", ...opts }) ?? "").trim();
 
 async function measure() {
-  // ── payload, from a fresh build ──
   fs.rmSync(path.join(ROOT, "dist"), { recursive: true, force: true });
   sh("bun", ["run", "build"], { stdio: ["ignore", "ignore", "inherit"] });
-  const liveHtml = fs.readFileSync(path.join(ROOT, "dist/projects/enigma/live/index.html"), "utf8");
+  const prev = fs.existsSync(JSON_OUT) ? JSON.parse(fs.readFileSync(JSON_OUT, "utf8")) : null;
+  const ids = ONLY ? [ONLY] : Object.keys(ENTRIES);
+  const results = {};
+  let meta = null;
+  for (const id of ids) {
+    if (!ENTRIES[id]) throw new Error(`no entry ${id} in ENTRIES`);
+    const r = await measureEntry(id, ENTRIES[id]);
+    results[id] = r.entry;
+    meta = r.meta;
+  }
+  const commit = sh("git", ["rev-parse", "--short", "HEAD"]);
+  const dirty = sh("git", ["status", "--porcelain", "--", "src", "projects", "public/models"]) !== "";
+  const stamp = { measured_at: new Date().toISOString(), commit, dirty };
+  const rig = prev && ONLY ? prev : { schema: 1, ...stamp, method: meta, entries: { "001": null, "002": null, "003": null } };
+  for (const [id, e] of Object.entries(results)) {
+    if (id === "001") { Object.assign(rig, stamp, { method: meta }); rig.entries[id] = e; }
+    else rig.entries[id] = { ...stamp, method: meta, ...e };
+  }
+  fs.writeFileSync(JSON_OUT, JSON.stringify(rig, null, 2) + "\n");
+  console.log("wrote", path.relative(ROOT, JSON_OUT));
+  return rig;
+}
+
+async function measureEntry(id, E) {
+  const FRAMES = path.join(ROOT, `public/projects/${E.slug}/rig`);
+  const BEATS = E.beats;
+  // ── payload, from the fresh build ──
+  const liveHtml = fs.readFileSync(path.join(ROOT, `dist${E.live}index.html`), "utf8");
   const jsRefs = [...new Set([
     // the piece's own bundle: its module + modulepreloads (not the site-wide /analytics.js counter)
     ...[...liveHtml.matchAll(/<script[^>]+src="(\/assets\/[^"]+\.js)"/g)].map((m) => m[1]),
@@ -55,7 +117,7 @@ async function measure() {
     const buf = fs.readFileSync(path.join(ROOT, "dist", ref));
     return { file: ref, bytes: buf.length, gzip: zlib.gzipSync(buf, { level: 9 }).length };
   });
-  const glbNames = [...new Set([...fs.readFileSync(path.join(ROOT, "src/enigma/Enigma.tsx"), "utf8").matchAll(/"\/models\/([a-z0-9-]+\.glb)"/g)].map((m) => m[1]))].sort();
+  const glbNames = [...new Set(E.glbFrom.flatMap((f) => [...fs.readFileSync(path.join(ROOT, f), "utf8").matchAll(/"\/models\/([a-z0-9-]+\.glb)"/g)].map((m) => m[1])))].sort();
   const glb = glbNames.map((n) => ({ file: `/models/${n}`, bytes: fs.statSync(path.join(ROOT, "dist/models", n)).size }));
 
   // ── headless: preview the built dist, SwiftShader Chromium ──
@@ -70,13 +132,15 @@ async function measure() {
   });
   const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
   const chromiumVersion = browser.version();
-  const probeOf = (page) => page.evaluate(() => window.__enigmaProbe ?? null);
+  const probeOf = (page) => page.evaluate((k) => window[k] ?? null, E.probe);
   const open = async (qs) => {
     const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 1, colorScheme: "dark" }); // fresh context = cold HTTP cache
     const page = await ctx.newPage();
     page.on("pageerror", (e) => console.error("pageerror:", e.message));
-    await page.goto(`${base}/projects/enigma/live/?${qs}`, { waitUntil: "load" });
-    await page.waitForFunction(() => (window.__enigmaProbe?.frames ?? 0) >= 1, null, { timeout: 180000, polling: 100 });
+    // headless Chromium hangs screenshots after a cross-document View Transition
+    await page.route("**/motion/transitions.css", (r) => r.fulfill({ status: 200, contentType: "text/css", body: "" }));
+    await page.goto(`${base}${E.live}?${[qs, E.qs].filter(Boolean).join("&")}`, { waitUntil: "load" });
+    await page.waitForFunction((k) => (window[k]?.frames ?? 0) >= 1, E.probe, { timeout: 180000, polling: 100 });
     return { ctx, page };
   };
   // wait until the scene stops growing (GLBs land after first paint; the bombe on demand)
@@ -92,7 +156,7 @@ async function measure() {
     return probeOf(page);
   };
 
-  let beats = [], cold = [], cipher = null;
+  let beats = [], cold = [], cipher = null, search = null;
   try {
     // time to first frame: the natural top of the page, cold, median of N
     for (let i = 0; i < COLD_RUNS; i++) {
@@ -103,7 +167,7 @@ async function measure() {
     fs.rmSync(FRAMES, { recursive: true, force: true });
     fs.mkdirSync(FRAMES, { recursive: true });
     for (const b of BEATS) {
-      const { ctx, page } = await open(`p=${b.p}&probe=1`);
+      const { ctx, page } = await open(b.qs ? `${b.qs}&probe=1` : `p=${b.p}&probe=1`);
       await page.mouse.move(W / 2, H / 2);
       const pr = await settle(page);
       const tag = `p${String(b.p).replace(".", "_")}`;
@@ -112,12 +176,12 @@ async function measure() {
       // 480×300 WebP: shown at ~240 px wide, so 2× for dense screens
       sh("python3", ["-c", `from PIL import Image; im=Image.open(${JSON.stringify(png)}).convert("RGB").resize((480,300), Image.LANCZOS); im.save(${JSON.stringify(path.join(FRAMES, tag + ".webp"))}, "WEBP", quality=62, method=6)`]);
       fs.rmSync(png);
-      beats.push({ p: b.p, name: b.name, frame: `/projects/enigma/rig/${tag}.webp`, calls: pr.calls, triangles: Math.round(pr.triangles), textures: pr.textures, geometries: pr.geometries, programs: pr.programs });
+      beats.push({ p: b.p, name: b.name, ...(b.qs ? { qs: b.qs } : {}), frame: `/projects/${E.slug}/rig/${tag}.webp`, calls: pr.calls, triangles: Math.round(pr.triangles), textures: pr.textures, geometries: pr.geometries, programs: pr.programs });
       console.log("beat", b.p, JSON.stringify(pr));
       await ctx.close();
     }
     // cipher smoke: type HELLO into the simulator
-    {
+    if (E.smoke === "cipher") {
       const { ctx, page } = await open("p=1&probe=1");
       await settle(page);
       cipher = await page.evaluate(async () => {
@@ -128,6 +192,17 @@ async function measure() {
       const ok = cipher.out.length === 5 && [...cipher.out].every((c, i) => /[A-Z]/.test(c) && c !== "HELLO"[i]);
       cipher.pass = ok;
       console.log("cipher", JSON.stringify(cipher));
+      await ctx.close();
+    }
+    // atlas smoke: type into the real search box, read the real result list
+    if (E.smoke === "search") {
+      const { ctx, page } = await open("atlas=1&flat=1&probe=1");
+      await page.waitForSelector(".rg-search input", { timeout: 180000 });
+      await page.fill(".rg-search input", "memory");
+      await page.waitForTimeout(500);
+      const names = await page.$$eval(".rg-results li button > span:nth-child(2)", (els) => els.map((e) => e.textContent ?? ""));
+      search = { query: "memory", results: names.length, first: names.slice(0, 3), pass: names.some((n) => /DIMM/i.test(n)) };
+      console.log("search", JSON.stringify(search));
       await ctx.close();
     }
   } finally {
@@ -143,20 +218,18 @@ async function measure() {
   } catch (e) { console.error("gh failed; CI left unmeasured:", e.message); }
 
   const sorted = [...cold].sort((a, b) => a - b);
-  const rig = {
-    schema: 1,
-    measured_at: new Date().toISOString(),
-    commit: sh("git", ["rev-parse", "--short", "HEAD"]),
-    dirty: sh("git", ["status", "--porcelain", "--", "src", "projects", "public/models"]) !== "",
-    method: {
-      tool: "tools/measure-rig.mjs",
-      browser: `Chromium ${chromiumVersion} headless, SwiftShader (software GL)`,
-      viewport: `${W}×${H} @1x, dark scheme`,
-      note: "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate.",
-    },
-    entries: {
-      "001": {
-        slug: "enigma",
+  const parts = E.parts ? (fs.readFileSync(path.join(ROOT, E.parts), "utf8").match(/^\s+"[a-z0-9-]+",$/gm) ?? []).length : null;
+  const meta = {
+    tool: "tools/measure-rig.mjs",
+    browser: `Chromium ${chromiumVersion} headless, SwiftShader (software GL)`,
+    viewport: `${W}×${H} @1x, dark scheme`,
+    ...(E.qs ? { query: `?${E.qs} on every load` } : {}),
+    note: "Headless software rendering. Timing is for comparing builds on the same bench, not a real-device frame rate.",
+  };
+  return {
+    meta,
+    entry: {
+        slug: E.slug,
         payload: {
           js_gzip: js.reduce((s, f) => s + f.gzip, 0),
           js_bytes: js.reduce((s, f) => s + f.bytes, 0),
@@ -165,18 +238,14 @@ async function measure() {
           glb,
           compression: "gzip -9 (node zlib); GLBs are raw file size",
         },
-        render: { beats, source: "renderer.info after the last frame, at ?p=<beat>&probe=1, once the scene stopped growing" },
+        render: { beats, source: `renderer.info after the last frame, at ?p=<beat>&probe=1 (or the beat's own query), once the scene stopped growing${E.probe === "__rigProbe" ? "; counted across every post-processing pass" : ""}` },
         first_frame_ms: { median: sorted[Math.floor(sorted.length / 2)], runs: cold, source: "performance.now() after the first renderer.render, cold context, top of page" },
-        cipher,
+        ...(cipher ? { cipher } : {}),
+        ...(search ? { search } : {}),
+        ...(parts != null ? { parts: { count: parts, source: E.parts } } : {}),
         ci,
-      },
-      "002": null,
-      "003": null,
     },
   };
-  fs.writeFileSync(JSON_OUT, JSON.stringify(rig, null, 2) + "\n");
-  console.log("wrote", path.relative(ROOT, JSON_OUT));
-  return rig;
 }
 
 // ── static HTML for the home page (the no-JS truth; src/home/rig.ts only animates it) ──
@@ -186,8 +255,7 @@ const day = (iso, year = true) => { const d = new Date(iso); return `${d.getUTCD
 const kB = (b) => b / 1000;
 const num = (v, d = 0, cls = "") => `<b class="rig-n${cls}" data-n="${v}" data-d="${d}">${v.toLocaleString("en-GB", { minimumFractionDigits: d, maximumFractionDigits: d })}</b>`;
 
-function stripHtml(rig) {
-  const e = rig.entries["001"];
+function stripHtml(e, stamp) {
   const beats = e.render.beats;
   const maxTri = Math.max(...beats.map((b) => b.triangles));
   const maxCalls = Math.max(...beats.map((b) => b.calls));
@@ -200,12 +268,12 @@ function stripHtml(rig) {
   const fmtK = (n) => (n >= 1000 ? `${Math.round(n / 1000)}k` : String(n));
   const ci = e.ci;
   const glbList = e.payload.glb.map((g) => `${g.file.replace("/models/", "")} ${(g.bytes / 1e6).toFixed(2)} MB`).join(", ");
-  const frames = beats.map((b, i) => `<img src="${b.frame}" width="480" height="300" data-p="${b.p.toFixed(2)}" data-name="${esc(b.name)}" alt="Headless render of the live piece at p ${b.p.toFixed(2)}: ${esc(b.name.toLowerCase())}" loading="lazy" decoding="async"${i === 0 ? ' class="on"' : ""}>`).join("\n          ");
+  const frames = beats.map((b, i) => `<img src="${b.frame}" width="480" height="300" data-p="${b.p.toFixed(2)}" data-name="${esc(b.name)}" alt="Headless render of the live piece at ${b.qs ? "the atlas" : `p ${b.p.toFixed(2)}`}: ${esc(b.name.toLowerCase())}" loading="lazy" decoding="async"${i === 0 ? ' class="on"' : ""}>`).join("\n          ");
   const ticks = beats.map((b, i) => `<li><button type="button" data-i="${i}" aria-label="Show frame at p ${b.p.toFixed(2)}, ${esc(b.name.toLowerCase())}"${i === 0 ? ' aria-current="true"' : ""}></button></li>`).join("");
   const dots = beats.map((b, i) => `<i${i === 0 ? ' class="on"' : ""} style="left:${X(i).toFixed(2)}%;top:${Y(b.triangles).toFixed(2)}%" data-i="${i}" title="p ${b.p.toFixed(2)}: ${b.triangles.toLocaleString("en-GB")} triangles, ${b.calls} draw calls"></i>`).join("");
   const axis = beats.map((b, i) => `<li style="left:${X(i).toFixed(2)}%">${b.p.toFixed(2)}</li>`).join("");
   return `<div class="rig" data-rig>
-      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">measured <time datetime="${rig.measured_at}">${day(rig.measured_at)}</time> · <a href="/projects/rig.json">rig.json</a></span></div>
+      <div class="rig-head"><span class="rig-title"><span class="rig-led" aria-hidden="true"></span>Test rig</span><span class="rig-when">measured <time datetime="${stamp.measured_at}">${day(stamp.measured_at)}</time> · <a href="/projects/rig.json">rig.json</a></span></div>
       <div class="rig-bench">
         <figure class="rig-film" data-film>
           <div class="rig-frames" tabindex="0" aria-label="QA frames at ${beats.length} pinned scroll positions; hover or focus to flick through">
@@ -230,9 +298,9 @@ function stripHtml(rig) {
         <div><dt>Draw calls</dt><dd class="rig-v">${num(maxCalls)}<u>peak</u></dd><dd class="rig-fn">max ${fmtK(maxTri)} tris · ${Math.max(...beats.map((b) => b.textures))} textures</dd></div>
         <div><dt>First frame</dt><dd class="rig-v">${num(+(e.first_frame_ms.median / 1000).toFixed(2), 2)}<u>s</u></dd><dd class="rig-fn">median of ${e.first_frame_ms.runs.length} cold loads · ${(Math.min(...e.first_frame_ms.runs) / 1000).toFixed(1)}–${(Math.max(...e.first_frame_ms.runs) / 1000).toFixed(1)} s</dd></div>
         ${ci ? `<div><dt>CI · main</dt><dd class="rig-v"><b class="rig-txt rig-ci" data-ci="${esc(ci.conclusion)}">${esc(ci.conclusion === "success" ? "pass" : ci.conclusion || "running")}</b></dd><dd class="rig-fn">${day(ci.at, false)} · ${esc(ci.sha)}</dd></div>` : ""}
-        ${e.cipher ? `<div><dt>Cipher</dt><dd class="rig-v rig-code"><b class="rig-txt">${esc(e.cipher.typed)}</b><u>→</u><b class="rig-txt" data-scramble>${esc(e.cipher.out)}</b></dd><dd class="rig-fn">${e.cipher.pass ? "typed headless; no letter maps to itself" : "smoke test FAILED"}</dd></div>` : ""}
+        ${e.parts ? `<div><dt>Pieces</dt><dd class="rig-v">${num(e.parts.count)}<u>ids</u></dd><dd class="rig-fn">every one modelled, described and searchable</dd></div>` : ""}${e.search ? `<div><dt>Atlas search</dt><dd class="rig-v rig-code"><b class="rig-txt">${esc(e.search.query)}</b><u>→</u><b class="rig-txt">${e.search.results}</b></dd><dd class="rig-fn">${e.search.pass ? `typed headless; lists ${esc(e.search.first.slice(0, 2).join(", "))}…` : "smoke test FAILED"}</dd></div>` : ""}${e.cipher ? `<div><dt>Cipher</dt><dd class="rig-v rig-code"><b class="rig-txt">${esc(e.cipher.typed)}</b><u>→</u><b class="rig-txt" data-scramble>${esc(e.cipher.out)}</b></dd><dd class="rig-fn">${e.cipher.pass ? "typed headless; no letter maps to itself" : "smoke test FAILED"}</dd></div>` : ""}
       </dl>
-      <p class="rig-foot">${esc(rig.method.browser.replace(/ headless.*/, ""))}, headless on SwiftShader at ${esc(rig.method.viewport.replace(", dark scheme", ""))}: a bench for comparing builds, not a device frame rate.</p>
+      <p class="rig-foot">${esc(stamp.method.browser.replace(/ headless.*/, ""))}, headless on SwiftShader at ${esc(stamp.method.viewport.replace(", dark scheme", ""))}${stamp.method.query ? `, <code>${esc(stamp.method.query.replace(/ on every load$/, ""))}</code>` : ""}: a bench for comparing builds, not a device frame rate.</p>
     </div>`;
 }
 
@@ -252,7 +320,10 @@ function writeHtml(rig) {
     if (!re.test(s)) throw new Error(`index.html has no <!-- rig:${tag} --> block`);
     s = s.replace(re, (_m, a, b) => `${a}\n    ${html}\n    ${b}`);
   };
-  put("001", stripHtml(rig));
+  for (const [id, e] of Object.entries(rig.entries)) {
+    if (!e) continue;
+    put(id, stripHtml(e, id === "001" ? rig : e));
+  }
   put("idle", idleHtml());
   fs.writeFileSync(f, s);
   console.log("rewrote index.html rig blocks");

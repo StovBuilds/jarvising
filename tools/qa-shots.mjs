@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Screenshot the live piece at pinned progress values on SwiftShader.
 //   node tools/qa-shots.mjs --p 0.3,0.5,0.66 --out /tmp/dir [--w 1440 --h 900] [--qs "kiosk=1"]
+//        [--path /projects/rig/live/ --wait ".rg-readout, .rg-atlas-head"]   (default: entry 001)
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -12,17 +13,20 @@ const arg = (k, d) => { const i = process.argv.indexOf(k); return i > -1 ? proce
 const ps = arg("--p", "0.3").split(",").map(Number);
 const out = arg("--out", "/tmp"); fs.mkdirSync(out, { recursive: true });
 const W = +arg("--w", 1440), H = +arg("--h", 900);
-const QS = arg("--qs", ""); const tag = QS ? "-" + QS.replace(/[^a-z0-9]+/gi, "_") : "";
+const QS = arg("--qs", "");
+const LIVE = arg("--path", "/projects/enigma/live/"), WAIT = arg("--wait", ".en-readout"); const tag = QS ? "-" + QS.replace(/[^a-z0-9]+/gi, "_") : "";
 const port = 4400 + Math.floor(Math.random() * 100);
 const server = spawn("bun", ["x", "vite", "--port", String(port), "--strictPort", "--host", "127.0.0.1"], { cwd: ROOT, stdio: ["ignore", "pipe", "pipe"] });
 await new Promise((res, rej) => { const t = setTimeout(() => rej(new Error("vite did not start")), 30000); server.stdout.on("data", (d) => { if (String(d).includes("Local:")) { clearTimeout(t); res(); } }); });
 const browser = await chromium.launch({ args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
 try {
   const page = await browser.newPage({ viewport: { width: W, height: H }, colorScheme: "dark" });
+  // headless Chromium hangs screenshots after a cross-document View Transition
+  await page.route("**/motion/transitions.css", (r) => r.fulfill({ status: 200, contentType: "text/css", body: "" }));
   page.on("pageerror", (e) => console.error("pageerror:", e.message));
   for (const p of ps) {
-    await page.goto(`http://127.0.0.1:${port}/projects/enigma/live/?p=${p}${QS ? "&" + QS : ""}`, { waitUntil: "networkidle" });
-    await page.waitForSelector(".en-readout", { timeout: 120000 });
+    await page.goto(`http://127.0.0.1:${port}${LIVE}?p=${p}${QS ? "&" + QS : ""}`, { waitUntil: "networkidle", timeout: 180000 });
+    await page.waitForSelector(WAIT, { timeout: 120000 });
     await page.mouse.move(W / 2, H / 2);
     await page.waitForTimeout(5000);
     const f = path.join(out, `p${String(p).replace(".", "_")}${tag}.png`);

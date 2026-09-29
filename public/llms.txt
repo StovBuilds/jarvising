@@ -8,6 +8,8 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 - [Entry 001 — Enigma](https://jarvising.com/projects/enigma/): a scroll-driven, fully procedural Three.js teardown of the Enigma I that ends in a faithful, typeable machine (rotors I·II·III, reflector B, ten plug pairs, double-step). The entry page explains what it does, how it was made (one scroll-derived progress value drives every beat; named parts with explode vectors; labels projected from 3D; WebAudio-synthesised sound) and a seven-step recipe for making your own, plus the complete cipher core as code. First shipped 2026-08-27 as jstov.uk lab experiment 008.
 - [Entry 001 — live piece](https://jarvising.com/projects/enigma/live/): the teardown itself. Needs WebGL and JavaScript.
+- [Entry 003 — Inside the Rig](https://jarvising.com/projects/rig/): a scroll-driven Three.js teardown of a flagship-class gaming PC, 17 chapters from inside the processor (an abstract city of logic blocks, then the cache) out through memory, the motherboard, storage, PCIe, the graphics processor, cooling, power and airflow to the whole machine, ending in an exploded, searchable atlas of 104 modelled pieces in eight systems (filters, synonym search, isolate, deep dive, a four-stage explode slider). Parts are modelled at real published dimensions but named generically: no brands, on purpose, enforced in CI. The entry page explains how it was made (an id registry the copy and the builders are both typed against; explode as per-node data; camera keys stamped with scroll progress; a scripted Blender parts library swapped in by id) and an eight-step recipe. First shipped 2026-09-07 as jstov.uk lab page 011.
+- [Entry 003 — live piece](https://jarvising.com/projects/rig/live/): the teardown and atlas. Needs WebGL and JavaScript.
 
 ## Pages
 
@@ -15,7 +17,7 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 ## Source
 
-- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`.
+- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`, entry 003 in `src/rig/`.
 
 ## Privacy
 

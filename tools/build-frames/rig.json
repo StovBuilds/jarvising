@@ -1,0 +1,135 @@
+{
+  "entry": "rig",
+  "out": "public/projects/rig/build",
+  "livePath": "/projects/rig/live/",
+  "viewport": {
+    "width": 1200,
+    "height": 675
+  },
+  "progress": [
+    0.21,
+    0.72
+  ],
+  "waitFor": ".rg-readout",
+  "qs": "tier=HIGH",
+  "brief": {
+    "text": "Create a premium interactive web experience that takes the viewer from inside a high-end gaming PC to the complete machine. […] The goal is not a one-off 3D animation. The goal is a reusable PC anatomy platform […]. Start where the frame begins. End with every physical piece that made it possible.",
+    "label": "The brief, as written",
+    "paraphrase": false,
+    "source": "Jack's master brief, v0.1, 7 September 2026, sections 1 and 2 (in the jstov repo as docs/lab/rig/MASTER_BRIEF.md). His words, with cuts marked; the cut clause names the private 3D kit the platform was to be built on."
+  },
+  "milestones": [
+    {
+      "label": "Promise logged",
+      "iso": "2026-09-07T15:08:18Z",
+      "source": "commitment ledger, 1b536044 opened"
+    },
+    {
+      "label": "State log: started",
+      "iso": "2026-09-07T15:36:44Z",
+      "source": "home-repo commit 449a299 (entry heading says ~15:45Z)"
+    },
+    {
+      "label": "First commit",
+      "iso": "2026-09-07T15:36:38Z",
+      "sha": "62f976e",
+      "repo": "jstov",
+      "source": "git -C jstov log 62f976e: the work in progress was swept into another lane's commit by a `git add -A`; d7f0a12 fixed its lint at 15:40:57"
+    },
+    {
+      "label": "Slice 1 live, promise closed",
+      "iso": "2026-09-07T17:21:03Z",
+      "source": "commitment ledger, 1b536044 closed (slice 1 committed 17:06:20 as 441d38a)"
+    },
+    {
+      "label": "Slice 4 live, last promise closed",
+      "iso": "2026-09-08T07:02:52Z",
+      "source": "commitment ledger, 93f54e7d closed (slice 4 committed 06:26:21 as b1524e5)"
+    }
+  ],
+  "frames": [
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "d7f0a12",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/rig/Rig.tsx",
+        "dir": "src/pages/lab/rig",
+        "scrub": true,
+        "aliases": {
+          "@jstov/3d-kit": "src/rig/helpers.ts",
+          "@fontsource/inter": "tools/build-frames/stubs/empty.css"
+        }
+      },
+      "note": "The first code on record: the work in progress as another lane's commit swept it up, plus its lint fix. Rendered from that commit's own rig files in a throwaway harness, with every product name scrubbed out of the sources first."
+    },
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "441d38a",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/rig/Rig.tsx",
+        "dir": "src/pages/lab/rig",
+        "scrub": true,
+        "aliases": {
+          "@jstov/3d-kit": "src/rig/helpers.ts",
+          "@fontsource/inter": "tools/build-frames/stubs/empty.css"
+        }
+      },
+      "note": "Rendered from the commit's own rig files in a throwaway harness, product names scrubbed from the sources first."
+    },
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "9fc8438",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/rig/Rig.tsx",
+        "dir": "src/pages/lab/rig",
+        "scrub": true,
+        "aliases": {
+          "@jstov/3d-kit": "src/rig/helpers.ts",
+          "@fontsource/inter": "tools/build-frames/stubs/empty.css"
+        }
+      },
+      "note": "Rendered from the commit's own rig files in a throwaway harness, product names scrubbed from the sources first."
+    },
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "cd8a6a8",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/rig/Rig.tsx",
+        "dir": "src/pages/lab/rig",
+        "scrub": true,
+        "aliases": {
+          "@jstov/3d-kit": "src/rig/helpers.ts",
+          "@fontsource/inter": "tools/build-frames/stubs/empty.css"
+        }
+      },
+      "note": "Rendered from the commit's own rig files in a throwaway harness, product names scrubbed from the sources first."
+    },
+    {
+      "repo": "jstov",
+      "repoPath": "~/repos/jstov",
+      "sha": "b1524e5",
+      "kind": "harness",
+      "harness": {
+        "component": "src/pages/lab/rig/Rig.tsx",
+        "dir": "src/pages/lab/rig",
+        "scrub": true,
+        "aliases": {
+          "@jstov/3d-kit": "src/rig/helpers.ts",
+          "@fontsource/inter": "tools/build-frames/stubs/empty.css"
+        },
+        "public": {
+          "lab-assets/rig/parts.glb": "public/lab-assets/rig/parts.glb"
+        }
+      },
+      "note": "Rendered from the commit's own rig files and parts library in a throwaway harness, product names scrubbed from the sources first."
+    }
+  ]
+}

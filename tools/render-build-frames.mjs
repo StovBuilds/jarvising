@@ -18,6 +18,18 @@
 //            temp Vite project that mounts only that component (react-router's
 //            Link stubbed to <a>), build, serve, shoot /?p=<x>. The source
 //            repo's working tree is never touched.
+//            Optional per frame (harness.*):
+//              aliases  { "module": "path/in/this/repo" }: stand-ins for modules
+//                       this repo does not have (private packages, fonts); a module's
+//                       subpaths map to the same file
+//              public   { "served/path": "repo/path" }: files copied from the commit
+//                       into the build's public dir, skipped if absent at that sha
+//              scrub    true: run every extracted text file through
+//                       tools/brand-scrub.mjs's scrubText, then refuse to build if
+//                       any denylisted name is left (entry 003 names no brands)
+// Optional per config: waitFor (selector that means "drawn", default
+// ".en-readout, [data-ready]"), qs (extra query appended to every shot).
+// A frame that fails to build is reported and left out; the rest still render.
 // Dependencies come from this repo's node_modules (the pieces share react/three
 // versions). WebGL runs on SwiftShader through the Playwright in
 // ~/repos/claude-design (PLAYWRIGHT_ROOT to override), which is why every piece
@@ -46,6 +58,8 @@ const writeManifest = !outArg;
 const force = has("--force");
 const VP = cfg.viewport ?? { width: 1200, height: 675 };
 const QUALITY = cfg.quality ?? 74;
+const WAIT_FOR = cfg.waitFor ?? ".en-readout, [data-ready]";
+const EXTRA_QS = cfg.qs ? `&${cfg.qs}` : "";
 fs.mkdirSync(OUT, { recursive: true });
 const TMP = fs.mkdtempSync(path.join(process.env.TMPDIR ?? os.tmpdir(), "build-frames-"));
 
@@ -89,16 +103,34 @@ function buildSite(frame, repo) {
   }
 }
 
-function buildHarness(frame, repo) {
+async function buildHarness(frame, repo) {
   const dir = path.join(TMP, `${frame.repo}-${frame.sha}`);
-  const { component, dir: partsDir } = frame.harness;
+  const { component, dir: partsDir, aliases = {}, public: pub = {}, scrub = false } = frame.harness;
   const srcDir = path.join(dir, "src");
   fs.mkdirSync(srcDir, { recursive: true });
   const files = git(repo, "ls-tree", "-r", "--name-only", frame.sha, partsDir).split("\n").filter(Boolean);
-  for (const f of [component, ...files]) {
+  const brands = scrub ? await import("./brand-scrub.mjs") : null;
+  const left = [];
+  for (const f of [...new Set([component, ...files])]) {
     const dest = path.join(srcDir, path.relative(path.dirname(component), f));
     fs.mkdirSync(path.dirname(dest), { recursive: true });
-    fs.writeFileSync(dest, git(repo, "show", `${frame.sha}:${f}`) + "\n");
+    let text = git(repo, "show", `${frame.sha}:${f}`) + "\n";
+    if (brands) {
+      text = brands.scrubText(text);
+      for (const b of brands.findBrands(text)) left.push(`${f}: ${b}`);
+    }
+    fs.writeFileSync(dest, text);
+  }
+  if (left.length) throw new Error(`scrub left ${left.length} denylisted name(s) at ${frame.sha}:\n${left.join("\n")}`);
+  // each alias replaces the module AND any subpath of it ("@fontsource/x/400.css")
+  const alias = [["react-router-dom", "/src/router-stub.tsx"], ...Object.entries(aliases).map(([m, stub]) => [m, path.join(ROOT, stub)])]
+    .map(([m, to]) => `{ find: /^${m.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}(\\/.*)?$/, replacement: ${JSON.stringify(to)} }`);
+  for (const [served, from] of Object.entries(pub)) {
+    const r = spawnSync("git", ["-C", repo, "show", `${frame.sha}:${from}`], { maxBuffer: 256 << 20 });
+    if (r.status !== 0) continue; // not in the repo yet at this commit
+    const dest = path.join(dir, "public", served);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, r.stdout);
   }
   const compName = path.basename(component).replace(/\.tsx?$/, "");
   fs.writeFileSync(path.join(srcDir, "router-stub.tsx"),
@@ -121,7 +153,7 @@ createRoot(document.getElementById("root")!).render(<Piece />);
   fs.writeFileSync(path.join(dir, "vite.config.mjs"),
     `import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-export default defineConfig({ plugins: [react()], resolve: { alias: { "react-router-dom": "/src/router-stub.tsx" } }, build: { target: "es2020", assetsInlineLimit: 0 } });
+export default defineConfig({ plugins: [react()], resolve: { alias: [${alias.join(", ")}] }, build: { target: "es2020", assetsInlineLimit: 0 } });
 `);
   fs.symlinkSync(path.join(ROOT, "node_modules"), path.join(dir, "node_modules"));
   run("bun", ["x", "vite", "build", "--logLevel", "error"], { cwd: dir });
@@ -144,15 +176,21 @@ try {
     const missing = want.filter(([, f]) => force || !fs.existsSync(path.join(OUT, f)));
     if (!skip && missing.length) {
       console.log(`build ${frame.repo}@${entry.sha} (${frame.kind}) …`);
-      const { dist, url } = frame.kind === "harness" ? buildHarness(frame, repo) : buildSite(frame, repo);
+      let built = null;
+      try { built = frame.kind === "harness" ? await buildHarness(frame, repo) : buildSite(frame, repo); }
+      catch (e) { console.error(`  could not build ${frame.repo}@${entry.sha}; left out:\n    ${e.message.split("\n").slice(0, 12).join("\n    ")}`); }
+      if (built) {
+      const { dist, url } = built;
       const server = await serve(dist);
       const port = server.address().port;
       try {
         for (const [p, f] of missing) {
           const page = await browser.newPage({ viewport: VP, deviceScaleFactor: 1, colorScheme: "dark" });
+          // headless Chromium hangs screenshots after a cross-document View Transition
+          await page.route("**/motion/transitions.css", (r) => r.fulfill({ status: 200, contentType: "text/css", body: "" }));
           page.on("pageerror", (e) => console.error(`  pageerror @${entry.sha}:`, e.message));
-          await page.goto(`http://127.0.0.1:${port}${url}?p=${p}`, { waitUntil: "networkidle", timeout: 180000 });
-          await page.waitForSelector(".en-readout, [data-ready]", { timeout: 180000 });
+          await page.goto(`http://127.0.0.1:${port}${url}?p=${p}${EXTRA_QS}`, { waitUntil: "networkidle", timeout: 180000 });
+          await page.waitForSelector(WAIT_FOR, { timeout: 180000 });
           await page.mouse.move(VP.width / 2, VP.height / 2);
           await page.waitForTimeout(7000); // several software-GL frames: late GLBs, callouts, lamps
           await page.screenshot({ path: path.join(OUT, f), type: "jpeg", quality: QUALITY, timeout: 180000 });
@@ -160,6 +198,7 @@ try {
           await page.close();
         }
       } finally { server.close(); }
+      }
     }
     for (const [p, f] of want) if (fs.existsSync(path.join(OUT, f))) entry.shots[String(p)] = f;
     if (Object.keys(entry.shots).length) out.push(entry);

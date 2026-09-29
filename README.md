@@ -23,7 +23,8 @@ functions/api/track.js        POST: first-party analytics collector (D1 `jarvisi
 functions/api/export-data.js  GET: aggregates for the Jarvis dashboard (x-api-key)
 migrations/                   D1 schema (site_events)
 tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
-                              qa-shots.mjs (pinned-progress screenshots), optimize-glb.mjs,
+                              qa-shots.mjs (pinned-progress screenshots, any live page), optimize-glb.mjs,
+                              brand-scrub.mjs (CI gate: entry 003 names no manufacturer or product),
                               render-build-frames.mjs (an entry's build replayed: the piece rebuilt at
                               real commits, shot at a pinned ?p=, + manifest; config in build-frames/),
                               measure-rig.mjs (home-page test-rig strips → public/projects/rig.json),
@@ -45,6 +46,7 @@ is strict TS.
 | # | Slug | What | Origin |
 |---|---|---|---|
 | 001 | `enigma` | Scroll-driven procedural Three.js teardown of the Enigma I, ending in a faithful typeable machine | ported from `jstov/src/pages/lab/Enigma.tsx` (lab experiment 008, 2026-08-27); links changed, nothing else |
+| 003 | `rig` | Inside the Rig: scroll from inside the processor out to a flagship-class gaming PC, then an exploded, searchable atlas of 104 pieces | ported from jstov.uk lab page 011 (2026-09-07/08) with every brand removed; `tools/brand-scrub.mjs` keeps it that way in CI |
 
 Adding an entry: copy `projects/enigma/` (entry page + live shell), put the code
 in `src/<slug>/`, add both HTML files to `rollupOptions.input`, render
