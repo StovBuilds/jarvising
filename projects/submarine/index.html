@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Below the Layer — entry 004 · Jarvising</title>
+<meta name="description" content="Entry 004: a British T-class submarine of the Second World War hunted by a surface escort's ASDIC. Dive under the thermocline and watch the ping lose it, then open the boat up. What it does, how it was made, how to make your own, and the sources.">
+<link rel="canonical" href="https://jarvising.com/projects/submarine/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Jarvising">
+<meta property="og:title" content="Below the Layer — entry 004">
+<meta property="og:description" content="A T-class submarine hunted by an escort's sonar. Dive under the layer and watch the ping lose it.">
+<meta property="og:url" content="https://jarvising.com/projects/submarine/">
+<meta property="og:image" content="https://jarvising.com/projects/submarine/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Below the Layer — entry 004 · Jarvising">
+<meta name="twitter:description" content="A T-class submarine hunted by an escort's sonar. Dive under the layer and watch the ping lose it.">
+<meta name="twitter:image" content="https://jarvising.com/projects/submarine/og.png">
+<meta name="theme-color" content="#F6F1E7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": "https://jarvising.com/projects/submarine/#work",
+  "name": "Below the Layer — a submarine hunted by sound",
+  "url": "https://jarvising.com/projects/submarine/",
+  "description": "A Three.js scene of an early British T-class submarine hunted by a surface escort's ASDIC: dive under the thermocline to lose the echo, read depth, pressure and echo, watch the echo trace, and open the boat up into its compartments.",
+  "author": { "@type": "Person", "name": "Jack Stovell", "url": "https://jstov.uk/" },
+  "publisher": { "@type": "Organization", "name": "Adapt Progress Evolve", "url": "https://adaptprogressevolve.com/", "vatID": "GB362654684", "identifier": "10047328" },
+  "license": "https://opensource.org/license/mit",
+  "datePublished": "2026-09-29",
+  "dateModified": "2026-09-29",
+  "isPartOf": { "@id": "https://jarvising.com/#website" },
+  "image": "https://jarvising.com/projects/submarine/og.png",
+  "keywords": ["submarine", "T-class", "ASDIC", "sonar", "thermocline", "Three.js", "WebGL", "exploded view"]
+}
+</script>
+
+<style>
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin-ext.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin-ext.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+  :root {
+    --paper: #F6F1E7; --paper-deep: #EFE8D9; --line: #DED5C2; --line-strong: #C9BEA5;
+    --ink: #1B1D20; --ink-soft: #4E5259; --ink-faint: #7A7E86;
+    --accent: #B5451B; --accent-soft: #F1D9CC; --code-bg: #1B1D20; --code-ink: #EDE7DA;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #15171A; --paper-deep: #1C1F23; --line: #2C3036; --line-strong: #3B4048;
+      --ink: #EDE7DA; --ink-soft: #B8B2A6; --ink-faint: #858079;
+      --accent: #E8845A; --accent-soft: #3A2A22; --code-bg: #0E1012; --code-ink: #DDD6C8;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--accent-soft); }
+  a { color: inherit; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 72px 24px 56px; min-height: 100vh; display: flex; flex-direction: column; }
+  @media (max-width: 600px) { .wrap { padding-top: 40px; } }
+
+  .fade { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .fade-2 { animation-delay: .09s; } .fade-3 { animation-delay: .18s; } .fade-4 { animation-delay: .27s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade, .fade-2, .fade-3, .fade-4 { animation: none; } }
+
+  .running-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); }
+  .running-head b { font-weight: 600; color: var(--ink-soft); }
+  .running-head a { text-decoration: none; }
+  .running-head a:hover { color: var(--ink); }
+
+  .entry { margin-top: 48px; }
+  .headword { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 600; font-variation-settings: 'opsz' 144; font-size: clamp(56px, 12vw, 104px); line-height: .95; letter-spacing: -0.03em; margin: 0; color: var(--ink); }
+  .headword .dot { color: var(--accent); }
+  .pron { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: baseline; color: var(--ink-soft); font-size: 17px; }
+  .pron .ipa { font-family: 'Fraunces', Georgia, serif; font-size: 20px; color: var(--ink); }
+  .pron .pos { font-family: 'Fraunces', Georgia, serif; font-style: italic; }
+  .pron .tag { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: 3px 9px 2px; font-weight: 600; }
+
+  .sense { margin: 32px 0 0; font-family: 'Fraunces', Georgia, serif; font-variation-settings: 'opsz' 40; font-size: clamp(22px, 3.4vw, 28px); line-height: 1.3; letter-spacing: -0.008em; font-weight: 500; max-width: 26em; }
+
+  /* hero figure = the door into the live piece */
+  .door { margin: 32px 0 0; position: relative; border-radius: 18px; overflow: hidden; background: #0b0b0d; border: 1px solid var(--line); aspect-ratio: 16 / 9; display: block; text-decoration: none; color: #ddd6c8; }
+  .door img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .92; transition: opacity .3s, transform .6s cubic-bezier(.2,.7,.2,1); }
+  .door:hover img { opacity: 1; transform: scale(1.015); }
+  .door .cta { position: absolute; left: 20px; bottom: 18px; right: 20px; display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+  .door .btn { background: #d9a441; color: #0b0b0d; font-weight: 700; font-size: 14px; letter-spacing: .04em; padding: 12px 18px; border-radius: 999px; white-space: nowrap; }
+  .door:hover .btn { background: #ffd98a; }
+  .door .meta { font-family: 'Inter', system-ui, sans-serif; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #a89f8e; text-align: right; }
+  @media (max-width: 520px) { .door .meta { display: none; } .door { aspect-ratio: 4 / 3; } }
+  .door:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  .facts { list-style: none; margin: 18px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 600px) { .facts { grid-template-columns: repeat(2, 1fr); } }
+  .facts li { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 4px; }
+  .facts small { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .facts span { font-family: 'Fraunces', Georgia, serif; font-size: 18px; color: var(--ink); line-height: 1.2; }
+
+  .note { margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 112px 1fr; gap: 6px 20px; align-items: baseline; }
+  @media (max-width: 560px) { .note { grid-template-columns: 1fr; gap: 6px; } }
+  .note h2 { margin: 0; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; padding-top: 5px; }
+  .note > div { color: var(--ink-soft); max-width: 62ch; min-width: 0; }
+  code { font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace; font-size: .88em; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; overflow-wrap: anywhere; color: var(--ink); }
+  pre code { background: none; border: 0; padding: 0; }
+  .note p { margin: 0 0 12px; }
+  .note p:last-child { margin-bottom: 0; }
+  .note i { font-family: 'Fraunces', Georgia, serif; color: var(--ink); font-size: 1.04em; }
+  .note strong { color: var(--ink); font-weight: 600; }
+  .note ul { margin: 0; padding-left: 18px; }
+  .note li { margin: 6px 0; }
+
+  .recipe { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  .recipe li { counter-increment: step; position: relative; padding-left: 40px; margin: 0 0 16px; }
+  .recipe li::before { content: counter(step); position: absolute; left: 0; top: 1px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 20px; line-height: 1; color: var(--accent); }
+  .recipe b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 2px; }
+
+  pre { margin: 14px 0 0; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 16px 18px; font-size: 12.5px; line-height: 1.55; overflow-x: auto; font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace; }
+  pre .c { color: #8a8272; }
+  pre .k { color: #d9a441; }
+  .caption { font-size: 12.5px; color: var(--ink-faint); margin-top: 8px; }
+
+  .see-also { margin-top: 48px; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 18px; padding: 24px 28px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; }
+  .see-also h2 { margin: 0; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .see-also p { margin: 6px 0 0; font-family: 'Fraunces', Georgia, serif; font-size: 19px; color: var(--ink); }
+  .see-also a.back { text-decoration: none; color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); font-size: 15px; }
+  .see-also a.back:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---- Etymology: the brief, day one, and the build replayed -------------- */
+  .grew .wide { grid-column: 1 / -1; min-width: 0; margin-top: 18px; }
+  .slip { position: relative; margin: 0; padding: 22px 24px 18px; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 4px 4px 14px 14px;
+    box-shadow: 0 1px 0 var(--line), 0 10px 24px -18px rgba(27, 29, 32, .35); }
+  .slip::before { content: ""; position: absolute; top: -7px; left: 50%; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e7a17f, var(--accent) 55%, #7c2c10); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
+  .slip-label { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .slip-label .tag { font-size: 10.5px; letter-spacing: .12em; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px 1px; }
+  .slip blockquote { margin: 10px 0 0; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-variation-settings: 'opsz' 40; font-size: clamp(20px, 3vw, 25px); line-height: 1.3; color: var(--ink); max-width: 30em; }
+  .slip blockquote::before { content: "\201C"; color: var(--accent); margin-right: .04em; }
+  .slip blockquote::after { content: "\201D"; color: var(--accent); margin-left: .02em; }
+  .slip .src { margin: 10px 0 0; font-size: 13px; color: var(--ink-faint); }
+
+  .note .day-one { margin-top: 14px; padding: 0; }
+  .note .day-one li { margin: 0; }
+  .day-one span { font-variant-numeric: tabular-nums; }
+  .day-one em { font-style: normal; font-family: 'Inter', system-ui, sans-serif; font-size: 12px; color: var(--ink-faint); }
+  .day-one li.total { background: var(--paper-deep); border-color: var(--line-strong); }
+  .day-one li.total span { color: var(--accent); }
+
+  .scrub { margin-top: 30px; }
+  .scrub-stage { position: relative; overflow: hidden; border-radius: 14px; background: #0b0b0d; border: 1px solid var(--line); aspect-ratio: 16 / 9; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .scrub.is-live .scrub-stage { cursor: ew-resize; }
+  /* the stage steps out of the 720px column on wide screens: the picture is the point */
+  @media (min-width: 1040px) { .scrub-stage { width: 960px; margin-left: calc((100% - 960px) / 2); } }
+  .scrub-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .scrub-stage > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .scrub-upper { visibility: hidden; will-change: clip-path; }
+  /* the wipe edge: a hairline of ink with a paper-coloured bloom, like a sheet being drawn across */
+  .scrub-edge { position: absolute; top: 0; bottom: 0; left: -1px; width: 2px; opacity: 0; pointer-events: none; will-change: transform;
+    background: #f6f1e7; box-shadow: 0 0 0 1px rgba(181, 69, 27, .55), 0 0 18px 3px rgba(246, 241, 231, .35); }
+  .scrub-caption { margin: 12px 0 0; display: grid; gap: 3px; min-height: 4.6em; }
+  .scrub-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 12px; letter-spacing: .06em; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .scrub-count { font-weight: 600; color: var(--accent); letter-spacing: .12em; }
+  .scrub-repo { text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 600; color: var(--ink-soft); }
+  .scrub-subject { font-family: 'Fraunces', Georgia, serif; font-size: 18.5px; line-height: 1.3; color: var(--ink); overflow-wrap: anywhere; }
+  .scrub-note { font-size: 13px; color: var(--ink-faint); }
+
+  .scrub-controls { margin-top: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .scrub-play { flex: none; display: inline-flex; align-items: center; gap: 9px; font: 600 13.5px/1 'Inter', system-ui, sans-serif; letter-spacing: .04em; color: var(--paper); background: var(--ink);
+    border: 0; border-radius: 999px; padding: 11px 17px 11px 14px; cursor: pointer; min-width: 104px; }
+  .scrub-play:hover { background: var(--accent); }
+  .scrub-play-icon { width: 0; height: 0; border-style: solid; border-width: 6px 0 6px 10px; border-color: transparent transparent transparent currentColor; }
+  .scrub.is-playing .scrub-play-icon { width: 10px; height: 12px; border: 0; border-left: 3.5px solid currentColor; border-right: 3.5px solid currentColor; }
+  .scrub-range { position: relative; flex: 1 1 240px; min-width: 0; height: 36px; display: flex; align-items: center; }
+  .scrub-ticks { position: absolute; left: 9px; right: 9px; top: 50%; height: 0; pointer-events: none; }
+  .scrub-ticks span { position: absolute; top: -6px; width: 1px; height: 12px; background: var(--line-strong); }
+  .scrub-range input { position: relative; width: 100%; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; height: 36px; cursor: pointer; }
+  .scrub-range input::-webkit-slider-runnable-track { height: 2px; background: var(--ink-faint); border-radius: 2px; }
+  .scrub-range input::-moz-range-track { height: 2px; background: var(--ink-faint); border-radius: 2px; }
+  .scrub-range input::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -8px; border-radius: 50%; background: var(--accent); border: 3px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
+  .scrub-range input::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 3px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
+  .scrub-range input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .scrub-play:focus-visible, .scrub-beat:focus-visible, .scrub-cite-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .scrub-beats { flex: none; display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px; }
+  .scrub-beat { font: 500 13px/1 'Inter', system-ui, sans-serif; color: var(--ink-soft); background: none; border: 0; border-radius: 999px; padding: 8px 13px; cursor: pointer; }
+  .scrub-beat[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  @media (max-width: 560px) { .scrub-range { flex-basis: 100%; order: 3; } }
+
+  .scrub-cites { list-style: none; margin: 22px 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); counter-reset: cite; display: grid; gap: 2px; }
+  .note .scrub-cites li { margin: 0; }
+  .scrub-cites li { counter-increment: cite; position: relative; padding: 5px 0 5px 34px; font-size: 14px; color: var(--ink-soft); line-height: 1.4; }
+  .scrub-cites li::before { content: counter(cite); position: absolute; left: 4px; top: 6px; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 15px; color: var(--ink-faint); }
+  .scrub-cites time { color: var(--ink-faint); font-variant-numeric: tabular-nums; margin-right: 6px; }
+  .scrub-cites code { margin-right: 6px; }
+  .scrub-cites .fresh { font-family: 'Fraunces', Georgia, serif; color: var(--ink); }
+  .scrub-cite-btn { all: unset; display: block; cursor: pointer; border-radius: 6px; }
+  .scrub-cite-btn:hover .fresh { text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+  .scrub-cites li.is-current::before { color: var(--accent); }
+  .scrub-cites li.is-current .fresh { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .scrub-edge { display: none; } }
+
+  footer { margin-top: auto; padding-top: 48px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 13.5px; color: var(--ink-faint); }
+  footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  footer a:hover { color: var(--ink); border-color: var(--ink); }
+  .headword { view-transition-name: entry-004; }
+  .headword { font-size: clamp(48px, 11vw, 96px); }
+  .rights { margin-top: 14px; font-size: 13.5px; color: var(--ink-soft); border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; }
+  .maths { font-variant-numeric: tabular-nums; }
+  .door .btn { background: #8fe6ee; }
+  .door:hover .btn { background: #c7f5f8; }
+</style>
+<script src="/motion/early.js"></script>
+<link rel="stylesheet" href="/motion/transitions.css">
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="running-head fade">
+    <span><a href="/"><b>jarvising</b></a> · entry 004</span>
+    <span>jarvising.com</span>
+  </header>
+
+  <main class="entry">
+    <h1 class="headword fade fade-2">be<span class="dot">·</span>low the lay<span class="dot">·</span>er</h1>
+    <div class="pron fade fade-2">
+      <span class="ipa" lang="en-fonipa">/bɪˈləʊ ðə ˈleɪ.ə/</span>
+      <span class="pos">adverbial phrase; of a submarine, under the thermocline, where the ping loses it</span>
+      <span class="tag">Entry 004</span>
+    </div>
+
+    <p class="sense fade fade-3">A British submarine of the Second World War, hunted by an escort's sonar: take the boat down under the layer of cold water and watch the ping lose it, then open the boat up and look inside.</p>
+
+    <a class="door fade fade-3" href="/projects/submarine/live/">
+      <img src="/projects/submarine/hero.jpg" width="1600" height="900" alt="A T-class submarine seen from below at night, lit by faint shafts of light: the escort's ping is passing along its hull in a pale band, a red echo is spreading from the hull, and the ping's edge sweeps across the seabed and a wreck far beneath." fetchpriority="high">
+      <span class="cta">
+        <span class="btn">Dive →</span>
+        <span class="meta">WebGL · sound optional<br>keyboard works</span>
+      </span>
+    </a>
+
+    <ul class="facts fade fade-4" aria-label="Facts">
+      <li><small>Stack</small><span>Three.js + TypeScript</span></li>
+      <li><small>The boat</small><span>T-class, 84 m, 6 compartments</span></li>
+      <li><small>Code</small><span>≈1,900 lines</span></li>
+      <li><small>Made</small><span>29 Sep 2026</span></li>
+    </ul>
+    <p class="caption fade fade-4">An <a href="https://adaptprogressevolve.com/">Adapt Progress Evolve Limited</a> project by Jack Stovell (registered in England and Wales, company no. 10047328, VAT GB362654684) · Source: <a href="https://github.com/StovBuilds/jarvising/tree/main/src/submarine">github.com/StovBuilds/jarvising</a> · <code>src/submarine/</code></p>
+
+    <section class="note fade fade-4">
+      <h2>What it does</h2>
+      <div>
+        <p>It is night, well under the sea. An early British T-class submarine hangs in the dark, and an enemy escort circles on the surface above, sending pulses of sound down to find it. Every few seconds the ping goes out as a pale shell of light, and where it touches something (the hull, a mine's cable, a wreck on the bottom, the seabed) the contact lights up and an echo starts back.</p>
+        <p>You have the depth. Drag the slider or press <code>1</code>, <code>2</code> or <code>3</code>: periscope depth, above the layer, below it. Above the layer the echo comes back <strong>strong</strong> and the escort has a fix, with the real round-trip time of the echo beside it. Take the boat down through the bright sheet of the thermocline at 180 feet and the ping bends away: the echo fades to a <strong>whisper</strong>, the status reads "Hidden below the layer", and the escort's trace goes quiet. Past 300 feet, the early boats' rated depth, the depth readout turns red. The pressure readout counts pounds per square inch above the surface, from the depth, the way the sea loads the hull.</p>
+        <p>Press <code>X</code> and the boat opens up. The casing and deck lift away, the keel and bulbous bow drop, the saddle tanks swing out, and the pressure hull splits into its six compartments, lit warm from inside, with labels tracked to the model: the tube space, torpedo stowage and mess, the control room, wardroom and galley over the battery, the engine room and the motor room.</p>
+        <p>Along the bottom, an echo trace draws the escort's view: strength against range, drawn as each ping comes back, with the boat, the wreck and the seabed marked. Sound is optional and synthesised in the browser. Cinematic cameras, a hidden interface for a clean picture, and every control on the keyboard. For exhibitions, <code>?kiosk=1</code> runs it unattended: it pings, works through its depths and opens up on its own.</p>
+      </div>
+    </section>
+
+    <section class="note grew" id="etymology" aria-labelledby="etymology-h">
+      <h2 id="etymology-h">Etymology</h2>
+      <div>
+        <p>First attested as a single-file page Jack built in a conversation with Claude and published as a claude.ai artifact on 29 September 2026; moved here the same day. The artifact has no git history, and the artifact service keeps only its final version, so there are no in-between frames to show and none are invented. The replay starts with the published file itself, rendered with the libraries it loaded from a CDN, and carries on through this site's port, every frame shot in the same state.</p>
+      </div>
+      <div class="wide">
+        <ul class="facts day-one" aria-label="Day one, 29 September 2026 (UTC)">
+          <li><small>Artifact published</small><span>07:18 <em>UTC, inferred</em></span></li>
+          <li><small>Port logged</small><span>10:22 <em>UTC</em></span></li>
+          <li><small>Port first commit</small><span>11:04 <em>155076a</em></span></li>
+          <li class="total"><small>Artifact to port</small><span>3 h 46 min</span></li>
+        </ul>
+        <p class="caption">Day one, from the records. The artifact's version id, 1790666297, read as a Unix timestamp is 07:18:17 UTC on 29 September; the artifact service does not document what the id means, so that time is an inference, not a record. The port's times come from the commitment ledger (a747b94e, opened 10:22:13) and <code>git log</code> on this site.</p>
+
+        <div class="scrub" data-scrubber data-manifest="/projects/submarine/build/manifest.json" data-progress="open" data-beat-names="Opened up, below the layer|At periscope depth">
+          <div class="scrub-stage">
+            <img src="/projects/submarine/build/jarvising-155076a-open.jpg" width="1200" height="675" loading="lazy" decoding="async" alt="The submarine piece as ported to jarvising: the boat opened up into its compartments below the layer, labels tracked to each part.">
+          </div>
+          <p class="scrub-caption">The latest frame, 29 Sep 2026. With JavaScript on, drag across the picture or use the slider to replay the build.</p>
+          <ol class="scrub-cites" aria-label="Citations: the versions replayed">
+            <li data-sha="1790666297"><time datetime="2026-09-29T07:18:17Z">29 Sep</time><code>1790666297</code><span class="fresh">claude.ai: published as an artifact, one HTML file (time inferred from the version id)</span></li>
+            <li data-sha="155076a"><time datetime="2026-09-29T11:04:09Z">29 Sep</time><code>155076a</code><span class="fresh">Ported to jarvising.com as entry 004</span></li>
+          </ol>
+          <p class="caption">Frames rendered by <a href="https://github.com/StovBuilds/jarvising/blob/main/tools/render-build-frames.mjs">tools/render-build-frames.mjs</a> in software WebGL. The port is shot pinned and frozen at <code>?depth=280&amp;view=open&amp;ping=0.3</code> (opened up, below the layer) and <code>?depth=40&amp;ping=0.75</code> (periscope depth). The published artifact has no such pin, so it was loaded as published, with its libraries from their CDNs, driven with its own buttons and left to sink to depth in real time; its ping, and the slow orbit it starts when left alone, are wherever they had got to. The file is kept in the repo at <code>tools/build-frames/sources/</code> so the frame can be rendered again.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>How it was made</h2>
+      <div>
+        <p><strong>One file, then modules.</strong> The piece began as a single HTML page of about 1,550 lines, with three.js loaded from a CDN through an import map and its fonts from Google. Here it is the same code split into nine TypeScript modules and a stylesheet under <a href="https://github.com/StovBuilds/jarvising/tree/main/src/submarine"><code>src/submarine/</code></a>, bundled by Vite against this site's own three.js. The look is deliberately its own: a night-sea palette, a stencil display face, a news serif and a mono for the instruments, all inside the live page only.</p>
+        <p><strong>A hull from five curves.</strong> The boat is lofted, not modelled. Five one-dimensional curves along its length give the half-breadth, the keel line, the widest point, the deck and the casing's width; a superellipse between them makes each cross-section, and a sweep joins the sections into the upper and lower hull. The bulbous bow is just where those curves swell at the stem. Saddle tanks are lathed, the fairwater is extruded from a plan shape and then raked in code, and the free-flooding holes along the casing are one instanced mesh placed on the hull's own curve.</p>
+        <p><strong>Every material hears the ping.</strong> The sonar is not a mesh that happens to be in front of things. Four expanding spheres carry their centres and radii in a uniform array that every lit material in the scene reads: an <code>onBeforeCompile</code> patch adds a thin bright line wherever a surface sits on a shell's radius, so the ping visibly slides over the hull, the mines and the seabed. The same patch adds caustics from above, the layer's glowing line and depth fog that fades into the colour of the water.</p>
+        <p><strong>The layer is one number.</strong> Anything on the far side of the thermocline from a shell's origin sees that shell at 14% strength. The echo's strength is how much of the boat's height, keel to periscope standards, sits below the layer: all of it above gives a strong echo, all of it below gives about an eighth. The trace, the readouts, the status line and the sound all read that one value.</p>
+        <p><strong>Opened up is a single eased number too.</strong> Every part group has a direction and a distance; one value from 0 to 1 moves them all, spreads the compartments along the boat, fades in dashed leader lines and warms the interior. Labels are HTML, projected from 3D points each frame, and hide themselves wherever the interface would cover them.</p>
+        <p><strong>The port.</strong> The CDN and Google Fonts are gone: this site's content security policy allows no third-party requests, so three.js is bundled (0.185 here, up from 0.169) and the fonts are self-hosted. Two things had moved in three.js between those versions: <code>PCFSoftShadowMap</code> was retired, so the shadows use <code>PCFShadowMap</code>, its successor, and <code>THREE.Clock</code> was deprecated, so the scene keeps its own clock. The inline script became modules, since the policy forbids inline scripts. For testing, the piece gained a pinned, frozen state (<code>?depth=280&amp;view=open&amp;ping=0.4</code>), which also meant stamping the echo with the moment it hit the hull rather than the frame that noticed it, and seeding the marine snow so every load draws the same picture. A sourcing pass corrected four lines of the copy (see History notes).</p>
+        <p>Built by Jack in one conversation with Claude, then ported to this site with Claude Code.</p>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>How to make your own</h2>
+      <div>
+        <ol class="recipe">
+          <li><b>Loft the hull from curves.</b> Write down a handful of numbers per station along the boat (half-breadth, keel, deck) and fit a smooth 1D curve through each. A cross-section function turns those into a ring of points; a sweep turns the rings into a mesh. Changing the bow is changing five numbers.</li>
+          <li><b>Put the physics in the shaders, not in meshes.</b> Keep the sonar pulses as a small uniform array (centre and radius) and patch every material to draw a line where its surface meets a radius. Then the pulse lights up whatever it touches without a single collision test.</li>
+          <li><b>Make the story one number.</b> Here, how much of the boat is below the layer. Drive the echo, the words, the trace and the sound from it, and the whole piece agrees with itself.</li>
+          <li><b>Slow the physics down, but say so.</b> Sound is drawn 36 times slower than life so you can watch it travel, but the readout gives the real round trip. Label every liberty on the page.</li>
+          <li><b>Explode with one eased value.</b> Give each part group a direction and a distance and multiply by one number from 0 to 1. Warm the interior and fade the leader lines on the same value.</li>
+          <li><b>Pin a frozen state from day one.</b> A URL that sets depth, view and the ping's progress, and stops the clock, turns a live scene into something you can screenshot, measure and compare between versions.</li>
+          <li><b>Check the history before you publish it.</b> Write the claims down, find a source for each, and correct the copy where the sources disagree. Ours turned up a bow that was only cut away on two boats, and a pressure that was 133, not 130.</li>
+        </ol>
+        <p>The shader patch that makes every surface hear the ping (the full piece is in <a href="https://github.com/StovBuilds/jarvising/tree/main/src/submarine">src/submarine/</a> on GitHub):</p>
+<pre><span class="c">// four pulses: xyz = where it was sent from, w = how far it has got</span>
+<span class="k">uniform</span> vec4 uWave[4];
+<span class="k">uniform</span> vec4 uWaveC[4];   <span class="c">// rgb = colour, a = strength</span>
+<span class="k">uniform</span> float uLayerY;    <span class="c">// the thermocline</span>
+
+<span class="c">// a pulse that crosses the layer arrives at 14%</span>
+float layerAtt(vec3 o, vec3 p) {
+  float oAbove = step(uLayerY, o.y);
+  float pBelow = smoothstep(uLayerY + 3.0, uLayerY - 3.0, p.y);
+  float crossing = oAbove * pBelow + (1.0 - oAbove) * (1.0 - pBelow);
+  <span class="k">return</span> mix(1.0, 0.14, crossing);
+}
+
+vec3 waveGlow(vec3 p, float sharp) {
+  vec3 acc = vec3(0.0);
+  <span class="k">for</span> (int i = 0; i &lt; 4; i++) {
+    <span class="k">if</span> (uWaveC[i].a &lt;= 0.0005) <span class="k">continue</span>;
+    float d = length(p - uWave[i].xyz) - uWave[i].w;  <span class="c">// distance to the shell</span>
+    float line = exp(-d * d * sharp);
+    float trail = d &lt; 0.0 ? exp(d * 0.035) * 0.16 : 0.0;
+    acc += uWaveC[i].rgb * uWaveC[i].a * (line + trail) * layerAtt(uWave[i].xyz, p);
+  }
+  <span class="k">return</span> acc;
+}
+<span class="c">// in each material's onBeforeCompile, after the emissive chunk:</span>
+<span class="c">//   totalEmissiveRadiance += waveGlow(vWorldPos, 0.25);</span></pre>
+        <p class="caption">The shader reads the world position the vertex patch passes down; the JavaScript side only grows each pulse's radius by the shown speed of sound each frame.</p>
+      </div>
+    </section>
+
+    <section class="note">
+      <h2>History notes</h2>
+      <div>
+        <p>What the piece shows, checked against the sources below. Where they disagreed with the original copy, the copy was changed.</p>
+        <ul>
+          <li><strong>The T-class.</strong> The Royal Navy's standard ocean-going patrol submarine of the war: 53 were built in three groups (15, 7 and 31), and nine more were cancelled in 1945. About 84 m (276 ft) long, with a wartime crew of around 60. The early boats were riveted and rated to 300 feet; the welded boats of the last group, to 350.</li>
+          <li><strong>The bow.</strong> The first group had ten torpedo tubes facing forward: six inside the bow, two outside it in the bulbous bow casing, and two outside amidships. The bulge cost speed on the surface in rough weather and threw up a bow wave at periscope depth. The original copy said it was "later removed"; in fact it was cut away on two boats, <i>Triumph</i> and <i>Thunderbolt</i> (the salvaged <i>Thetis</i>), during repairs, and the second group moved those tubes aft so the bow could be finer. The piece shows the bow as built.</li>
+          <li><strong>A mid-war fit.</strong> The early boats were built with machine guns, not the Oerlikon shown aft of the bridge, and radar came mid-war. The model shows that later fit on an early hull, and says so.</li>
+          <li><strong>ASDIC.</strong> The British name for active sonar, fitted to their submarines as well as their escorts. The piece does not expand the acronym: the familiar "Allied Submarine Detection Investigation Committee" has no trace in the Admiralty's archives.</li>
+          <li><strong>The layer.</strong> Sound bends toward slower water, so at a sharp drop in temperature much of a ping is refracted downward, leaving a shadow zone beneath the layer that the sound barely reaches. The original copy said the ping was "bent away and scattered"; refraction, not scattering, does the work, and the copy now says so. U-boats are recorded diving under layers to shake off ASDIC. The layer's depth changes with the season and the sea; the piece's 180 feet is illustrative.</li>
+          <li class="maths"><strong>The pressure.</strong> Seawater (1,025 kg/m³) weighs 1,025 × 9.807 = 10,052 pascals per metre of depth, or 1.458 psi per metre: about one atmosphere (14.7 psi) every 33 feet. At 300 ft, 91.44 m, that is 919,100 Pa, or <strong>133 psi</strong> more than at the surface, 148 psi with the air on top. The original copy said "about 130"; it now says 133. The readout is the same sum: 1.4585 psi per metre, gauge.</li>
+          <li><strong>The echo.</strong> The escort's range comes from the echo's time for the round trip, out and back: time = 2 × range ÷ 1,500 m/s. Sound in seawater runs from about 1,440 to 1,570 m/s with temperature, salinity and depth. On screen the pulse moves at 42 m/s, about 36 times slower than life; the status line gives the real time.</li>
+        </ul>
+        <p class="caption">Drawn loosely, and not verified: the net cutter at the stem, and the exact compartment layout (the broad order, torpedo spaces forward, control room under the bridge, engines then motors aft, is standard for the period, but we found no T-class plan to check it against). The escort, the wreck and the mines are generic.</p>
+      </div>
+    </section>
+
+    <section class="note" id="sources">
+      <h2>Sources</h2>
+      <div>
+        <ul>
+          <li><a href="https://uboat.net/allies/warships/class/53.html">uboat.net, T class submarines</a>; <a href="https://uboat.net/allies/warships/ship/3494.html">HMS Truant</a> (its 1941 patrol log: depths in feet, torpedoes heard on ASDIC); <a href="https://uboat.net/allies/technical/asdic.htm">ASDIC / sonar</a></li>
+          <li><a href="https://rnsubs.co.uk/index.php?PageID=622">rnsubs.co.uk (Barrow Submariners Association), T class</a> and <a href="https://rnsubs.co.uk/index.php?PageID=1144">the streamlined T class</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/British_T-class_submarine">Wikipedia, British T-class submarine</a>, used only where the two above agree; <a href="https://en.wikipedia.org/wiki/Type_291_radar">Type 291 radar</a></li>
+          <li><a href="https://oceanservice.noaa.gov/facts/pressure.html">NOAA National Ocean Service, How does pressure change with ocean depth?</a></li>
+          <li><a href="https://www.arc.id.au/UWAcoustics.html">arc.id.au, Underwater sound propagation</a>; <a href="https://dosits.org/tutorials/science/tutorial-speed/">Discovery of Sound in the Sea (URI), speed of sound</a> and <a href="https://dosits.org/glossary/shadow-zone/">shadow zone</a></li>
+        </ul>
+        <p class="caption">A claim-by-claim ledger with verdicts lives in the repo: <a href="https://github.com/StovBuilds/jarvising/blob/main/docs/submarine-sources.md">docs/submarine-sources.md</a>. Three of the pages listed refused our fetcher and were read only through search summaries; the ledger marks which.</p>
+      </div>
+    </section>
+
+    <section class="see-also">
+      <div>
+        <h2>See also</h2>
+        <p>Entry 001, <a href="/projects/enigma/">Enigma</a>: the same war from Bletchley Park, a cipher machine taken apart and then typed on.</p>
+        <p>Entry 002, <a href="/projects/cortex/">Cortex</a>: a fleet&#8217;s memory as a living 3D war table, handed on as a library.</p>
+        <p>Entry 003, <a href="/projects/rig/">Inside the Rig</a>: an exploded view at the scale of a whole gaming PC.</p>
+      </div>
+      <a class="back" href="/">← all entries</a>
+    </section>
+  </main>
+
+  <footer class="fade fade-4">
+    <span>© 2026 Jarvising. Built in the open.</span>
+    <span>by <a href="https://jstov.uk/" rel="me">Jack Stovell</a> · <a href="https://adaptprogressevolve.com/">adaptprogressevolve.com</a></span>
+    <span>Operated by <a href="https://adaptprogressevolve.com/">Adapt Progress Evolve Limited</a>. Registered in England and Wales, company no. 10047328. VAT GB362654684.</span>
+    <span>Anonymous first-party page counts only: no cookies, no third parties. <a href="/#privacy">Opt out</a>.</span>
+  </footer>
+
+</div>
+<script type="module" src="/src/entry/scrubber.ts"></script>
+</body>
+</html>
