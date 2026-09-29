@@ -23,7 +23,7 @@ functions/api/track.js        POST: first-party analytics collector (D1 `jarvisi
 functions/api/export-data.js  GET: aggregates for the Jarvis dashboard (x-api-key)
 migrations/                   D1 schema (site_events)
 tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 001 imagery + smoke test),
-                              render-cortex.mjs (entry 002 hero/og),
+                              render-cortex.mjs (entry 002 hero/og), render-submarine.mjs (entry 004 hero/og),
                               qa-shots.mjs (pinned-progress screenshots, any live page), optimize-glb.mjs,
                               brand-scrub.mjs (CI gate: entry 003 names no manufacturer or product),
                               render-build-frames.mjs (an entry's build replayed: the piece rebuilt at
@@ -49,6 +49,7 @@ is strict TS.
 | 001 | `enigma` | Scroll-driven procedural Three.js teardown of the Enigma I, ending in a faithful typeable machine | ported from `jstov/src/pages/lab/Enigma.tsx` (lab experiment 008, 2026-08-27); links changed, nothing else |
 | 002 | `cortex` | The Jarvis fleet's memory map as a living 3D war table, over a fictional studio's second brain; the entry's recipe hands on the library | [cortex-map](https://github.com/StovBuilds/cortex-map) (MIT, 2026-07-15) vendored in `src/cortex/lib/` at 68db7b1; changes listed in `src/cortex/lib/SOURCE.md` |
 | 003 | `rig` | Inside the Rig: scroll from inside the processor out to a flagship-class gaming PC, then an exploded, searchable atlas of 104 pieces | ported from jstov.uk lab page 011 (2026-09-07/08) with every brand removed; `tools/brand-scrub.mjs` keeps it that way in CI |
+| 004 | `submarine` | Below the Layer: an early British T-class submarine hunted by an escort's ASDIC; dive under the thermocline to lose the echo, open the boat into its compartments | Jack's claude.ai artifact (one HTML file, published 2026-09-29), ported the same day to bundled three.js and self-hosted fonts; claims checked in `docs/submarine-sources.md` |
 
 Adding an entry: copy `projects/enigma/` (entry page + live shell), put the code
 in `src/<slug>/`, add both HTML files to `rollupOptions.input`, render
@@ -135,6 +136,12 @@ Uses the Playwright install in `~/repos/claude-design` (override with
 Fraunces and Inter (both SIL OFL), copied from the forematter holding page.
 Self-hosted so the page makes no third-party requests.
 
+Entry 004's live page adds its own three (all SIL OFL), fetched once from
+Google Fonts' CSS API as variable woff2, latin + latin-ext subsets:
+Big Shoulders Stencil Display (700–800), Newsreader (opsz 6–72, 400–500, roman
+and italic) and Azeret Mono (400–600), as `public/fonts/{big-shoulders-stencil,
+newsreader-normal,newsreader-italic,azeret-mono}-latin[-ext].woff2`.
+
 ## Adding projects
 
 Each portfolio entry should show what it does, how it was made, and how to
@@ -144,5 +151,5 @@ step; the "See also" block on the holding page is where the index will live.
 ## Licence
 
 Code is [MIT](LICENSE). The bundled fonts (Fraunces, Inter, Space Grotesk,
-JetBrains Mono, Special Elite) are under the SIL Open Font License and keep
-their own terms.
+JetBrains Mono, Special Elite, Big Shoulders Stencil Display, Newsreader, Azeret
+Mono) are under the SIL Open Font License and keep their own terms.

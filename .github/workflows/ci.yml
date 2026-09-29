@@ -21,12 +21,13 @@ jobs:
           for f in index.html projects/enigma/index.html projects/enigma/live/index.html \
                    _headers og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png models/bombe.glb models/enigma.glb models/props.glb \
                    projects/cortex/index.html projects/cortex/live/index.html projects/cortex/hero.jpg projects/cortex/og.png \
-                   projects/rig/index.html projects/rig/live/index.html projects/rig/hero.jpg projects/rig/og.png models/rig-parts.glb; do
+                   projects/rig/index.html projects/rig/live/index.html projects/rig/hero.jpg projects/rig/og.png models/rig-parts.glb \
+                   projects/submarine/index.html projects/submarine/live/index.html projects/submarine/hero.jpg projects/submarine/og.png; do
             test -f "dist/$f" || { echo "missing dist/$f"; exit 1; }
           done
           test -f functions/_middleware.js
           # every self-hosted asset the hand-written pages reference must exist in dist
-          for f in $(grep -ohE "(/fonts/[a-z0-9.-]+\.woff2|/favicon\.svg|/apple-touch-icon\.png|/og\.png|/projects/(enigma|cortex|rig)/[a-z0-9./-]+\.(png|jpg|webp))" dist/index.html dist/projects/enigma/index.html dist/projects/cortex/index.html dist/projects/rig/index.html | sort -u); do
+          for f in $(grep -ohE "(/fonts/[a-z0-9.-]+\.woff2|/favicon\.svg|/apple-touch-icon\.png|/og\.png|/projects/(enigma|cortex|rig|submarine)/[a-z0-9./-]+\.(png|jpg|webp))" dist/index.html dist/projects/enigma/index.html dist/projects/cortex/index.html dist/projects/rig/index.html dist/projects/submarine/index.html | sort -u); do
             test -f "dist$f" || { echo "missing dist$f"; exit 1; }
           done
           # the live page must reference a built module, not the source path
@@ -35,6 +36,9 @@ jobs:
           # entry 002 ships under a CSP without unsafe-eval: no eval-built code in any bundle
           ! grep -l "new Function" dist/assets/*.js || { echo "a bundle contains new Function (see src/cortex/ngraph-stub.ts)"; exit 1; }
           grep -q 'src="/assets/' dist/projects/rig/live/index.html
+          grep -q 'src="/assets/' dist/projects/submarine/live/index.html
+          # entry 004's fonts are self-hosted: the live page must not reach for Google or a CDN
+          ! grep -qE "fonts.googleapis|fonts.gstatic|cdn.jsdelivr" dist/projects/submarine/live/index.html dist/assets/submarineLive-*.css || { echo "entry 004 references a third-party font/CDN"; exit 1; }
           # every URL in the sitemap must have a built page behind it
           for u in $(grep -oE '<loc>[^<]+</loc>' dist/sitemap.xml | sed -E 's#</?loc>##g; s#https://jarvising.com##'); do
             test -f "dist${u}index.html" || { echo "sitemap URL without a page: $u"; exit 1; }
@@ -45,7 +49,7 @@ jobs:
           test -f dist/analytics.js && node --check dist/analytics.js
           grep -q "'/api/track'" dist/analytics.js
           ! grep -qE "https?://" dist/analytics.js || { echo "tracker must not reference another origin"; exit 1; }
-          for f in index.html projects/enigma/index.html projects/enigma/live/index.html projects/cortex/index.html projects/cortex/live/index.html projects/rig/index.html projects/rig/live/index.html; do
+          for f in index.html projects/enigma/index.html projects/enigma/live/index.html projects/cortex/index.html projects/cortex/live/index.html projects/rig/index.html projects/rig/live/index.html projects/submarine/index.html projects/submarine/live/index.html; do
             grep -q 'src="/analytics.js"' "dist/$f" || { echo "dist/$f does not load /analytics.js"; exit 1; }
           done
           test -f migrations/0001_site_events.sql

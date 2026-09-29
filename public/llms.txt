@@ -12,6 +12,8 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 - [Entry 002 — live piece](https://jarvising.com/projects/cortex/live/): the map, over a fictional game studio's second brain (191 nodes, 273 links, 7 clusters; no real data). Needs WebGL and JavaScript; flat 2D on phones.
 - [Entry 003 — Inside the Rig](https://jarvising.com/projects/rig/): a scroll-driven Three.js teardown of a flagship-class gaming PC, 17 chapters from inside the processor (an abstract city of logic blocks, then the cache) out through memory, the motherboard, storage, PCIe, the graphics processor, cooling, power and airflow to the whole machine, ending in an exploded, searchable atlas of 104 modelled pieces in eight systems (filters, synonym search, isolate, deep dive, a four-stage explode slider). Parts are modelled at real published dimensions but named generically: no brands, on purpose, enforced in CI. The entry page explains how it was made (an id registry the copy and the builders are both typed against; explode as per-node data; camera keys stamped with scroll progress; a scripted Blender parts library swapped in by id) and an eight-step recipe. First shipped 2026-09-07 as jstov.uk lab page 011.
 - [Entry 003 — live piece](https://jarvising.com/projects/rig/live/): the teardown and atlas. Needs WebGL and JavaScript.
+- [Entry 004 — Below the Layer](https://jarvising.com/projects/submarine/): a Three.js scene of an early British T-class submarine of the Second World War hunted by a surface escort's ASDIC (active sonar). Dive below the thermocline ("the layer") at 180 ft and the ping bends away, so the echo fades from strong to faint; depth, pressure (gauge psi from depth, 133 psi at the boats' 300 ft rated depth) and echo readouts, an echo trace, and an exploded cutaway of the six compartments. The entry page explains how it was made (a hull lofted from five curves; every material patched to draw the sonar shells, caustics and depth fog; one number for how much of the boat is below the layer) and a seven-step recipe, with history notes and a claim-by-claim sources ledger (docs/submarine-sources.md). Built by Jack Stovell in a conversation with Claude, published as a claude.ai artifact on 2026-09-29, ported here the same day.
+- [Entry 004 — live piece](https://jarvising.com/projects/submarine/live/): the submarine scene. Needs WebGL and JavaScript. `?kiosk=1` runs it unattended.
 
 ## Pages
 
@@ -19,7 +21,7 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 
 ## Source
 
-- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`, entry 002 in `src/cortex/` (the cortex-map source vendored in `src/cortex/lib/`), entry 003 in `src/rig/`.
+- [github.com/StovBuilds/jarvising](https://github.com/StovBuilds/jarvising): the whole site, public. Entry 001 lives in `src/enigma/`, entry 002 in `src/cortex/` (the cortex-map source vendored in `src/cortex/lib/`), entry 003 in `src/rig/`, entry 004 in `src/submarine/`.
 
 ## Privacy
 
