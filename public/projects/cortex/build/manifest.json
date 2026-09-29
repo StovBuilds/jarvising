@@ -1,0 +1,131 @@
+{
+  "entry": "cortex",
+  "livePath": "/projects/cortex/live/",
+  "progress": [
+    "table",
+    "globe"
+  ],
+  "viewport": {
+    "width": 1200,
+    "height": 675
+  },
+  "base": "/projects/cortex/build/",
+  "milestones": [
+    {
+      "label": "Promise logged",
+      "iso": "2026-07-15T15:57:48Z",
+      "source": "commitment ledger, fdf6a1f3 opened"
+    },
+    {
+      "label": "First commit",
+      "iso": "2026-07-15T16:24:20Z",
+      "sha": "221d13e",
+      "repo": "cortex-map",
+      "source": "git -C cortex-map log 221d13e"
+    },
+    {
+      "label": "CI fix",
+      "iso": "2026-07-15T16:26:25Z",
+      "sha": "ed6eaf0",
+      "repo": "cortex-map",
+      "source": "git -C cortex-map log ed6eaf0"
+    },
+    {
+      "label": "Public, demo live, promise closed",
+      "iso": "2026-07-15T16:29:56Z",
+      "source": "commitment ledger, fdf6a1f3 closed; state entry committed 16:30:33Z as 20a8115 (repo public, CI green, cortex-map.pages.dev deployed)"
+    }
+  ],
+  "brief": {
+    "text": "Build NoctemJack/cortex-map: OSS extraction of the war-table 3D map (npm pkg + demo app + docs + waitlist link)",
+    "label": "The brief, as logged",
+    "paraphrase": true,
+    "source": "Commitment ledger fdf6a1f3, opened 2026-07-15 15:57:48Z: the session's one-line summary of the job when Jack gave the go-ahead, not his words. The state log entry that closed it (home-repo commit 20a8115, 16:30:33Z) says 'Jack greenlit 15:55'; that time was typed by hand."
+  },
+  "beatAlt": {
+    "table": "on its default war-table view",
+    "globe": "switched to the globe projection"
+  },
+  "beatMissing": {
+    "globe": "No globe projection yet at this commit; showing the table."
+  },
+  "beatGroupLabel": "View",
+  "generated": "2026-09-29T07:57:40.082Z",
+  "frames": [
+    {
+      "repo": "cortex-map",
+      "sha": "221d13e",
+      "date": "2026-07-15T16:24:20+00:00",
+      "subject": "cortex-map v0.1.0 — the war-table 3D knowledge-graph, extracted and themeable",
+      "kind": "workspace",
+      "shots": {
+        "table": "cortex-map-221d13e-table.jpg"
+      }
+    },
+    {
+      "repo": "cortex-map",
+      "sha": "498b74b",
+      "date": "2026-07-23T18:35:27+00:00",
+      "subject": "feat(demo): live theming panel — size, colours, waves",
+      "kind": "workspace",
+      "shots": {
+        "table": "cortex-map-498b74b-table.jpg"
+      }
+    },
+    {
+      "repo": "cortex-map",
+      "sha": "72cba99",
+      "date": "2026-07-23T18:42:15+00:00",
+      "subject": "feat(demo): camera, link/pillar and per-cluster motion controls",
+      "kind": "workspace",
+      "shots": {
+        "table": "cortex-map-72cba99-table.jpg"
+      }
+    },
+    {
+      "repo": "cortex-map",
+      "sha": "165e8e8",
+      "date": "2026-07-23T19:01:09+00:00",
+      "subject": "feat(prototype): globe projection mode",
+      "kind": "workspace",
+      "shots": {
+        "table": "cortex-map-165e8e8-table.jpg",
+        "globe": "cortex-map-165e8e8-globe.jpg"
+      }
+    },
+    {
+      "repo": "cortex-map",
+      "sha": "101bfc4",
+      "date": "2026-07-23T19:53:03+00:00",
+      "subject": "feat(globe): rebuild globe mode to the reference — lit world + equatorial ring + orbiting cluster-systems",
+      "kind": "workspace",
+      "shots": {
+        "table": "cortex-map-101bfc4-table.jpg",
+        "globe": "cortex-map-101bfc4-globe.jpg"
+      }
+    },
+    {
+      "repo": "cortex-map",
+      "sha": "68db7b1",
+      "date": "2026-07-23T20:08:08+00:00",
+      "subject": "feat(globe): options — transparency, grid-outside, orbs-on-surface, colour, label distance, remove",
+      "kind": "workspace",
+      "shots": {
+        "table": "cortex-map-68db7b1-table.jpg",
+        "globe": "cortex-map-68db7b1-globe.jpg"
+      }
+    },
+    {
+      "repo": "jarvising",
+      "sha": "7d60968",
+      "date": "2026-09-29T07:13:45+00:00",
+      "subject": "cortex: the live piece — war table, intro, live stream, kiosk orbit, probe",
+      "kind": "site",
+      "note": "The same library vendored into this site at 68db7b1, with the site's bar and the theming panel folded away.",
+      "shots": {
+        "table": "jarvising-7d60968-table.jpg",
+        "globe": "jarvising-7d60968-globe.jpg"
+      }
+    }
+  ]
+}

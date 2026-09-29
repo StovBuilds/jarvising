@@ -24,9 +24,15 @@ interface Frame {
 interface Manifest {
   entry: string;
   base: string;
-  progress: number[];
+  /** scroll positions (entry 001) or named states (entry 002: "table", "globe") */
+  progress: (number | string)[];
   viewport: { width: number; height: number };
   frames: Frame[];
+  /** optional per-beat alt-text phrase, e.g. { "globe": "switched to the globe view" } */
+  beatAlt?: Record<string, string>;
+  /** optional per-beat note for a frame that predates that state */
+  beatMissing?: Record<string, string>;
+  beatGroupLabel?: string;
 }
 
 const reduce = matchMedia("(prefers-reduced-motion: reduce)");
@@ -62,15 +68,23 @@ async function mount(root: HTMLElement) {
   const frames = m.frames;
   if (frames.length < 2) return;
   const n = frames.length;
-  const beats = m.progress.map(String).filter((p) => frames.every((f) => f.shots[p]));
-  let beat = root.dataset.progress && beats.includes(root.dataset.progress) ? root.dataset.progress : beats[0];
-  const src = (i: number) => m.base + frames[i].shots[beat];
+  // A beat every frame has is a full replay. A beat only later frames have (a
+  // state the piece grew into) is offered too; earlier frames fall back to the
+  // first full beat and say so in the caption.
+  const all = m.progress.map(String);
+  const full = all.filter((p) => frames.every((f) => f.shots[p]));
+  if (!full.length) return;
+  const beats = all.filter((p) => full.includes(p) || frames.filter((f) => f.shots[p]).length >= 2);
+  let beat = root.dataset.progress && beats.includes(root.dataset.progress) ? root.dataset.progress : full[0];
+  const shotOf = (i: number) => frames[i].shots[beat] ?? frames[i].shots[full[0]];
+  const src = (i: number) => m.base + shotOf(i);
 
   // ---- stage: two stacked images, the upper one wiped in ------------------
   const stage = root.querySelector<HTMLElement>(".scrub-stage") ?? root.appendChild(h("div", "scrub-stage"));
   stage.textContent = "";
   const alt = (i: number) =>
-    `The ${m.entry} piece as built at ${frames[i].repo} commit ${frames[i].sha}, ${fmtDate(frames[i].date)}, pinned at ${beat} of the scroll.`;
+    `The ${m.entry} piece as built at ${frames[i].repo} commit ${frames[i].sha}, ${fmtDate(frames[i].date)}, ${
+      frames[i].shots[beat] ? (m.beatAlt?.[beat] ?? `pinned at ${beat} of the scroll`) : (m.beatAlt?.[full[0]] ?? `pinned at ${full[0]} of the scroll`)}.`;
   const lower = h("img", "scrub-img");
   const upper = h("img", "scrub-img scrub-upper");
   const edge = h("span", "scrub-edge");
@@ -130,13 +144,13 @@ async function mount(root: HTMLElement) {
   if (beats.length > 1) {
     beatGroup = h("div", "scrub-beats");
     beatGroup.setAttribute("role", "group");
-    beatGroup.setAttribute("aria-label", "Point in the scroll");
+    beatGroup.setAttribute("aria-label", m.beatGroupLabel ?? "Point in the scroll");
     const names = (root.dataset.beatNames ?? "").split("|");
     beats.forEach((b, i) => {
       const btn = h("button", "scrub-beat", names[i] || `p = ${b}`);
       btn.type = "button";
       btn.dataset.beat = b;
-      btn.title = `Every frame pinned at ?p=${b}`;
+      btn.title = /^[\d.]+$/.test(b) ? `Every frame pinned at ?p=${b}` : `Every frame in the ${b} state`;
       btn.setAttribute("aria-pressed", String(b === beat));
       btn.addEventListener("click", () => setBeat(b));
       beatGroup!.append(btn);
@@ -205,8 +219,10 @@ async function mount(root: HTMLElement) {
       capRepo.textContent = f.repo;
       capSha.textContent = f.sha;
       capSubject.textContent = f.subject;
-      capNote.textContent = f.note ?? "";
-      capNote.hidden = !f.note;
+      const gap = f.shots[beat] ? "" : (m.beatMissing?.[beat] ?? "This state did not exist yet at this commit; showing the first view.");
+      const note = [gap, f.note ?? ""].filter(Boolean).join(" ");
+      capNote.textContent = note;
+      capNote.hidden = !note;
       range.setAttribute("aria-valuetext", `${near + 1} of ${n}: ${fmtDate(f.date)}, ${f.repo} ${f.sha}, ${f.subject}`);
       cites.forEach((li) => li.classList.remove("is-current"));
       citeFor(near)?.classList.add("is-current");
