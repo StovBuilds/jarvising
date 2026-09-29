@@ -144,8 +144,8 @@
     },
     "002": {
       "slug": "cortex",
-      "measured_at": "2026-09-29T08:13:11.733Z",
-      "commit": "8ffd62a",
+      "measured_at": "2026-09-29T08:46:58.864Z",
+      "commit": "c370cc7",
       "dirty": false,
       "method": {
         "tool": "tools/measure-rig.mjs --entry 002",
@@ -260,8 +260,8 @@
             "tag": "search",
             "name": "Search",
             "frame": "/projects/cortex/rig/search.webp",
-            "calls": 94,
-            "triangles": 61776,
+            "calls": 96,
+            "triangles": 61780,
             "textures": 24,
             "geometries": 294,
             "programs": 23
@@ -290,13 +290,13 @@
         "source": "renderer.info summed over the latest whole frame (scene + bloom passes), via ?probe=1, once the scene stopped changing"
       },
       "first_frame_ms": {
-        "median": 498,
+        "median": 902,
         "runs": [
-          1187,
-          474,
-          534,
-          496,
-          498
+          1285,
+          902,
+          913,
+          771,
+          574
         ],
         "source": "performance.now() at the first WebGL draw call, cold context, ?intro=0"
       },
