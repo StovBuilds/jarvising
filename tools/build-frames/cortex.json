@@ -1,0 +1,52 @@
+{
+  "entry": "cortex",
+  "out": "public/projects/cortex/build",
+  "livePath": "/projects/cortex/live/",
+  "viewport": { "width": 1200, "height": 675 },
+  "progress": ["table", "globe"],
+  "ready": "canvas",
+  "settleMs": 12000,
+  "jiggle": true,
+  "pointer": [0.5, 0.17],
+  "states": {
+    "table": { "query": "" },
+    "globe": { "query": "", "actions": [{ "clickText": "globe" }] }
+  },
+  "beatAlt": {
+    "table": "on its default war-table view",
+    "globe": "switched to the globe projection"
+  },
+  "beatMissing": {
+    "globe": "No globe projection yet at this commit; showing the table."
+  },
+  "beatGroupLabel": "View",
+  "workspace": {
+    "install": ["npm", "ci", "--no-audit", "--no-fund", "--loglevel=error"],
+    "cwd": "demo",
+    "build": ["npx", "vite", "build", "--logLevel", "error"],
+    "dist": "demo/dist"
+  },
+  "brief": {
+    "text": "Build NoctemJack/cortex-map: OSS extraction of the war-table 3D map (npm pkg + demo app + docs + waitlist link)",
+    "label": "The brief, as logged",
+    "paraphrase": true,
+    "source": "Commitment ledger fdf6a1f3, opened 2026-07-15 15:57:48Z: the session's one-line summary of the job when Jack gave the go-ahead, not his words. The state log entry that closed it (home-repo commit 20a8115, 16:30:33Z) says 'Jack greenlit 15:55'; that time was typed by hand."
+  },
+  "milestones": [
+    { "label": "Promise logged", "iso": "2026-07-15T15:57:48Z", "source": "commitment ledger, fdf6a1f3 opened" },
+    { "label": "First commit", "iso": "2026-07-15T16:24:20Z", "sha": "221d13e", "repo": "cortex-map", "source": "git -C cortex-map log 221d13e" },
+    { "label": "CI fix", "iso": "2026-07-15T16:26:25Z", "sha": "ed6eaf0", "repo": "cortex-map", "source": "git -C cortex-map log ed6eaf0" },
+    { "label": "Public, demo live, promise closed", "iso": "2026-07-15T16:29:56Z", "source": "commitment ledger, fdf6a1f3 closed; state entry committed 16:30:33Z as 20a8115 (repo public, CI green, cortex-map.pages.dev deployed)" }
+  ],
+  "frames": [
+    { "repo": "cortex-map", "repoPath": "~/repos/cortex-map", "sha": "221d13e", "kind": "workspace" },
+    { "repo": "cortex-map", "repoPath": "~/repos/cortex-map", "sha": "498b74b", "kind": "workspace" },
+    { "repo": "cortex-map", "repoPath": "~/repos/cortex-map", "sha": "72cba99", "kind": "workspace" },
+    { "repo": "cortex-map", "repoPath": "~/repos/cortex-map", "sha": "165e8e8", "kind": "workspace" },
+    { "repo": "cortex-map", "repoPath": "~/repos/cortex-map", "sha": "101bfc4", "kind": "workspace" },
+    { "repo": "cortex-map", "repoPath": "~/repos/cortex-map", "sha": "68db7b1", "kind": "workspace" },
+    { "repo": "jarvising", "repoPath": "~/work/jv-entry-cortex", "sha": "7d60968", "kind": "site",
+      "stateOverrides": { "table": { "query": "intro=0" }, "globe": { "query": "intro=0&view=globe" } },
+      "note": "The same library vendored into this site at 68db7b1, with the site's bar and the theming panel folded away." }
+  ]
+}

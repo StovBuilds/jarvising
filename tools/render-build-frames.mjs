@@ -13,15 +13,30 @@
 //   site     a commit of THIS site's repo: `git worktree add --detach` into a
 //            temp dir, symlink our node_modules, `vite build`, serve dist,
 //            shoot <livePath>?p=<x>. The worktree is removed afterwards.
+//   workspace  a commit of another repo that builds its own demo (entry 002:
+//            cortex-map, npm workspaces). `git worktree add --detach` that repo
+//            into a temp dir, install ITS lockfile (cfg.workspace.install, e.g.
+//            npm ci), run cfg.workspace.build in cfg.workspace.cwd, serve
+//            cfg.workspace.dist, shoot "/". The worktree is removed afterwards.
 //   harness  a commit of another repo where the piece was one page of a big
 //            app: `git show <sha>:<path>` the component + its folder into a
 //            temp Vite project that mounts only that component (react-router's
 //            Link stubbed to <a>), build, serve, shoot /?p=<x>. The source
 //            repo's working tree is never touched.
 // Dependencies come from this repo's node_modules (the pieces share react/three
-// versions). WebGL runs on SwiftShader through the Playwright in
-// ~/repos/claude-design (PLAYWRIGHT_ROOT to override), which is why every piece
-// needs the ?p= pin: in software GL, eased values never settle.
+// versions), except for `workspace` frames, which install their own. WebGL runs
+// on SwiftShader through the Playwright in ~/repos/claude-design (PLAYWRIGHT_ROOT
+// to override), which is why every piece needs a pinned state: in software GL,
+// eased values never settle.
+//
+// States: by default each shot is <url>?p=<progress> (scroll pieces). A config
+// with "states" instead names each shot ({ "table": { query, actions } }), and
+// "progress" lists those names; a frame's "stateOverrides" replaces a state for
+// that frame. Actions run after the page is ready: { "clickText": "Globe" }
+// clicks the first button whose name starts with that text (no such button =
+// the piece had no such state at that commit, so the shot is skipped), and
+// { "key": "g" } presses a key. "ready" (CSS selector), "settleMs" and "jiggle"
+// (keep nudging the pointer, for render-on-demand loops) tune the wait.
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -55,7 +70,17 @@ const run = (cmd, args, opts = {}) => {
   return r.stdout.trim();
 };
 const git = (repo, ...args) => run("git", ["-C", repo, ...args]);
-const pTag = (p) => "p" + String(p).replace(".", "_");
+const pTag = (p) => (typeof p === "number" ? "p" + String(p).replace(".", "_") : String(p));
+const READY = cfg.ready ?? ".en-readout, [data-ready]";
+const SETTLE_MS = cfg.settleMs ?? 7000;
+// where the pointer rests while shooting, as fractions of the viewport (default: centre)
+const PTR = { x: (cfg.pointer?.[0] ?? 0.5) * VP.width, y: (cfg.pointer?.[1] ?? 0.5) * VP.height };
+const stateFor = (frame, p) => {
+  if (!cfg.states) return { query: `p=${p}`, actions: [] };
+  const st = frame.stateOverrides?.[p] ?? cfg.states[p];
+  if (!st) throw new Error(`no state "${p}" in ${cfgPath}`);
+  return { query: st.query ?? "", actions: st.actions ?? [] };
+};
 
 // ---- static server over a dist folder ------------------------------------
 const MIME = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".css": "text/css", ".json": "application/json",
@@ -84,6 +109,23 @@ function buildSite(frame, repo) {
     const dist = path.join(TMP, `${frame.repo}-${frame.sha}-dist`);
     fs.renameSync(path.join(dir, "dist"), dist);
     return { dist, url: cfg.livePath };
+  } finally {
+    git(repo, "worktree", "remove", "--force", dir);
+  }
+}
+
+function buildWorkspace(frame, repo) {
+  const ws = { ...cfg.workspace, ...frame.workspace };
+  const dir = path.join(TMP, `${frame.repo}-${frame.sha}`);
+  git(repo, "worktree", "add", "--detach", dir, frame.sha);
+  try {
+    const [icmd, ...iargs] = ws.install;
+    run(icmd, iargs, { cwd: dir });
+    const [bcmd, ...bargs] = ws.build;
+    run(bcmd, bargs, { cwd: path.join(dir, ws.cwd ?? ".") });
+    const dist = path.join(TMP, `${frame.repo}-${frame.sha}-dist`);
+    fs.renameSync(path.join(dir, ws.dist), dist);
+    return { dist, url: "/" };
   } finally {
     git(repo, "worktree", "remove", "--force", dir);
   }
@@ -144,17 +186,43 @@ try {
     const missing = want.filter(([, f]) => force || !fs.existsSync(path.join(OUT, f)));
     if (!skip && missing.length) {
       console.log(`build ${frame.repo}@${entry.sha} (${frame.kind}) …`);
-      const { dist, url } = frame.kind === "harness" ? buildHarness(frame, repo) : buildSite(frame, repo);
+      let built;
+      try {
+        built = frame.kind === "harness" ? buildHarness(frame, repo) : frame.kind === "workspace" ? buildWorkspace(frame, repo) : buildSite(frame, repo);
+      } catch (e) {
+        // an honest gap: say which commit would not build, and carry on with the rest
+        console.log(`  ${frame.repo}@${entry.sha} did not build; left out:\n${String(e.message).split("\n").slice(0, 6).join("\n")}`);
+        continue;
+      }
+      const { dist, url } = built;
       const server = await serve(dist);
       const port = server.address().port;
       try {
         for (const [p, f] of missing) {
           const page = await browser.newPage({ viewport: VP, deviceScaleFactor: 1, colorScheme: "dark" });
           page.on("pageerror", (e) => console.error(`  pageerror @${entry.sha}:`, e.message));
-          await page.goto(`http://127.0.0.1:${port}${url}?p=${p}`, { waitUntil: "networkidle", timeout: 180000 });
-          await page.waitForSelector(".en-readout, [data-ready]", { timeout: 180000 });
-          await page.mouse.move(VP.width / 2, VP.height / 2);
-          await page.waitForTimeout(7000); // several software-GL frames: late GLBs, callouts, lamps
+          const st = stateFor(frame, p);
+          await page.goto(`http://127.0.0.1:${port}${url}${st.query ? `?${st.query}` : ""}`, { waitUntil: "networkidle", timeout: 180000 });
+          await page.waitForSelector(READY, { timeout: 180000 });
+          await page.mouse.move(PTR.x, PTR.y);
+          let absent = false;
+          for (const a of st.actions) {
+            if (a.wait) await page.waitForTimeout(a.wait);
+            if (a.key) await page.keyboard.press(a.key);
+            if (a.clickText) {
+              const btn = page.getByRole("button", { name: new RegExp(`^\\W*${a.clickText}`, "i") }).first();
+              if (!(await btn.count())) { absent = true; break; }
+              await btn.click();
+              await page.mouse.move(PTR.x, PTR.y);
+            }
+          }
+          if (absent) { console.log(`  no "${p}" state at ${entry.sha}; skipped`); await page.close(); continue; }
+          if (cfg.jiggle) {
+            // render-on-demand pieces sleep when idle; keep them awake while they settle
+            for (let t = 0; t < SETTLE_MS; t += 1000) { await page.mouse.move(PTR.x + (t % 2000 ? 4 : 0), PTR.y); await page.waitForTimeout(1000); }
+          } else {
+            await page.waitForTimeout(SETTLE_MS); // several software-GL frames: late GLBs, callouts, lamps
+          }
           await page.screenshot({ path: path.join(OUT, f), type: "jpeg", quality: QUALITY, timeout: 180000 });
           console.log(`  wrote ${f} (${Math.round(fs.statSync(path.join(OUT, f)).size / 1024)} kB)`);
           await page.close();
@@ -180,6 +248,9 @@ if (writeManifest) {
     base: "/" + path.relative(path.join(ROOT, "public"), OUT).split(path.sep).join("/") + "/",
     ...(cfg.milestones ? { milestones: cfg.milestones } : {}),
     ...(cfg.brief ? { brief: cfg.brief } : {}),
+    ...(cfg.beatAlt ? { beatAlt: cfg.beatAlt } : {}),
+    ...(cfg.beatMissing ? { beatMissing: cfg.beatMissing } : {}),
+    ...(cfg.beatGroupLabel ? { beatGroupLabel: cfg.beatGroupLabel } : {}),
     generated: previous && JSON.stringify(previous.frames) === JSON.stringify(out) ? previous.generated : new Date().toISOString(),
     frames: out,
   };
