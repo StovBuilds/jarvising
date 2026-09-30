@@ -38,7 +38,7 @@
   "publisher": { "@type": "Organization", "name": "Adapt Progress Evolve", "url": "https://adaptprogressevolve.com/", "vatID": "GB362654684", "identifier": "10047328" },
   "license": "https://opensource.org/license/mit",
   "datePublished": "2026-09-29",
-  "dateModified": "2026-09-29",
+  "dateModified": "2026-09-30",
   "isPartOf": { "@id": "https://jarvising.com/#website" },
   "image": "https://jarvising.com/projects/submarine/og.png",
   "keywords": ["submarine", "T-class", "ASDIC", "sonar", "thermocline", "Three.js", "WebGL", "exploded view"]
@@ -143,7 +143,7 @@
   .see-also a.back { text-decoration: none; color: var(--ink-soft); border-bottom: 1px solid var(--line-strong); font-size: 15px; }
   .see-also a.back:hover { color: var(--ink); border-color: var(--ink); }
 
-  /* ---- Etymology: the brief, day one, and the build replayed -------------- */
+  /* ---- Etymology: day one, and the build replayed --------------------------- */
   .grew .wide { grid-column: 1 / -1; min-width: 0; margin-top: 18px; }
   .slip { position: relative; margin: 0; padding: 22px 24px 18px; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 4px 4px 14px 14px;
     box-shadow: 0 1px 0 var(--line), 0 10px 24px -18px rgba(27, 29, 32, .35); }
@@ -279,13 +279,12 @@
         <p>First attested as a single-file page Jack built in a conversation with Claude and published as a claude.ai artifact on 29 September 2026; moved here the same day. The artifact has no git history, and the artifact service keeps only its final version, so there are no in-between frames to show and none are invented. The replay starts with the published file itself, rendered with the libraries it loaded from a CDN, and carries on through this site's port, every frame shot in the same state.</p>
       </div>
       <div class="wide">
-        <ul class="facts day-one" aria-label="Day one, 29 September 2026 (UTC)">
-          <li><small>Artifact published</small><span>07:18 <em>UTC, inferred</em></span></li>
-          <li><small>Port logged</small><span>10:22 <em>UTC</em></span></li>
-          <li><small>Port first commit</small><span>11:04 <em>155076a</em></span></li>
+        <ul class="facts day-one" aria-label="Day one, 29 September 2026">
+          <li><small>Artifact to port logged</small><span>3 h 4 min <em>inferred</em></span></li>
+          <li><small>Logged to first commit</small><span>42 min</span></li>
           <li class="total"><small>Artifact to port</small><span>3 h 46 min</span></li>
         </ul>
-        <p class="caption">Day one, from the records. The artifact's version id, 1790666297, read as a Unix timestamp is 07:18:17 UTC on 29 September; the artifact service does not document what the id means, so that time is an inference, not a record. The port's times come from the commitment ledger (a747b94e, opened 10:22:13) and <code>git log</code> on this site.</p>
+        <p class="caption">Day one, from the records. The artifact's version id, 1790666297, read as a Unix timestamp, gives when it was published; the artifact service does not document what the id means, so that is an inference, not a record. The port's durations come from the commitment ledger (a747b94e) and <code>git log</code> on this site.</p>
 
         <div class="scrub" data-scrubber data-manifest="/projects/submarine/build/manifest.json" data-progress="open" data-beat-names="Opened up, below the layer|At periscope depth">
           <div class="scrub-stage">
@@ -293,8 +292,8 @@
           </div>
           <p class="scrub-caption">The latest frame, 29 Sep 2026. With JavaScript on, drag across the picture or use the slider to replay the build.</p>
           <ol class="scrub-cites" aria-label="Citations: the versions replayed">
-            <li data-sha="1790666297"><time datetime="2026-09-29T07:18:17Z">29 Sep</time><code>1790666297</code><span class="fresh">claude.ai: published as an artifact, one HTML file (time inferred from the version id)</span></li>
-            <li data-sha="155076a"><time datetime="2026-09-29T11:04:09Z">29 Sep</time><code>155076a</code><span class="fresh">Ported to jarvising.com as entry 004</span></li>
+            <li data-sha="1790666297"><time datetime="2026-09-29">29 Sep</time><code>1790666297</code><span class="fresh">claude.ai: published as an artifact, one HTML file (time inferred from the version id)</span></li>
+            <li data-sha="155076a"><time datetime="2026-09-29">29 Sep</time><code>155076a</code><span class="fresh">Ported to jarvising.com as entry 004</span></li>
           </ol>
           <p class="caption">Frames rendered by <a href="https://github.com/StovBuilds/jarvising/blob/main/tools/render-build-frames.mjs">tools/render-build-frames.mjs</a> in software WebGL. The port is shot pinned and frozen at <code>?depth=280&amp;view=open&amp;ping=0.3</code> (opened up, below the layer) and <code>?depth=40&amp;ping=0.75</code> (periscope depth). The published artifact has no such pin, so it was loaded as published, with its libraries from their CDNs, driven with its own buttons and left to sink to depth in real time; its ping, and the slow orbit it starts when left alone, are wherever they had got to. The file is kept in the repo at <code>tools/build-frames/sources/</code> so the frame can be rendered again.</p>
         </div>

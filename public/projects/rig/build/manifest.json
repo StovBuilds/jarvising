@@ -13,30 +13,30 @@
   "milestones": [
     {
       "label": "Promise logged",
-      "iso": "2026-09-07T15:08:18Z",
+      "iso": "2026-09-07",
       "source": "commitment ledger, 1b536044 opened"
     },
     {
       "label": "State log: started",
-      "iso": "2026-09-07T15:36:44Z",
-      "source": "home-repo commit 449a299 (entry heading says ~15:45Z)"
+      "iso": "2026-09-07",
+      "source": "home-repo commit 449a299"
     },
     {
       "label": "First commit",
-      "iso": "2026-09-07T15:36:38Z",
+      "iso": "2026-09-07",
       "sha": "62f976e",
       "repo": "jstov",
-      "source": "git -C jstov log 62f976e: the work in progress was swept into another lane's commit by a `git add -A`; d7f0a12 fixed its lint at 15:40:57"
+      "source": "git -C jstov log 62f976e: the work in progress was swept into another lane's commit by a `git add -A`; d7f0a12 fixed its lint"
     },
     {
       "label": "Slice 1 live, promise closed",
-      "iso": "2026-09-07T17:21:03Z",
-      "source": "commitment ledger, 1b536044 closed (slice 1 committed 17:06:20 as 441d38a)"
+      "iso": "2026-09-07",
+      "source": "commitment ledger, 1b536044 closed (slice 1 committed as 441d38a)"
     },
     {
       "label": "Slice 4 live, last promise closed",
-      "iso": "2026-09-08T07:02:52Z",
-      "source": "commitment ledger, 93f54e7d closed (slice 4 committed 06:26:21 as b1524e5)"
+      "iso": "2026-09-08",
+      "source": "commitment ledger, 93f54e7d closed (slice 4 committed as b1524e5)"
     }
   ],
   "brief": {
@@ -50,7 +50,7 @@
     {
       "repo": "jstov",
       "sha": "d7f0a12",
-      "date": "2026-09-07T15:40:57+00:00",
+      "date": "2026-09-07",
       "subject": "lab(rig): split a comma expression into statements (lint: no-unused-expressions)",
       "kind": "harness",
       "note": "The first code on record: the work in progress as another lane's commit swept it up, plus its lint fix. Rendered from that commit's own rig files in a throwaway harness, with every product name scrubbed out of the sources first.",
@@ -62,7 +62,7 @@
     {
       "repo": "jstov",
       "sha": "441d38a",
-      "date": "2026-09-07T17:06:20+00:00",
+      "date": "2026-09-07",
       "subject": "lab(rig): Inside the Rig (011) — slice 1 verified: lighting, cameras, glass, atlas entry, story reveals",
       "kind": "harness",
       "note": "Rendered from the commit's own rig files in a throwaway harness, product names scrubbed from the sources first.",
@@ -74,7 +74,7 @@
     {
       "repo": "jstov",
       "sha": "9fc8438",
-      "date": "2026-09-07T18:06:22+00:00",
+      "date": "2026-09-07",
       "subject": "lab(rig): slice 2 — the cinematic half",
       "kind": "harness",
       "note": "Rendered from the commit's own rig files in a throwaway harness, product names scrubbed from the sources first.",
@@ -86,7 +86,7 @@
     {
       "repo": "jstov",
       "sha": "cd8a6a8",
-      "date": "2026-09-07T19:07:56+00:00",
+      "date": "2026-09-07",
       "subject": "lab(rig): slice 3 — Level B everywhere, deep dive, breadcrumbs, dark lab",
       "kind": "harness",
       "note": "Rendered from the commit's own rig files in a throwaway harness, product names scrubbed from the sources first.",
@@ -98,7 +98,7 @@
     {
       "repo": "jstov",
       "sha": "b1524e5",
-      "date": "2026-09-08T06:26:21+00:00",
+      "date": "2026-09-08",
       "subject": "lab(rig): slice 4 — Blender hero parts, the mobile pass, the accessibility pass",
       "kind": "harness",
       "note": "Rendered from the commit's own rig files and parts library in a throwaway harness, product names scrubbed from the sources first.",
@@ -110,7 +110,7 @@
     {
       "repo": "jarvising",
       "sha": "cab6ce5",
-      "date": "2026-09-29T07:04:19+00:00",
+      "date": "2026-09-29",
       "subject": "entry 003: Inside the Rig, ported from jstov lab 011 with every brand removed",
       "kind": "site",
       "shots": {

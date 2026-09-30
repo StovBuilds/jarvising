@@ -287,13 +287,12 @@
           <p class="src">The session's one-line summary of the job, written into the commitment ledger at the moment Jack said go. Not his exact words. The npm package it mentions was never published; that is still Jack's call.</p>
         </figure>
 
-        <ul class="facts day-one" aria-label="Day one, 15 July 2026 (UTC)">
-          <li><small>Promise logged</small><span>15:57 <em>UTC</em></span></li>
-          <li><small>First commit</small><span>16:24 <em>221d13e</em></span></li>
-          <li><small>Public, demo live</small><span>16:29 <em>UTC</em></span></li>
+        <ul class="facts day-one" aria-label="Day one, 15 July 2026">
+          <li><small>Logged to first commit</small><span>27 min</span></li>
+          <li><small>First commit to public</small><span>6 min</span></li>
           <li class="total"><small>Logged to live</small><span>32 min</span></li>
         </ul>
-        <p class="caption">Day one, from the records: the commitment ledger (fdf6a1f3, opened 15:57:48, closed 16:29:56), <code>git log</code> on cortex-map (221d13e at 16:24:20, a CI fix at 16:26:25) and the state-log entry committed at 16:30:33, which records the repository made public, CI green and the demo deployed to cortex-map.pages.dev. That entry's heading says Jack gave the go-ahead at 15:55; it was typed by hand, so the ledger's clock is the one shown.</p>
+        <p class="caption">Day one, from the records: the commitment ledger (fdf6a1f3), <code>git log</code> on cortex-map (221d13e, then a CI fix) and the state-log entry that records the repository made public, CI green and the demo deployed to cortex-map.pages.dev. The state log's heading was typed by hand, so the durations are measured on the ledger's clock.</p>
 
         <div class="scrub" data-scrubber data-manifest="/projects/cortex/build/manifest.json" data-progress="table" data-beat-names="The table|The globe">
           <div class="scrub-stage">
@@ -301,13 +300,13 @@
           </div>
           <p class="scrub-caption">The latest frame, 29 Sep 2026. With JavaScript on, drag across the picture or use the slider to replay all seven.</p>
           <ol class="scrub-cites" aria-label="Citations: the commits replayed">
-            <li data-sha="221d13e"><time datetime="2026-07-15T16:24:20Z">15 Jul</time><code>221d13e</code><span class="fresh">cortex-map: v0.1.0, the war table extracted and themeable</span></li>
-            <li data-sha="498b74b"><time datetime="2026-07-23T18:35:27Z">23 Jul</time><code>498b74b</code><span class="fresh">cortex-map: A live theming panel: size, colours, waves</span></li>
-            <li data-sha="72cba99"><time datetime="2026-07-23T18:42:15Z">23 Jul</time><code>72cba99</code><span class="fresh">cortex-map: Camera, link, pillar and per-cluster motion controls</span></li>
-            <li data-sha="165e8e8"><time datetime="2026-07-23T19:01:09Z">23 Jul</time><code>165e8e8</code><span class="fresh">cortex-map: A globe projection, as a prototype</span></li>
-            <li data-sha="101bfc4"><time datetime="2026-07-23T19:53:03Z">23 Jul</time><code>101bfc4</code><span class="fresh">cortex-map: The globe rebuilt: a lit world, a ring, orbiting clusters</span></li>
-            <li data-sha="68db7b1"><time datetime="2026-07-23T20:08:08Z">23 Jul</time><code>68db7b1</code><span class="fresh">cortex-map: Globe options: transparency, grid, orbs on the surface</span></li>
-            <li data-sha="7d60968"><time datetime="2026-09-29T07:13:45Z">29 Sep</time><code>7d60968</code><span class="fresh">Vendored into jarvising.com as entry 002</span></li>
+            <li data-sha="221d13e"><time datetime="2026-07-15">15 Jul</time><code>221d13e</code><span class="fresh">cortex-map: v0.1.0, the war table extracted and themeable</span></li>
+            <li data-sha="498b74b"><time datetime="2026-07-23">23 Jul</time><code>498b74b</code><span class="fresh">cortex-map: A live theming panel: size, colours, waves</span></li>
+            <li data-sha="72cba99"><time datetime="2026-07-23">23 Jul</time><code>72cba99</code><span class="fresh">cortex-map: Camera, link, pillar and per-cluster motion controls</span></li>
+            <li data-sha="165e8e8"><time datetime="2026-07-23">23 Jul</time><code>165e8e8</code><span class="fresh">cortex-map: A globe projection, as a prototype</span></li>
+            <li data-sha="101bfc4"><time datetime="2026-07-23">23 Jul</time><code>101bfc4</code><span class="fresh">cortex-map: The globe rebuilt: a lit world, a ring, orbiting clusters</span></li>
+            <li data-sha="68db7b1"><time datetime="2026-07-23">23 Jul</time><code>68db7b1</code><span class="fresh">cortex-map: Globe options: transparency, grid, orbs on the surface</span></li>
+            <li data-sha="7d60968"><time datetime="2026-09-29">29 Sep</time><code>7d60968</code><span class="fresh">Vendored into jarvising.com as entry 002</span></li>
           </ol>
           <p class="caption">Frames rendered by <a href="https://github.com/StovBuilds/jarvising/blob/main/tools/render-build-frames.mjs">tools/render-build-frames.mjs</a> in software WebGL at 1200×675: each cortex-map commit checked out alone, installed from its own lockfile, its demo built and shot on first load (<i>the table</i>) and after pressing its Globe button (<i>the globe</i>). Three commits are left out because nothing on screen changes: a CI fix (<code>ed6eaf0</code>), the GitHub account rename (<code>078561c</code>) and a docs rewrite (<code>f6fe240</code>). The Globe button first appears at <code>165e8e8</code>; before it, the globe view shows the table. Every commit built, the first included. The last frame is this site's copy. The list gives each commit's subject shortened; the caption above gives it in full.</p>
         </div>

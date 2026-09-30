@@ -14,37 +14,37 @@
     "text": "Enigma machine parallax — what it did / when created / how it works piece by piece.",
     "label": "The brief, as logged",
     "paraphrase": true,
-    "source": "claude-state.md, entry headed 2026-08-27 ~10:20Z (home-repo commit e31c6fc). The session's paraphrase of Jack's ask, not his words."
+    "source": "claude-state.md, entry dated 2026-08-27 (home-repo commit e31c6fc). The session's paraphrase of Jack's ask, not his words."
   },
   "milestones": [
     {
       "label": "Promise logged",
-      "iso": "2026-08-27T10:09:49Z",
+      "iso": "2026-08-27",
       "source": "commitment ledger, acbc1db5 opened"
     },
     {
       "label": "State log: starting",
-      "iso": "2026-08-27T10:11:23Z",
-      "source": "home-repo commit e31c6fc (entry text says ~10:20Z)"
+      "iso": "2026-08-27",
+      "source": "home-repo commit e31c6fc"
     },
     {
       "label": "First commit",
-      "iso": "2026-08-27T10:38:30Z",
+      "iso": "2026-08-27",
       "sha": "6054eaf",
       "repo": "jstov",
       "source": "git -C jstov log 6054eaf"
     },
     {
       "label": "Lint fix",
-      "iso": "2026-08-27T10:45:08Z",
+      "iso": "2026-08-27",
       "sha": "f99c5ba",
       "repo": "jstov",
       "source": "git -C jstov log f99c5ba"
     },
     {
       "label": "Live, verified, promise closed",
-      "iso": "2026-08-27T10:46:08Z",
-      "source": "commitment ledger, acbc1db5 closed; state entry 'SHIPPED' committed 10:46:29Z as fdfa4e2 (entry text says ~11:55Z)"
+      "iso": "2026-08-27",
+      "source": "commitment ledger, acbc1db5 closed; state entry 'SHIPPED' committed as fdfa4e2"
     }
   ],
   "frames": [

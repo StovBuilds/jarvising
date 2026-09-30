@@ -322,13 +322,16 @@ try {
 
 if (writeManifest) {
   out.sort((a, b) => a.date.localeCompare(b.date));
+  // Published date-only (order is fixed above, on the full timestamp): the public
+  // pages never show a clock time for work Jack was part of.
+  for (const f of out) f.date = String(f.date).slice(0, 10);
   const manifest = {
     entry: cfg.entry,
     livePath: cfg.livePath,
     progress,
     viewport: VP,
     base: "/" + path.relative(path.join(ROOT, "public"), OUT).split(path.sep).join("/") + "/",
-    ...(cfg.milestones ? { milestones: cfg.milestones } : {}),
+    ...(cfg.milestones ? { milestones: cfg.milestones.map((m) => ({ ...m, ...(m.iso ? { iso: String(m.iso).slice(0, 10) } : {}) })) } : {}),
     ...(cfg.brief ? { brief: cfg.brief } : {}),
     ...(cfg.beatAlt ? { beatAlt: cfg.beatAlt } : {}),
     ...(cfg.beatMissing ? { beatMissing: cfg.beatMissing } : {}),

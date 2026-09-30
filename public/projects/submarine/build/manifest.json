@@ -13,18 +13,18 @@
   "milestones": [
     {
       "label": "Artifact published",
-      "iso": "2026-09-29T07:18:17Z",
+      "iso": "2026-09-29",
       "inferred": true,
       "source": "claude.ai artifact version id 1790666297 read as a Unix timestamp; the service does not document the id, so this is an inference"
     },
     {
       "label": "Port logged",
-      "iso": "2026-09-29T10:22:13Z",
+      "iso": "2026-09-29",
       "source": "commitment ledger, a747b94e opened"
     },
     {
       "label": "Port first commit",
-      "iso": "2026-09-29T11:04:09Z",
+      "iso": "2026-09-29",
       "sha": "155076a",
       "repo": "jarvising",
       "source": "git log 155076a (author date)"
@@ -40,10 +40,10 @@
     {
       "repo": "claude.ai",
       "sha": "1790666297",
-      "date": "2026-09-29T07:18:17Z",
+      "date": "2026-09-29",
       "subject": "Published as a claude.ai artifact",
       "kind": "file",
-      "note": "The published file itself, with three 0.169 and its fonts from their CDNs; it has no pinned state, so it was driven with its own buttons and left to sink in real time. The time is the version id read as a Unix timestamp, an inference.",
+      "note": "The published file itself, with three 0.169 and its fonts from their CDNs; it has no pinned state, so it was driven with its own buttons and left to sink in real time.",
       "shots": {
         "open": "claude.ai-1790666297-open.jpg",
         "periscope": "claude.ai-1790666297-periscope.jpg"
@@ -52,7 +52,7 @@
     {
       "repo": "jarvising",
       "sha": "155076a",
-      "date": "2026-09-29T11:04:09+00:00",
+      "date": "2026-09-29",
       "subject": "submarine: port Below the Layer (entry 004 live piece)",
       "kind": "site",
       "note": "Ported: the same scene on the site's own three.js and fonts, shot in a pinned, frozen state.",

@@ -38,7 +38,7 @@
   "publisher": { "@type": "Organization", "name": "Adapt Progress Evolve", "url": "https://adaptprogressevolve.com/", "vatID": "GB362654684", "identifier": "10047328" },
   "license": "https://opensource.org/license/mit",
   "datePublished": "2026-08-27",
-  "dateModified": "2026-09-07",
+  "dateModified": "2026-09-30",
   "citation": ["https://www.gchq.gov.uk/information/the-pyry-forest-meeting", "https://www.tnmoc.org/bombe", "https://www.cryptomuseum.com/crypto/enigma/hist.htm", "https://www.bletchleypark.org.uk/markers/hut-3-and-hut-6/"],
   "isPartOf": { "@id": "https://jarvising.com/#website" },
   "image": "https://jarvising.com/projects/enigma/og.png",
@@ -281,13 +281,12 @@
           <p class="src">The session's summary of Jack's ask, from the state log entry that opened the work on 27 August 2026. Not his exact words.</p>
         </figure>
 
-        <ul class="facts day-one" aria-label="Day one, 27 August 2026 (UTC)">
-          <li><small>Promise logged</small><span>10:09 <em>UTC</em></span></li>
-          <li><small>First commit</small><span>10:38 <em>6054eaf</em></span></li>
-          <li><small>Live, verified</small><span>10:46 <em>UTC</em></span></li>
+        <ul class="facts day-one" aria-label="Day one, 27 August 2026">
+          <li><small>Logged to first commit</small><span>29 min</span></li>
+          <li><small>First commit to live</small><span>8 min</span></li>
           <li class="total"><small>Logged to live</small><span>36 min</span></li>
         </ul>
-        <p class="caption">Day one, from the records: the commitment ledger (opened 10:09:49, closed 10:46:08), <code>git log</code> on jstov (6054eaf at 10:38:30, a lint fix at 10:45:08) and the commits that wrote the state log. The state log's own headings say ~10:20 and ~11:55; those were typed by hand, and the commits that saved them say 10:11 and 10:46, so the machine clocks are the ones shown. First commit to live: eight minutes.</p>
+        <p class="caption">Day one, from the records: the commitment ledger, <code>git log</code> on jstov (6054eaf, then a lint fix) and the commits that wrote the state log. The state log's own headings were typed by hand, so the durations are measured on the machine clocks. First commit to live: eight minutes.</p>
 
         <div class="scrub" data-scrubber data-manifest="/projects/enigma/build/manifest.json" data-progress="0.31" data-beat-names="The assembly|The rotor">
           <div class="scrub-stage">
@@ -295,14 +294,14 @@
           </div>
           <p class="scrub-caption">The latest frame, 7 Sep 2026. With JavaScript on, drag across the picture or use the slider to replay all eight.</p>
           <ol class="scrub-cites" aria-label="Citations: the commits replayed">
-            <li data-sha="6054eaf"><time datetime="2026-08-27T10:38:30Z">27 Aug</time><code>6054eaf</code><span class="fresh">jstov: 008 — ENIGMA, a scroll-driven teardown</span></li>
-            <li data-sha="8736c28"><time datetime="2026-08-28T12:19:47Z">28 Aug</time><code>8736c28</code><span class="fresh">jstov: enigma polish — sound, live traces, shareable secrets, grade</span></li>
-            <li data-sha="164c3d0"><time datetime="2026-09-07T06:50:08Z">7 Sep</time><code>164c3d0</code><span class="fresh">Ported to jarvising.com as entry 001</span></li>
-            <li data-sha="ce3614f"><time datetime="2026-09-07T08:16:09Z">7 Sep</time><code>ce3614f</code><span class="fresh">Hut 6 at night, anchored callouts, lid card, Bletchley chapters</span></li>
-            <li data-sha="734e5bb"><time datetime="2026-09-07T08:41:15Z">7 Sep</time><code>734e5bb</code><span class="fresh">The bombe, a Blender-built GLB</span></li>
-            <li data-sha="e442ad6"><time datetime="2026-09-07T09:22:38Z">7 Sep</time><code>e442ad6</code><span class="fresh">The Enigma itself from a Blender parts library</span></li>
-            <li data-sha="46aba59"><time datetime="2026-09-07T09:43:41Z">7 Sep</time><code>46aba59</code><span class="fresh">Engraved key letters, running bombe, hut props</span></li>
-            <li data-sha="9210418"><time datetime="2026-09-07T15:36:03Z">7 Sep</time><code>9210418</code><span class="fresh">Rotor solo: the machine lifts offstage</span></li>
+            <li data-sha="6054eaf"><time datetime="2026-08-27">27 Aug</time><code>6054eaf</code><span class="fresh">jstov: 008 — ENIGMA, a scroll-driven teardown</span></li>
+            <li data-sha="8736c28"><time datetime="2026-08-28">28 Aug</time><code>8736c28</code><span class="fresh">jstov: enigma polish — sound, live traces, shareable secrets, grade</span></li>
+            <li data-sha="164c3d0"><time datetime="2026-09-07">7 Sep</time><code>164c3d0</code><span class="fresh">Ported to jarvising.com as entry 001</span></li>
+            <li data-sha="ce3614f"><time datetime="2026-09-07">7 Sep</time><code>ce3614f</code><span class="fresh">Hut 6 at night, anchored callouts, lid card, Bletchley chapters</span></li>
+            <li data-sha="734e5bb"><time datetime="2026-09-07">7 Sep</time><code>734e5bb</code><span class="fresh">The bombe, a Blender-built GLB</span></li>
+            <li data-sha="e442ad6"><time datetime="2026-09-07">7 Sep</time><code>e442ad6</code><span class="fresh">The Enigma itself from a Blender parts library</span></li>
+            <li data-sha="46aba59"><time datetime="2026-09-07">7 Sep</time><code>46aba59</code><span class="fresh">Engraved key letters, running bombe, hut props</span></li>
+            <li data-sha="9210418"><time datetime="2026-09-07">7 Sep</time><code>9210418</code><span class="fresh">Rotor solo: the machine lifts offstage</span></li>
           </ol>
           <p class="caption">Frames rendered by <a href="https://github.com/StovBuilds/jarvising/blob/main/tools/render-build-frames.mjs">tools/render-build-frames.mjs</a> in software WebGL, pinned at <code>?p=0.31</code> (the assembly) and <code>?p=0.45</code> (the rotor). The two jstov frames come from that commit's own Enigma files mounted alone, without the rest of jstov.uk; the list gives each commit's subject shortened, the caption above gives it in full.</p>
         </div>
