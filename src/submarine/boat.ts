@@ -5,14 +5,9 @@ import { TAU, clamp, lerp } from "./constants";
 import { bez, curveSet, makeProfile, mesh, range, ringLower, ringUpper, sweep } from "./geometry";
 import type { Materials } from "./materials";
 
-export const COMPS = [
-  { x0: 25, x1: 33, name: "Tube space" },
-  { x0: 12, x1: 25, name: "Torpedo stowage & mess" },
-  { x0: 0, x1: 12, name: "Control room" },
-  { x0: -10, x1: 0, name: "Wardroom, galley & battery" },
-  { x0: -23, x1: -10, name: "Engine room" },
-  { x0: -33, x1: -23, name: "Motor room & steering" },
-];
+// the compartments live in ./comps.ts (three-free, so the no-WebGL fallback can list them)
+import { COMPS } from "./comps";
+export { COMPS };
 
 // pressure hull radius along the boat
 export const rPH = (x: number) => {

@@ -38,6 +38,7 @@ import {
   labAmount, samplePath, smooth, storyExplode, storyFades, storyHidden, storyOffsets,
 } from "./path";
 import { RigAmbience } from "./ambience";
+import { NOGL_FIX, NOGL_WHY, tryRenderer } from "../shared/webgl";
 
 const SCROLL_VH = 1400;
 type Tier = "LOW" | "MEDIUM" | "HIGH" | "ULTRA";
@@ -194,11 +195,9 @@ const Rig = () => {
     (async () => {
       try { await document.fonts.ready; } catch { /* system fonts */ }
       if (dead || !stageRef.current) return;
-      let gl: WebGLRenderingContext | null = null;
-      try { gl = document.createElement("canvas").getContext("webgl"); } catch { /* none */ }
-      if (!gl) { setPhase("unsupported"); return; }
+      renderer = tryRenderer(() => new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" }));
+      if (!renderer) { setPhase("unsupported"); return; }
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
       if (PROBE) renderer.info.autoReset = false;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier === "LOW" ? 1.25 : 2));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -716,6 +715,7 @@ const Rig = () => {
         <div className="rg-fallback">
           <h1>INSIDE THE RIG</h1>
           <p>This one needs WebGL. Here is the machine as a list — every major component and what it does:</p>
+          <p className="rg-nogl">{NOGL_WHY} {NOGL_FIX}</p>
           <ol>
             {LEVEL_A.map((id) => (
               <li key={id}><strong>{P[id].name}</strong>{P[id].productName ? ` — ${P[id].productName}` : ""}: {P[id].short}</li>
@@ -1009,6 +1009,7 @@ const CSS = `
 .rg-fallback { place-content: start center; padding: 10vh 6vw; overflow: auto; text-align: left; }
 .rg-fallback h1 { font: 700 40px/1 "Space Grotesk"; letter-spacing: .06em; }
 .rg-fallback ol { max-width: 60ch; line-height: 1.55; } .rg-fallback a { color: var(--rg-accent); }
+.rg-fallback .rg-nogl { max-width: 60ch; line-height: 1.55; opacity: .8; }
 
 /* story chrome */
 .rg-masthead { position: fixed; top: 18px; left: 22px; z-index: 10; display: grid; gap: 4px; pointer-events: none; }

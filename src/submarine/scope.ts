@@ -7,14 +7,19 @@ export interface PingRec { t0: number; contacts: Contact[]; seed: number }
 const SCOPE_MAX = 420;
 
 export function makeScope(canvas: HTMLCanvasElement) {
-  const ctx = canvas.getContext("2d")!;
+  // a browser can refuse even a 2D context (canvas disabled or out of memory): the trace
+  // then just stays empty instead of throwing every frame
+  let ctx: CanvasRenderingContext2D | null = null;
+  try { ctx = canvas.getContext("2d"); } catch { /* none */ }
   function size() {
+    if (!ctx) return;
     const r = canvas.getBoundingClientRect();
     const pr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.max(1, Math.round(r.width * pr));
     canvas.height = Math.max(1, Math.round(r.height * pr));
   }
   function draw(T: number, p: PingRec | null) {
+    if (!ctx) return;
     const W = canvas.width, Hs = canvas.height;
     if (W < 4 || Hs < 4 || !canvas.offsetParent) return;
     const pr = W / Math.max(1, canvas.clientWidth), padX = 8 * pr, base = Hs - 13 * pr, amp = Hs - 20 * pr;

@@ -19,6 +19,7 @@ import { Enigma as EnigmaCipher } from "./cipher";
 import { EnigmaAudio } from "./sound";
 import { buildRoom } from "./room";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { NOGL_FIX, NOGL_WHY, tryRenderer } from "../shared/webgl";
 
 const SCROLL_VH = 1400;
 
@@ -379,13 +380,11 @@ const Enigma = () => {
         partsLibRef.current = lib ? `library:${lib.size}` : "primitives";
       } catch { /* fallback stacks hold */ }
       if (dead || !stageRef.current) return;
-      let gl: WebGLRenderingContext | null = null;
-      try { gl = document.createElement("canvas").getContext("webgl"); } catch { /* none */ }
-      if (!gl) {
+      renderer = tryRenderer(() => new THREE.WebGLRenderer({ antialias: true, alpha: true }));
+      if (!renderer) {
         setPhase("unsupported");
         return;
       }
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1041,6 +1040,7 @@ const Enigma = () => {
         <div className="en-fallback">
           <h1>ENIGMA</h1>
           <p>This teardown needs WebGL. The chapters it would run:</p>
+          <p className="en-nogl">{NOGL_WHY} {NOGL_FIX}</p>
           <ol>{CHAPTERS.map((c) => <li key={c.kicker}>{c.kicker} — {c.head.replace("\n", " ")}</li>)}</ol>
           {!KIOSK && <a href="/projects/enigma/">← back to the entry</a>}
         </div>
@@ -1259,6 +1259,7 @@ const CSS = `
 .en-fallback h1 { font-size: 40px; }
 .en-fallback ol { color: #8a8272; line-height: 2; }
 .en-fallback a { color: #d9a441; }
+.en-fallback .en-nogl { max-width: 52ch; padding: 0 20px; text-align: center; color: #c9bfa8; line-height: 1.55; font-size: 14px; }
 /* ── kiosk / exhibition mode ─────────────────────────────────────────── */
 .kiosk { cursor: default; }
 .kiosk .en-grain, .kiosk .en-rail, .kiosk .en-series { display: none; }

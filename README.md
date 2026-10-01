@@ -29,6 +29,7 @@ tools/                        render-og.mjs (site OG), render-enigma.mjs (entry 
                               render-build-frames.mjs (an entry's build replayed: the piece rebuilt at
                               real commits, shot at a pinned ?p=, + manifest; config in build-frames/),
                               measure-rig.mjs (home-page test-rig strips → public/projects/rig.json),
+                              check-nogl.mjs (CI gate: every live piece falls back cleanly without WebGL),
                               blender/*.py (parametric assets → public/models/*.glb via ~/bin/blender-run.mjs)
 ```
 
@@ -119,6 +120,26 @@ Storage is D1 `jarvising-events` (binding `SITE_EVENTS`, schema in
 Jarvis dashboard (jarvis.jstov.uk/analytics) reads
 `/api/export-data?action=analytics&days=N` through claude-web-api's
 `SITE_DATA_JARVISING_*` target.
+
+## Without WebGL
+
+Managed work laptops often have WebGL switched off ("disabled by enterprise
+policy", a blocklisted GPU, hardware acceleration off), and three r185 needs
+WebGL2, so a WebGL1-only browser counts as none. `src/shared/webgl.ts`
+(`hasWebGL()`, `tryRenderer()`) is the one check every piece uses: Enigma and the
+Rig show their lists, Cortex opens its flat 2D lite mode, the submarine shows a
+still version, and each entry page notes it under the "Open …" door. `?nogl=1`
+forces the fallback in any browser.
+
+```bash
+bun run build
+node tools/check-nogl.mjs                      # WebGL off + WebGL1 only: fallbacks, no errors, no stuck loader
+node tools/check-nogl.mjs --mode gl            # SwiftShader WebGL2: the 3D path still starts
+node tools/check-nogl.mjs --base https://<preview>.jarvising.pages.dev --shots /tmp/nogl
+```
+
+CI runs the first line (it installs Playwright into a scratch dir); without
+Playwright the script skips with a notice.
 
 ## Regenerating the social image
 

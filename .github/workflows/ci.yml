@@ -15,6 +15,16 @@ jobs:
       - name: brand scrub (entry 003 names no brands)
         run: node tools/brand-scrub.mjs
       - run: bun run build
+      - name: no-WebGL fallbacks (every live piece degrades cleanly without WebGL or with WebGL1 only)
+        run: |
+          # Playwright is not a repo dependency: install it into a scratch dir, point the check at it
+          mkdir -p "$RUNNER_TEMP/pw"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y >/dev/null
+          npm i --no-audit --no-fund --silent playwright@1.61.0
+          npx playwright install --with-deps chromium
+          cd "$GITHUB_WORKSPACE"
+          PLAYWRIGHT_ROOT="$RUNNER_TEMP/pw" node tools/check-nogl.mjs --mode nogl,webgl1
       - name: sanity-check dist
         run: |
           set -e

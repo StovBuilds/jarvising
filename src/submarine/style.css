@@ -170,3 +170,30 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
 .noscript a{color:var(--sonar)}
 @media (max-width:620px){.back{padding:8px 10px;font-size:9.5px;text-align:center}}
 @media (max-width:380px){.grp.hull .seg button{letter-spacing:.03em;padding:10px 4px}}
+
+/* The still version (./fallback.ts): no WebGL in this browser, so no sea. Same night palette and type. */
+html.nogl, html.nogl body{height:auto;overflow:auto}
+html.nogl #stage, html.nogl #labels, html.nogl .ui, html.nogl #loader, html.nogl #info{display:none !important}
+.still{min-height:100vh;background:var(--abyss)}
+.still-hero{margin:0;position:relative}
+.still-hero img{display:block;width:100%;height:min(56vh,620px);object-fit:cover;object-position:50% 45%}
+.still-hero::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(to bottom,rgba(5,10,18,0),var(--abyss));pointer-events:none}
+.still-hero figcaption{position:absolute;right:16px;top:14px;z-index:1;font:500 10px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);text-shadow:0 1px 8px rgba(0,0,0,.9)}
+.still-body{position:relative;box-sizing:border-box;width:min(640px,100%);margin:-72px auto 0;padding:0 16px 64px}
+.still-kicker{margin:0 0 10px;font:500 10.5px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--sonar)}
+.still h1{font-size:clamp(40px,8vw,64px)}
+.still-why{margin:20px 0 0;padding:12px 14px;border:1px solid rgba(255,104,67,.35);border-radius:12px;background:rgba(255,104,67,.06);font:400 14.5px/1.5 var(--f-serif);color:#cbd5de}
+.still-why strong{color:var(--lamp);font-weight:500}
+.still-idea p{margin:16px 0 0;font:400 17px/1.55 var(--f-serif);color:#b6c3cf}
+.still-sec{margin-top:30px;padding-top:18px;border-top:1px solid var(--rule)}
+.still-sec h2{margin:0 0 10px;font:800 26px/1 var(--f-display);text-transform:uppercase;letter-spacing:.01em}
+.still-sec h3{margin:18px 0 6px;font:italic 500 18px/1.2 var(--f-serif);color:var(--ink)}
+.still-sec h3:first-child{margin-top:0}
+.still-sec p{margin:0;font:400 15.5px/1.55 var(--f-serif);color:#b6c3cf}
+.still-sec p + p{margin-top:10px}
+.still-sec strong{color:var(--ink);font-weight:500}
+.still-comps{margin:0;padding:0;list-style:none;counter-reset:c;display:grid;gap:6px}
+.still-comps li{counter-increment:c;display:flex;gap:12px;align-items:baseline;font:400 16px/1.4 var(--f-serif);color:var(--ink)}
+.still-comps li::before{content:counter(c,decimal-leading-zero);font:500 10.5px/1 var(--f-mono);letter-spacing:.1em;color:var(--lamp)}
+.still-links{margin:34px 0 0;display:flex;gap:18px;align-items:center}
+.still-src{font:500 10.5px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--sonar)}

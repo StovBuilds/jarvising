@@ -17,6 +17,7 @@ import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } f
 import { CortexMap, DEFAULT_THEME, type ClusterDef, type CortexMapHandle, type CortexMapNode, type CortexMapTheme } from "./lib";
 import { CLUSTERS, makeSampleData } from "./sampleData";
 import { Controls } from "./Controls";
+import { NOGL_FIX, NOGL_WHY, hasWebGL } from "../shared/webgl";
 
 const QS = new URLSearchParams(window.location.search);
 const KIOSK = QS.get("kiosk") === "1";
@@ -26,6 +27,9 @@ const IDLE_MS = Math.max(3, Number(QS.get("idle") ?? 60)) * 1000;
 const START_VIEW: "table" | "globe" = QS.get("view") === "globe" ? "globe" : "table";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const small = window.matchMedia("(max-width: 820px)").matches;
+// no WebGL (common on managed work laptops): the map's flat lite mode is canvas 2D,
+// so it opens in that on every screen, decided before the first render
+const NO_GL = !hasWebGL();
 const ORBIT_RAD_PER_S = 0.07; // one lap in ~90 s: slow enough to read labels
 
 export default function Cortex() {
@@ -184,7 +188,11 @@ export default function Cortex() {
           theme={deferredTheme}
           projection={projection}
           onNodeSelect={setSelected}
+          lite={NO_GL ? true : undefined}
         />
+        {NO_GL && (
+          <p className="cx-nogl" role="note" title={`${NOGL_WHY} ${NOGL_FIX}`}>3D is off in this browser, so this is the flat map.</p>
+        )}
         {!KIOSK && (
           <Controls
             theme={theme}
@@ -225,7 +233,8 @@ export default function Cortex() {
               <button type="button" ref={enterRef} className="cx-enter" onClick={() => setIntro(false)}>Enter the map</button>
               <a href="/projects/cortex/">Read the entry</a>
             </div>
-            {small && !reduceMotion && <p className="cx-fine">On a small screen the map opens in its flat lite mode. The 3D switch is bottom right.</p>}
+            {NO_GL && <p className="cx-fine cx-fine-nogl">{NOGL_WHY} So the map opens flat, in its 2D lite mode. {NOGL_FIX}</p>}
+            {small && !reduceMotion && !NO_GL && <p className="cx-fine">On a small screen the map opens in its flat lite mode. The 3D switch is bottom right.</p>}
             {reduceMotion && <p className="cx-fine">Reduced motion is on, so the map stays flat and still.</p>}
           </div>
         </div>
