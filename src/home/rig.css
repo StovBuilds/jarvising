@@ -7,6 +7,8 @@
 .see-also .slots { grid-template-columns: 1fr 1fr; }
 .see-also .slots li.live { grid-column: 1 / -1; }
 @media (max-width: 520px) { .see-also .slots { grid-template-columns: 1fr; } }
+/* One chart (the lead entry's); the rest keep their row of numbers. */
+.see-also .slots li.live ~ li.live .rig-bench { display: none; }
 
 .rig {
   --rig-t: 700ms;
@@ -165,7 +167,7 @@
 
 .rig-foot {
   margin: 12px 0 0; font-size: 11px; line-height: 1.45; color: var(--ink-faint);
-  font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 12.5px;
+  font-family: 'Fraunces', Georgia, serif; font-size: 12.5px;
 }
 .rig-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
