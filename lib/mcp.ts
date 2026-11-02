@@ -47,7 +47,7 @@ const terms = (q: string) => [...new Set(words(q).filter(w => !STOP.has(w)).map(
 function search(ix: Index, qs: string[], phrase: string, allowed: Set<number> | null): { i: number; s: number }[] {
   const total = new Map<number, number>(), matched = new Map<number, number>();
   for (const q of qs) {
-    const post = ix.postings[q];
+    const post = Object.hasOwn(ix.postings, q) ? ix.postings[q] : null; // "constructor" is a word, not a prototype key
     if (!post) continue;
     const idf = Math.log(1 + ix.pages.length / (post.length / 2));
     for (let j = 0; j < post.length; j += 2) {

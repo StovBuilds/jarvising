@@ -86,7 +86,7 @@ for (const url of urls) {
 const STOP = new Set('a an and are as at be by can could do does for from how i if in into is it its me my of on or should that the this to use using was what when where which who why will with you your'.split(' '));
 const words = t => t.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? [];
 const stem = w => w.length > 4 ? w.replace(/(ies|es|s|ing|ed)$/, '') : w;
-const postings = {};
+const postings = Object.create(null); // words like "constructor" must not hit Object.prototype
 pages.forEach((p, i) => {
   const score = new Map();
   const add = (k, v) => { if (!STOP.has(k)) score.set(k, (score.get(k) ?? 0) + v); };
