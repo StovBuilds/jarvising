@@ -34,7 +34,7 @@ jobs:
       - name: sanity-check dist
         run: |
           set -e
-          for f in index.html projects/enigma/index.html projects/enigma/live/index.html \
+          for f in index.html mcp-server/index.html projects/enigma/index.html projects/enigma/live/index.html \
                    _headers og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png models/bombe.glb models/enigma.glb models/props.glb \
                    projects/cortex/index.html projects/cortex/live/index.html projects/cortex/hero.jpg projects/cortex/og.png \
                    projects/rig/index.html projects/rig/live/index.html projects/rig/hero.jpg projects/rig/og.png models/rig-parts.glb \

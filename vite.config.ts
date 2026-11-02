@@ -26,6 +26,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: resolve(__dirname, "index.html"),
+        mcpServer: resolve(__dirname, "mcp-server/index.html"),
         enigma: resolve(__dirname, "projects/enigma/index.html"),
         enigmaLive: resolve(__dirname, "projects/enigma/live/index.html"),
         cortex: resolve(__dirname, "projects/cortex/index.html"),

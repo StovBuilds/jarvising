@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jarvising MCP server: use this site from your AI assistant · Jarvising</title>
+<meta name="description" content="jarvising.com has a free, read-only MCP server at https://jarvising.com/mcp. Connect it to Claude, ChatGPT, Claude Code, Cursor or VS Code and your assistant can search and read every public page here.">
+<link rel="canonical" href="https://jarvising.com/mcp-server/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Jarvising">
+<meta property="og:title" content="Jarvising MCP server: use this site from your AI assistant">
+<meta property="og:description" content="jarvising.com has a free, read-only MCP server at https://jarvising.com/mcp. Connect it to Claude, ChatGPT, Claude Code, Cursor or VS Code and your assistant can search and read every public page here.">
+<meta property="og:url" content="https://jarvising.com/mcp-server/">
+<meta property="og:image" content="https://jarvising.com/og.png">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F6F1E7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15171A" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Fraunces'; src: url('/fonts/fraunces-latin-ext.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family: 'Inter'; src: url('/fonts/inter-normal-latin-ext.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap;
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+
+  :root {
+    --paper: #F6F1E7; --paper-deep: #EFE8D9; --line: #DED5C2; --line-strong: #C9BEA5;
+    --ink: #1B1D20; --ink-soft: #4E5259; --ink-faint: #7A7E86;
+    --accent: #B5451B; --accent-soft: #F1D9CC; --code-bg: #1B1D20; --code-ink: #EDE7DA;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #15171A; --paper-deep: #1C1F23; --line: #2C3036; --line-strong: #3B4048;
+      --ink: #EDE7DA; --ink-soft: #B8B2A6; --ink-faint: #858079;
+      --accent: #E8845A; --accent-soft: #3A2A22; --code-bg: #0E1012; --code-ink: #DDD6C8;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--accent-soft); }
+  a { color: inherit; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 72px 24px 56px; min-height: 100vh; display: flex; flex-direction: column; }
+  @media (max-width: 600px) { .wrap { padding-top: 40px; } }
+
+  .fade { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .fade-2 { animation-delay: .09s; } .fade-3 { animation-delay: .18s; } .fade-4 { animation-delay: .27s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .fade, .fade-2, .fade-3, .fade-4 { animation: none; } }
+
+  .running-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); padding-bottom: 12px; border-bottom: 1px solid var(--line-strong); }
+  .running-head b { font-weight: 600; color: var(--ink-soft); }
+  .running-head a { text-decoration: none; }
+  .running-head a:hover { color: var(--ink); }
+
+
+  .entry { margin-top: 48px; }
+  .headword { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 600; font-variation-settings: 'opsz' 144; font-size: clamp(36px, 7vw, 60px); line-height: 1.02; letter-spacing: -0.025em; margin: 0; text-wrap: balance; }
+  .prose { margin-top: 28px; color: var(--ink-soft); max-width: 62ch; }
+  .prose p { margin: 0 0 14px; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose h2 { margin: 40px 0 12px; padding-top: 24px; border-top: 1px solid var(--line); font-family: 'Fraunces', Georgia, serif; font-size: 24px; line-height: 1.2; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+  .prose h3 { margin: 26px 0 8px; font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .prose ul, .prose ol { margin: 0 0 14px; padding-left: 20px; }
+  .prose li { margin: 6px 0; }
+  .prose a { color: var(--ink); text-decoration-color: var(--line-strong); text-underline-offset: 3px; }
+  .prose a:hover { text-decoration-color: var(--accent); }
+  code { font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace; font-size: .88em; background: var(--paper-deep); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; overflow-wrap: anywhere; }
+  pre { margin: 14px 0 16px; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 16px 18px; font-size: 13px; line-height: 1.55; overflow-x: auto; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; overflow-wrap: normal; }
+  .tablewrap { overflow-x: auto; margin: 14px 0 18px; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  tbody tr:last-child td { border-bottom: 0; }
+  th { font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; background: var(--paper-deep); }
+  td:first-child { white-space: nowrap; }
+  td code { overflow-wrap: normal; }
+  td:not(:first-child) { min-width: 14em; }
+
+  footer { margin-top: auto; padding-top: 48px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 13.5px; color: var(--ink-faint); }
+  footer a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  footer a:hover { color: var(--ink); border-color: var(--ink); }
+</style>
+<script src="/motion/early.js"></script>
+<link rel="stylesheet" href="/motion/transitions.css">
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="running-head fade">
+    <span><a href="/"><b>jarvising</b></a> · MCP server</span>
+    <span>jarvising.com</span>
+  </header>
+
+  <main class="entry">
+    <h1 class="headword fade fade-2">Jarvising MCP server: use this site from your AI assistant</h1>
+    <div class="prose fade fade-3">
+<p>jarvising.com now runs an MCP server. MCP (Model Context Protocol) is the open standard that assistants like Claude, ChatGPT, Cursor and VS Code use to connect to outside tools and data. Add the address below and your assistant can search the entries here, read any public page in full and list them newest first, so it can talk you through a teardown from the page itself rather than from memory.</p>
+<p>It's free, needs no account or key, and is read-only: it can't change anything, and it only sees pages that are already public. The setup steps follow below.</p>
+<h2>The address</h2>
+<pre><code class="language-text">https://jarvising.com/mcp</code></pre>
+<p>It speaks MCP over Streamable HTTP. There is no sign-in, no API key and nothing to install on the site's side.</p>
+<h2>What your assistant can do with it</h2>
+<div class="tablewrap"><table><thead><tr><th>Tool</th><th>What it does</th></tr></thead><tbody><tr><td><code>search_site</code></td><td>Searches every page listed in the site's sitemap and returns the best matches, each with its URL, a short snippet and its last-updated date.</td></tr><tr><td><code>get_page</code></td><td>Fetches one page from this site as clean text, with its title and last-updated date.</td></tr><tr><td><code>list_pages</code></td><td>Lists the pages, newest first, a section at a time if you want.</td></tr></tbody></table></div>
+<p>All three only read. None of them can post, buy, sign up or change anything, and none of them can see a page that isn't already public.</p>
+<p>Things to ask once it's connected:</p>
+<ul><li>"Search jarvising.com for the Cortex memory map."</li><li>"List the entries on jarvising.com, newest first."</li><li>"Summarise the Inside the Rig entry on jarvising.com."</li></ul>
+<h2>How to connect it</h2>
+<h3>Claude (claude.ai and the desktop app)</h3>
+<p>Open <strong>Settings → Connectors</strong> (in newer versions, <strong>Customize → Connectors</strong>), choose <strong>Add custom connector</strong>, name it Jarvising, paste the address above and leave the OAuth fields empty. The Free plan allows one custom connector.</p>
+<h3>ChatGPT</h3>
+<p>ChatGPT adds custom MCP servers through <strong>Developer mode</strong>: <strong>Settings → Apps → Advanced settings → Developer mode</strong>, then create an app with the address above and no authentication. Which plans get Developer mode has changed more than once, so if you can't see it, check OpenAI's help pages for your plan.</p>
+<h3>Claude Code</h3>
+<pre><code class="language-sh">claude mcp add --transport http jarvising https://jarvising.com/mcp</code></pre>
+<h3>Cursor</h3>
+<p>Add this to <code>~/.cursor/mcp.json</code> (or <code>.cursor/mcp.json</code> in a project):</p>
+<pre><code class="language-json">{
+  "mcpServers": {
+    "jarvising": { "url": "https://jarvising.com/mcp" }
+  }
+}</code></pre>
+<h3>VS Code</h3>
+<p>Add this to <code>.vscode/mcp.json</code>:</p>
+<pre><code class="language-json">{
+  "servers": {
+    "jarvising": { "type": "http", "url": "https://jarvising.com/mcp" }
+  }
+}</code></pre>
+<h2>What we record</h2>
+<p>When a tool is called, we may count it: which tool, whether it worked, and a rough label for the kind of client (Claude, ChatGPT, Cursor and so on). We don't store what you searched for, which pages you asked for, your IP address or anything else about you.</p>
+<h2>Other machine-readable files</h2>
+<ul><li><a href="https://jarvising.com/llms.txt">llms.txt</a>: a plain-text map of the site for AI tools.</li><li><a href="https://jarvising.com/.well-known/mcp.json">MCP discovery card</a>: the server's address, transport and tools as JSON.</li><li><a href="https://jarvising.com/sitemap.xml">Sitemap</a>: every public page, with last-modified dates. The MCP server indexes exactly these pages.</li></ul>
+    </div>
+  </main>
+
+    <footer class="fade fade-4">
+    <span>© 2026 Jarvising. Built in the open.</span>
+    <span>by <a href="https://jstov.uk/" rel="me">Jack Stovell</a> · <a href="https://x.com/StovBuilds" rel="me noopener" target="_blank">X</a> · <a href="https://www.instagram.com/stovbuilds" rel="me noopener" target="_blank">Instagram</a> · <a href="https://www.linkedin.com/in/jackstovell/" rel="me noopener" target="_blank">LinkedIn</a> · <a href="https://adaptprogressevolve.com/">adaptprogressevolve.com</a></span>
+    <span>Operated by <a href="https://adaptprogressevolve.com/">Adapt Progress Evolve Limited</a>. Registered in England and Wales, company no. 10047328. Registered office: 5 Brayford Square, London E1 0SG. VAT GB362654684.</span>
+    <span><a href="/mcp-server/">MCP server</a></span>
+    <span>Anonymous first-party page counts only: no cookies, no third parties. <a href="/#privacy">Opt out</a>.</span>
+  </footer>
+
+</div>
+</body>
+</html>

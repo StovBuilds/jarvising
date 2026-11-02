@@ -17,6 +17,8 @@ const read = p => readFileSync(join(dist, p), 'utf8');
 
 const sitemap = read('sitemap.xml');
 const urls = [...sitemap.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map(m => m[1].replace(/&amp;/g, '&'));
+// <lastmod> per URL: the fallback "updated" date when a page's own front matter has none.
+const lastmod = new Map([...sitemap.matchAll(/<url>[\s\S]*?<loc>\s*([^<\s]+)\s*<\/loc>[\s\S]*?<\/url>/g)].map(m => [m[1].replace(/&amp;/g, '&'), m[0].match(/<lastmod>\s*([^<\s]+)\s*<\/lastmod>/)?.[1]?.slice(0, 10) ?? null]));
 if (!urls.length) throw new Error('build-mcp-index: sitemap.xml lists no URLs');
 const origin = new URL(urls[0]).origin;
 
@@ -68,15 +70,15 @@ for (const url of urls) {
     const { fields, body } = frontmatter(read(mdRel));
     const h1 = body.match(/^#\s+(.+)$/m)?.[1];
     const headings = [...body.matchAll(/^#{2,3}\s+(.+)$/gm)].map(m => plain(m[1]));
-    const firstPara = body.split(/\n\s*\n/).map(p => p.trim()).find(p => p && !p.startsWith('#') && !/^(Author|Published|Updated):/i.test(p)) || '';
-    page = { title: fields.title || plain(h1 || ''), description: fields.description || plain(firstPara).slice(0, 300), headings, text: plain(body), markdown: `/${mdRel}`, fields };
+    const firstPara = body.split(/\n\s*\n/).map(p => p.trim()).find(p => p && !p.startsWith('#') && !/^(Author|Published|Updated|Canonical|Publisher|Contact|Source|Language):/i.test(p)) || '';
+    page = { title: fields.title || plain(h1 || ''), description: fields.description || plain(firstPara).slice(0, 300), headings, text: plain(body), markdown: `/${mdRel}`, fields, body };
   } else if (existsSync(join(dist, htmlRel))) {
     page = { ...fromHtml(read(htmlRel)), markdown: null, fields: {} };
   } else continue;
   for (const k of ['title', 'url', 'description']) delete page.fields[k];
   pages.push({
     path, url, section: slug.split('/')[0] && slug.includes('/') ? slug.split('/')[0] : (slug ? 'pages' : 'home'),
-    title: page.title || title, description: page.description, updated: page.fields.updated || page.fields.published || null,
+    title: page.title || title, description: page.description, updated: page.fields.updated || page.fields.published || page.body?.match(/^Updated:\s*(\d{4}-\d{2}-\d{2})/mi)?.[1] || lastmod.get(url) || null,
     headings: page.headings.slice(0, 40), markdown: page.markdown, html: page.markdown ? null : `/${htmlRel}`, fields: page.fields,
     text: page.text,
   });
@@ -110,8 +112,17 @@ const card = {
 mkdirSync(join(dist, '.well-known'), { recursive: true });
 writeFileSync(join(dist, '.well-known', 'mcp.json'), JSON.stringify(card, null, 2) + '\n');
 
-if (llms && !llms.includes(`${origin}/mcp`)) {
-  writeFileSync(join(dist, 'llms.txt'), llms.replace(/\s*$/, '\n') + `\n## AI agents\n\n- [MCP server](${origin}/mcp): Read-only remote MCP server (Streamable HTTP, no key). Tools: search_site, get_page, list_pages. Every page listed in the sitemap, with its URL and last-updated date.\n`);
+// The "AI agents" lines for llms.txt and llms-full.txt. The /mcp-server/ help page is listed only
+// when the site has one. Skipped when the source file already names the endpoint itself.
+const helpPage = ['mcp-server/index.html', 'mcp-server.html'].some(f => existsSync(join(dist, f)));
+const agentLines = `\n## AI agents\n\n- [MCP server](${origin}/mcp): Read-only remote MCP server (Streamable HTTP, no key). Tools: search_site, get_page, list_pages. Covers every page in the sitemap, with its URL and last-updated date.\n`
+  + (helpPage ? `- [Connect the MCP server](${origin}/mcp-server/): How to add it to Claude, ChatGPT, Claude Code, Cursor or VS Code, what each tool does and what we record.\n` : '')
+  + `- [MCP discovery card](${origin}/.well-known/mcp.json): The server's endpoint, transport and tools as JSON.\n`;
+const namesEndpoint = t => new RegExp(`${origin.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}/mcp(?![\\w/-])`).test(t);
+for (const f of ['llms.txt', 'llms-full.txt']) {
+  if (!existsSync(join(dist, f))) continue;
+  const t = read(f);
+  if (!namesEndpoint(t)) writeFileSync(join(dist, f), t.replace(/\s*$/, '\n') + agentLines);
 }
 
 const bytes = JSON.stringify(index).length;
