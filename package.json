@@ -4,7 +4,7 @@
   "type": "module",
   "description": "jarvising.com — open portfolio of test projects. Static site, no framework.",
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && node tools/build-mcp-index.mjs",
     "dev": "vite",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json --noEmit",
