@@ -33,3 +33,4 @@
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
 }
+.suggest-band{margin:64px 0 0}
