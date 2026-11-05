@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - run: node --check tools/indexnow.mjs
       - run: bun run typecheck
       - name: brand scrub (entry 003 names no brands)
         run: node tools/brand-scrub.mjs
