@@ -33,6 +33,7 @@
   }
   html, body { margin: 0; background: #050608; color: #e8e6df; }
   #root { min-height: 100vh; }
+  .vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
   .noscript { font-family: Inter, system-ui, sans-serif; padding: 48px 24px; max-width: 560px; margin: 0 auto; line-height: 1.5; }
   .noscript a { color: #e8a33a; }
 </style>
@@ -41,7 +42,16 @@
 <script src="/analytics.js" defer></script>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Server-rendered summary for readers and crawlers without JavaScript; React replaces it on mount. Facts from the entry page. -->
+    <section class="vh" aria-labelledby="about-piece">
+      <h1 id="about-piece">INSIDE THE RIG: a teardown in scroll</h1>
+      <p>Entry 003 on jarvising.com: a flagship-class gaming PC taken apart in scroll. Seventeen chapters run from inside the processor out to the whole machine, then it ends in an exploded atlas you can search, isolate and pull apart piece by piece. It is a WebGL scene built with Three.js and TypeScript, and it takes about three minutes. It is generic, with no brands, on purpose.</p>
+      <p>It starts inside the processor: a city of logic blocks at night, an instruction pulse running its streets, then the cache stacked above it. The camera pulls out to the chip in its socket and works outward, one system per chapter: memory, the motherboard's lanes, the SSD, the PCIe link, the graphics processor building a frame and its graphics memory, then heat: the card's heatsink, the liquid loop, the power supply and the case's airflow. The last chapters step back through the glass to the whole machine.</p>
+      <p>The atlas holds 104 modelled pieces in eight systems. Filter them, search with synonyms ("memory", "vrm", "radiator"), hover to identify, click for a plain-English panel on what each part does and why it matters, isolate it, and use a staged explode slider: case open, systems, components, every piece.</p>
+      <p>The written entry, with what it does, how it was made and how to make your own, is at <a href="/projects/rig/">jarvising.com/projects/rig</a>.</p>
+    </section>
+  </div>
   <noscript>
     <div class="noscript">
       <h1>INSIDE THE RIG</h1>

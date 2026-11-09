@@ -21,6 +21,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   html, body { margin: 0; background: #04060d; color: #e2ecfa; }
+  .vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
   .noscript { font-family: system-ui, sans-serif; padding: 48px 24px; max-width: 560px; margin: 0 auto; line-height: 1.5; }
   .noscript a { color: #ffcf7a; }
 </style>
@@ -29,7 +30,17 @@
 <script src="/analytics.js" defer></script>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <!-- Server-rendered summary for readers and crawlers without JavaScript; React replaces it on mount. Facts from the entry page. -->
+    <section class="vh" aria-labelledby="about-piece">
+      <h1 id="about-piece">CORTEX: a memory map you can take apart</h1>
+      <p>Entry 002 on jarvising.com: a knowledge graph drawn as a living, holographic war table by cortex-map, the open-source (MIT) renderer behind the Jarvis fleet's memory. It is built with React and three.js: 3D on desktop, flat on phones.</p>
+      <p>Every memory is an orb, and every cluster owns a sector of a domed table. The most important orbs throw up pillars of light; strong links arc across the map as bright trails of particles, and weak ones make a faint web underneath. Fresh memories glow in their cluster's colour; old ones cool to slate. Under it all a sea rolls, and where a part of the mind is busy, that sector of the sea ripples and then storms.</p>
+      <p>Click an orb and the rest of the map dims while tentacles reach out to everything it is linked to, with an inspector listing each link by strength. Press / to search every label and note, L to simulate a brain at work, G for the globe projection. A theming panel copies your settings as props to paste. On a phone, or with reduced motion on, it opens as a flat 2D map.</p>
+      <p>The data is fictional: a made-up indie game studio's second brain, 191 memories, 273 links and seven clusters, generated from a fixed seed. None of Jack's real memories are in it.</p>
+      <p>The written entry, with what it does, how it was made and how to make your own, is at <a href="/projects/cortex/">jarvising.com/projects/cortex</a>. The library is at <a href="https://github.com/StovBuilds/cortex-map">github.com/StovBuilds/cortex-map</a>.</p>
+    </section>
+  </div>
   <noscript>
     <div class="noscript">
       <h1>CORTEX</h1>

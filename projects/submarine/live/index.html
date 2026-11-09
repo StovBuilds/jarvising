@@ -22,7 +22,8 @@
 <link rel="preload" href="/fonts/big-shoulders-stencil-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/newsreader-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/azeret-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
-<style>html, body { margin: 0; background: #050a12; color: #e3ebf1; }</style>
+<style>html, body { margin: 0; background: #050a12; color: #e3ebf1; }
+.vh { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }</style>
 <noscript><style>#loader, .ui, #stage, #labels { display: none !important; } body { overflow: auto !important; }</style></noscript>
 <script src="/motion/early.js"></script>
 <link rel="stylesheet" href="/motion/transitions.css">
@@ -100,6 +101,12 @@
     <p class="fine">The boat is modelled loosely on an early T-class, the Royal Navy's main ocean-going patrol submarine of the war: 84 m (276 ft) long, 53 built. It is shown with its original bulbous bow. That bulge held two of its ten torpedo tubes that faced forward, but it slowed the boats in rough seas; two boats had it cut away, and later groups were built with a finer bow. The Oerlikon aft of the bridge and the radar mast are mid-war additions. Depths are in feet, as the boats' own logs recorded them. The escort's range is in metres. Sound is shown about 36× slower than life so you can watch it travel. Sources are listed on the <a href="/projects/submarine/#sources">entry page</a>.<br><br><kbd>Space</kbd> ping · <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> periscope, above or below the layer · <kbd>[</kbd> <kbd>]</kbd> nudge depth · <kbd>X</kbd> assembled or opened up · <kbd>C</kbd> cinematic cameras · <kbd>R</kbd> reset the view · <kbd>/</kbd> hide the interface · drag to orbit · right-drag to pan · scroll to zoom</p>
   </article>
 </div>
+
+<section class="vh" aria-labelledby="about-piece">
+  <h2 id="about-piece">About this piece</h2>
+  <p>Entry 004 on jarvising.com, a WebGL scene built with Three.js and TypeScript. An early British T-class submarine of the Second World War, 84 m long with six compartments, hangs in the dark while an enemy escort on the surface hunts it with ASDIC. You set the depth: periscope, above the layer or below it. Under the thermocline at 180 feet the ping bends away and the echo fades to a whisper. Press X and the boat opens up into its pressure hull and compartments: the tube space, torpedo stowage and mess, the control room, wardroom and galley over the battery, the engine room and the motor room. <code>?kiosk=1</code> runs it unattended.</p>
+  <p>The written entry, with what it does, how it was made, how to make your own and its sources, is at <a href="/projects/submarine/">jarvising.com/projects/submarine</a>.</p>
+</section>
 
 <noscript>
   <div class="noscript">
