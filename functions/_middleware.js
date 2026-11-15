@@ -19,5 +19,17 @@ export async function onRequest(context) {
     url.hostname = CANONICAL;
     return Response.redirect(url.toString(), 301);
   }
-  return context.next();
+  const response = await context.next();
+  // Pages answers any unknown path with the app's index.html (200), because
+  // there is no 404.html. For /.well-known/ that is wrong: a personal agent that
+  // finds an app page at /.well-known/oauth-protected-resource refuses the whole
+  // /.well-known/poppy.json (Poppy spec 3.2). Real files there (poppy.json,
+  // mcp.json, security.txt) are not HTML and pass through untouched.
+  if (url.pathname.startsWith("/.well-known/") && (response.headers.get("content-type") || "").includes("text/html")) {
+    return new Response("Not found\n", {
+      status: 404,
+      headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store", "x-robots-tag": "noindex" },
+    });
+  }
+  return response;
 }
