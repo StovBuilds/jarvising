@@ -18,6 +18,7 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 ## Pages
 
 - [Home](https://jarvising.com/): the dictionary entry for "jarvising" and the index of entries.
+- [Who we are](https://jarvising.com/who-we-are/): Adapt Progress Evolve, the studio that runs this site, and its 29 public projects
 
 ## Source
 
