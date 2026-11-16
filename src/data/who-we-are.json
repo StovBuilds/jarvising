@@ -1,0 +1,250 @@
+{
+  "_generated": "by ~/bin/who-we-are.mjs from ~/registry/public.json + who-we-are.copy.json. Do not edit by hand: re-run it.",
+  "registry_generated": "2026-11-16",
+  "org": {
+    "name": "Adapt Progress Evolve",
+    "legalName": "Adapt Progress Evolve Limited",
+    "url": "https://adaptprogressevolve.com",
+    "id": "https://adaptprogressevolve.com/#organization",
+    "sameAs": [
+      "https://aibyape.com",
+      "https://find-and-update.company-information.service.gov.uk/company/10047328",
+      "https://github.com/StovBuilds"
+    ],
+    "companyNumber": "10047328"
+  },
+  "parentOrganization": {
+    "@type": "Organization",
+    "@id": "https://adaptprogressevolve.com/#organization",
+    "name": "Adapt Progress Evolve Limited",
+    "url": "https://adaptprogressevolve.com",
+    "sameAs": [
+      "https://aibyape.com",
+      "https://find-and-update.company-information.service.gov.uk/company/10047328",
+      "https://github.com/StovBuilds"
+    ]
+  },
+  "intro": [
+    "Adapt Progress Evolve is a software studio in London. We design, build and run our own portfolio of digital products, and take on selective client work: AI agents, Claude and LLM integration, and MVP builds.",
+    "Day to day, a fleet of specialised Claude AI agents does the work with human direction, and a person approves anything customer-facing, destructive or costly. These are the projects we run."
+  ],
+  "footnote": "Adapt Progress Evolve Limited, registered in England and Wales, company number 10047328.",
+  "sections": [
+    {
+      "title": "Writing and voice",
+      "projects": [
+        {
+          "slug": "scriptgrain",
+          "name": "ScriptGrain",
+          "url": "https://scriptgrain.com",
+          "description": "Reads writing you've already published into a voice profile of 45 measured attributes, then drafts new content and scores each draft against it."
+        },
+        {
+          "slug": "deadwritingtheory",
+          "name": "Dead Writing Theory",
+          "url": "https://deadwritingtheory.com",
+          "description": "Tests with data, one case at a time, the claim that the web's writing is collapsing into one machine-made voice."
+        },
+        {
+          "slug": "brandsovertime",
+          "name": "Brands over time",
+          "url": "https://brandsovertime.com",
+          "description": "How 209 UK brands write, measured across 27,062 of their own pages from 2015 to 2026, before and after ChatGPT."
+        }
+      ]
+    },
+    {
+      "title": "Being found by AI",
+      "projects": [
+        {
+          "slug": "visibilitytoai",
+          "name": "Visibility to AI",
+          "url": "https://visibilitytoai.com",
+          "description": "Measures whether ChatGPT, Claude, Gemini and Perplexity name and cite a company when its buyers ask them questions."
+        },
+        {
+          "slug": "whatisgeo",
+          "name": "What is GEO",
+          "url": "https://whatisgeo.app",
+          "description": "A practical, source-linked beginner's guide to Generative Engine Optimisation (GEO), for business owners and marketers."
+        },
+        {
+          "slug": "hilyt",
+          "name": "Hilyt",
+          "url": "https://hilyt.it",
+          "description": "Open profiles for people and businesses that AI systems can read: a crawlable page, schema.org markup and a plain-text card, with no login wall."
+        },
+        {
+          "slug": "seracu",
+          "name": "Seracu",
+          "url": "https://seracu.com",
+          "description": "Finds the searches your website is missing and writes finished articles for them in your own voice, every claim traced to a fetched page."
+        }
+      ]
+    },
+    {
+      "title": "Guides to using AI",
+      "projects": [
+        {
+          "slug": "howtogetaito",
+          "name": "How to get AI to",
+          "url": "https://howtogetaito.com",
+          "description": "A library of practical guides to getting AI to do things, and if your task isn't there, a plan for it in about ten seconds."
+        },
+        {
+          "slug": "canyouuseai",
+          "name": "Can You Use AI",
+          "url": "https://canyouuseai.com",
+          "description": "Straight answers to \"can I use AI for...?\": a verdict, how to do it well, and the UK rules and risks. Free, no sign-up."
+        },
+        {
+          "slug": "iwantaito",
+          "name": "I Want AI To",
+          "url": "https://iwantaito.com",
+          "description": "Plain-English Claude prompts, what they really produced (mistakes included), and how to put the result live from GitHub with no terminal."
+        },
+        {
+          "slug": "usingaias",
+          "name": "Using AI As",
+          "url": "https://usingaias.com",
+          "description": "Shows people in finance, HR and office admin how to use AI at work without breaking confidentiality or UK GDPR."
+        },
+        {
+          "slug": "aiguideson",
+          "name": "AI Guides On",
+          "url": "https://aiguideson.com",
+          "description": "Free short AI courses for people who don't code: 3 to 6 lessons, the exact prompts, and a finished thing at the end."
+        },
+        {
+          "slug": "isthereathing",
+          "name": "Is There a Thing",
+          "url": "https://isthereathing.com",
+          "description": "One question per page, \"is there a thing for that?\", with an honest yes, partly or not really, the real options, the cost and the catch."
+        }
+      ]
+    },
+    {
+      "title": "Tools for small businesses",
+      "projects": [
+        {
+          "slug": "reviewnudge",
+          "name": "ReviewNudge",
+          "url": "https://reviewnudge.app",
+          "description": "Free, no-account tools for small businesses to ask for honest reviews, reply to them and show real feedback as QR cards and testimonial images."
+        },
+        {
+          "slug": "reviewsnot",
+          "name": "reviewsnot",
+          "url": "https://reviewsnot.com",
+          "description": "One problem per page about reviews not showing: the likely cause first, the fix in steps, linked to the platform's own help pages."
+        },
+        {
+          "slug": "productphotoshots",
+          "name": "Product Photo Shots",
+          "url": "https://productphotoshots.com",
+          "description": "Send one photo of a real product and get campaign shots of that exact product in new scenes, each checked against the original."
+        },
+        {
+          "slug": "launchvideomaker",
+          "name": "Launch Video Maker",
+          "url": "https://launchvideomaker.com",
+          "description": "Turns a business website into a short motion reel with music for YouTube, Shorts, Reels and TikTok. You approve the facts first."
+        }
+      ]
+    },
+    {
+      "title": "Charts and decks",
+      "projects": [
+        {
+          "slug": "lookgoodtools",
+          "name": "Look Good Tools",
+          "url": "https://lookgoodtools.com",
+          "description": "Makes charts and slide decks look good in your own brand: Chartsmade and Decksmade, with one login and one credit wallet."
+        },
+        {
+          "slug": "chartsmade",
+          "name": "Chartsmade",
+          "url": "https://chartsmade.com",
+          "description": "Turns a table, a CSV, a spreadsheet or a sentence into a finished chart you share as a live embed, PNG or SVG."
+        },
+        {
+          "slug": "decksmade",
+          "name": "Decksmade",
+          "url": "https://decksmade.com",
+          "description": "Turns a report, a spreadsheet or an old deck into a designed presentation. Every number on a slide comes from your file, and you can check each one."
+        }
+      ]
+    },
+    {
+      "title": "Data you can search",
+      "projects": [
+        {
+          "slug": "marketframe",
+          "name": "MarketFrame",
+          "url": "https://marketframe.app",
+          "description": "Free daily news sentiment for every FTSE 100 company: it reads the UK business news each morning and scores every story's tone."
+        },
+        {
+          "slug": "ukspend",
+          "name": "UK Spend",
+          "url": "https://ukspend.com",
+          "description": "London council spending made searchable: £123.3bn across more than 17 million payments from 32 authorities, by supplier and category."
+        },
+        {
+          "slug": "paws",
+          "name": "Paws of London",
+          "url": "https://pawsof.london",
+          "description": "A guide to dog-friendly cafés, pubs, restaurants, hotels and shops across London, plus dog walking routes."
+        }
+      ]
+    },
+    {
+      "title": "3D and open source",
+      "projects": [
+        {
+          "slug": "assetsforthreejs",
+          "name": "Assets for three.js",
+          "url": "https://assetsforthreejs.com",
+          "description": "Original 3D model packs (GLB) for three.js and WebGL: British streets, building sites and parks, in three detail levels, with a free starter pack."
+        },
+        {
+          "slug": "cortex-map",
+          "name": "Cortex Map",
+          "url": "https://cortex-map.pages.dev",
+          "description": "An open-source, living 3D knowledge-graph component for React and three.js, with a live demo."
+        }
+      ]
+    },
+    {
+      "title": "The lab and side projects",
+      "projects": [
+        {
+          "slug": "noctemlabs",
+          "name": "Noctem Labs",
+          "url": "https://noctemlabs.co.uk",
+          "description": "The studio's lab: studies, failures and experiments, published with the evidence, including a museum of the fleet's own failures."
+        },
+        {
+          "slug": "jarvising",
+          "name": "Jarvising",
+          "url": "https://jarvising.com",
+          "description": "An open portfolio of test projects, published as they're built.",
+          "self": true
+        },
+        {
+          "slug": "notquitefolk",
+          "name": "Not Quite Folk",
+          "url": "https://notquitefolk.com",
+          "description": "A small studio making openly AI presenter personas for Instagram and TikTok that never pretend to be human. Oriel is the first."
+        },
+        {
+          "slug": "gary-the-spacehorse",
+          "name": "Gary the Space Horse",
+          "url": "https://garythespacehorse.com",
+          "description": "A bedtime show about a horse in space with a helmet and no oxygen tank, narrated by the Moon."
+        }
+      ]
+    }
+  ],
+  "count": 29
+}
