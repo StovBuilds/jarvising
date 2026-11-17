@@ -1,0 +1,57 @@
+{
+  "_about": "Company details in the hand-written pages' footers and project-page JSON-LD publisher nodes are written from src/data/identity.json (the shared registry). CI runs node scripts/identity-render.mjs --check. See ~/registry/IDENTITY.md.",
+  "source": "src/data/identity.json",
+  "regions": [],
+  "lines": [
+    {
+      "file": "index.html",
+      "match": "^\\s*<span>Operated by ",
+      "template": "    <span>Operated by <a href=\"{{org.url}}/\">{{org.legalName}}</a>. Registered in {{org.registeredIn}}, company no. {{org.companyNumber}}. Registered office: {{org.address.streetAddress}}, {{org.address.addressLocality}} {{org.address.postalCode}}. VAT {{org.vatID}}.</span>"
+    },
+    {
+      "file": "mcp-server/index.html",
+      "match": "^\\s*<span>Operated by ",
+      "template": "    <span>Operated by <a href=\"{{org.url}}/\">{{org.legalName}}</a>. Registered in {{org.registeredIn}}, company no. {{org.companyNumber}}. Registered office: {{org.address.streetAddress}}, {{org.address.addressLocality}} {{org.address.postalCode}}. VAT {{org.vatID}}.</span>"
+    },
+    {
+      "file": "projects/cortex/index.html",
+      "match": "^\\s*<span>Operated by ",
+      "template": "    <span>Operated by <a href=\"{{org.url}}/\">{{org.legalName}}</a>. Registered in {{org.registeredIn}}, company no. {{org.companyNumber}}. Registered office: {{org.address.streetAddress}}, {{org.address.addressLocality}} {{org.address.postalCode}}. VAT {{org.vatID}}.</span>"
+    },
+    {
+      "file": "projects/enigma/index.html",
+      "match": "^\\s*<span>Operated by ",
+      "template": "    <span>Operated by <a href=\"{{org.url}}/\">{{org.legalName}}</a>. Registered in {{org.registeredIn}}, company no. {{org.companyNumber}}. Registered office: {{org.address.streetAddress}}, {{org.address.addressLocality}} {{org.address.postalCode}}. VAT {{org.vatID}}.</span>"
+    },
+    {
+      "file": "projects/rig/index.html",
+      "match": "^\\s*<span>Operated by ",
+      "template": "    <span>Operated by <a href=\"{{org.url}}/\">{{org.legalName}}</a>. Registered in {{org.registeredIn}}, company no. {{org.companyNumber}}. Registered office: {{org.address.streetAddress}}, {{org.address.addressLocality}} {{org.address.postalCode}}. VAT {{org.vatID}}.</span>"
+    },
+    {
+      "file": "projects/submarine/index.html",
+      "match": "^\\s*<span>Operated by ",
+      "template": "    <span>Operated by <a href=\"{{org.url}}/\">{{org.legalName}}</a>. Registered in {{org.registeredIn}}, company no. {{org.companyNumber}}. Registered office: {{org.address.streetAddress}}, {{org.address.addressLocality}} {{org.address.postalCode}}. VAT {{org.vatID}}.</span>"
+    },
+    {
+      "file": "projects/cortex/index.html",
+      "match": "^\\s*\"publisher\": \\{ \"@type\": \"Organization\"",
+      "template": "  \"publisher\": { \"@type\": \"Organization\", \"name\": \"{{org.name}}\", \"url\": \"{{org.url}}/\", \"vatID\": \"{{org.vatID}}\", \"identifier\": \"{{org.companyNumber}}\", \"address\": { \"@type\": \"PostalAddress\", \"streetAddress\": \"{{org.address.streetAddress}}\", \"addressLocality\": \"{{org.address.addressLocality}}\", \"postalCode\": \"{{org.address.postalCode}}\", \"addressCountry\": \"{{org.address.addressCountry}}\" } },"
+    },
+    {
+      "file": "projects/enigma/index.html",
+      "match": "^\\s*\"publisher\": \\{ \"@type\": \"Organization\"",
+      "template": "  \"publisher\": { \"@type\": \"Organization\", \"name\": \"{{org.name}}\", \"url\": \"{{org.url}}/\", \"vatID\": \"{{org.vatID}}\", \"identifier\": \"{{org.companyNumber}}\", \"address\": { \"@type\": \"PostalAddress\", \"streetAddress\": \"{{org.address.streetAddress}}\", \"addressLocality\": \"{{org.address.addressLocality}}\", \"postalCode\": \"{{org.address.postalCode}}\", \"addressCountry\": \"{{org.address.addressCountry}}\" } },"
+    },
+    {
+      "file": "projects/rig/index.html",
+      "match": "^\\s*\"publisher\": \\{ \"@type\": \"Organization\"",
+      "template": "  \"publisher\": { \"@type\": \"Organization\", \"name\": \"{{org.name}}\", \"url\": \"{{org.url}}/\", \"vatID\": \"{{org.vatID}}\", \"identifier\": \"{{org.companyNumber}}\", \"address\": { \"@type\": \"PostalAddress\", \"streetAddress\": \"{{org.address.streetAddress}}\", \"addressLocality\": \"{{org.address.addressLocality}}\", \"postalCode\": \"{{org.address.postalCode}}\", \"addressCountry\": \"{{org.address.addressCountry}}\" } },"
+    },
+    {
+      "file": "projects/submarine/index.html",
+      "match": "^\\s*\"publisher\": \\{ \"@type\": \"Organization\"",
+      "template": "  \"publisher\": { \"@type\": \"Organization\", \"name\": \"{{org.name}}\", \"url\": \"{{org.url}}/\", \"vatID\": \"{{org.vatID}}\", \"identifier\": \"{{org.companyNumber}}\", \"address\": { \"@type\": \"PostalAddress\", \"streetAddress\": \"{{org.address.streetAddress}}\", \"addressLocality\": \"{{org.address.addressLocality}}\", \"postalCode\": \"{{org.address.postalCode}}\", \"addressCountry\": \"{{org.address.addressCountry}}\" } },"
+    }
+  ]
+}

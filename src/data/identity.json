@@ -1,0 +1,755 @@
+{
+  "_about": "Copied from ~/registry/identity.json by ~/bin/identity.mjs sync. Do not edit here: edit the registry and re-sync.",
+  "schema": "identity/1",
+  "built": "2026-11-17",
+  "org": {
+    "id": "https://adaptprogressevolve.com/#organization",
+    "name": "Adapt Progress Evolve",
+    "legalName": "Adapt Progress Evolve Limited",
+    "alternateName": [
+      "Adapt Progress Evolve",
+      "adaptprogressevolve.com"
+    ],
+    "url": "https://adaptprogressevolve.com",
+    "logo": "https://adaptprogressevolve.com/logo-512.png",
+    "description": "A UK software studio that builds and operates its own digital products, run day-to-day by a fleet of specialised Claude AI agents with human direction.",
+    "email": "hello@adaptprogressevolve.com",
+    "areaServed": "GB",
+    "foundingDate": "2016-03-07",
+    "companyNumber": "10047328",
+    "companiesHouseUrl": "https://find-and-update.company-information.service.gov.uk/company/10047328",
+    "registeredIn": "England and Wales",
+    "vatID": "GB362654684",
+    "address": {
+      "streetAddress": "5 Brayford Square",
+      "addressLocality": "London",
+      "postalCode": "E1 0SG",
+      "addressCountry": "GB"
+    },
+    "founder": "jack",
+    "socials": [
+      {
+        "platform": "youtube",
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@adaptprogressevolve",
+        "handle": "@adaptprogressevolve",
+        "note": "studio videos and programmes"
+      },
+      {
+        "platform": "instagram",
+        "label": "Instagram",
+        "url": "https://www.instagram.com/adaptprogressevolve/",
+        "handle": "@adaptprogressevolve",
+        "note": "short reels and updates from the studio"
+      },
+      {
+        "platform": "facebook",
+        "label": "Facebook",
+        "url": "https://www.facebook.com/AdaptProgressEvolve",
+        "handle": "Adapt Progress Evolve",
+        "note": "studio news and updates"
+      },
+      {
+        "platform": "linkedin",
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/adapt-progress-evolve/",
+        "handle": "Adapt Progress Evolve",
+        "note": "company page with studio news"
+      }
+    ],
+    "sameAsExtra": [
+      "https://github.com/StovBuilds",
+      "https://i.hilyt.it/ape",
+      "https://find-and-update.company-information.service.gov.uk/company/10047328"
+    ],
+    "knowsAbout": [
+      "AI agent development",
+      "MVP development",
+      "SaaS product development",
+      "Three.js and WebGL",
+      "venture building",
+      "SEO and generative engine optimisation"
+    ],
+    "foundingDateText": "7 March 2016",
+    "location": "London, United Kingdom",
+    "github": "https://github.com/StovBuilds",
+    "hilytProfile": "https://i.hilyt.it/ape"
+  },
+  "people": {
+    "jack": {
+      "id": "https://jstov.uk/#person",
+      "name": "Jack Stovell",
+      "url": "https://jstov.uk",
+      "jobTitle": "Founder",
+      "worksFor": "ape",
+      "profile": "https://i.hilyt.it/jack",
+      "socials": [
+        {
+          "platform": "linkedin",
+          "label": "LinkedIn",
+          "url": "https://www.linkedin.com/in/jackstovell/"
+        },
+        {
+          "platform": "x",
+          "label": "X",
+          "url": "https://x.com/StovBuilds"
+        },
+        {
+          "platform": "instagram",
+          "label": "Instagram",
+          "url": "https://www.instagram.com/stovbuilds"
+        },
+        {
+          "platform": "youtube",
+          "label": "YouTube",
+          "url": "https://www.youtube.com/@StovBuilds"
+        },
+        {
+          "platform": "tiktok",
+          "label": "TikTok",
+          "url": "https://www.tiktok.com/@stovbuilds"
+        },
+        {
+          "platform": "github",
+          "label": "GitHub",
+          "url": "https://github.com/StovBuilds"
+        }
+      ],
+      "sameAsExtra": [
+        "https://i.hilyt.it/jack"
+      ]
+    }
+  },
+  "brands": {
+    "aiguideson": {
+      "slug": "aiguideson",
+      "name": "AI Guides On",
+      "url": "https://aiguideson.com",
+      "status": "live",
+      "statusSince": "2026-10-03",
+      "public": true,
+      "oneLiner": "Free short AI courses for people who don't code: 3 to 6 lessons, the exact prompts, and a finished thing at the end.",
+      "icon": "https://aiguideson.com/apple-touch-icon.png",
+      "ogImage": "https://aiguideson.com/og/default.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://aiguideson.com",
+        "desktop": "screenshots/aiguideson/2026-11-17-desktop.webp",
+        "phone": "screenshots/aiguideson/2026-11-17-phone.webp"
+      }
+    },
+    "assetsforthreejs": {
+      "slug": "assetsforthreejs",
+      "name": "Assets for three.js",
+      "url": "https://assetsforthreejs.com",
+      "status": "live",
+      "statusSince": "2026-09-25",
+      "public": true,
+      "oneLiner": "Original 3D model packs (GLB) for three.js and WebGL: British streets, building sites and parks, in three detail levels, with a free starter pack.",
+      "icon": "https://assetsforthreejs.com/favicon.svg",
+      "ogImage": "https://assetsforthreejs.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://assetsforthreejs.com",
+        "desktop": "screenshots/assetsforthreejs/2026-11-17-desktop.webp",
+        "phone": "screenshots/assetsforthreejs/2026-11-17-phone.webp"
+      }
+    },
+    "brandsovertime": {
+      "slug": "brandsovertime",
+      "name": "Brands over time",
+      "url": "https://brandsovertime.com",
+      "status": "live",
+      "statusSince": "2026-10-05",
+      "public": true,
+      "oneLiner": "How 209 UK brands write, measured across 27,062 of their own pages from 2015 to 2026, before and after ChatGPT.",
+      "icon": "https://brandsovertime.com/apple-touch-icon.png",
+      "ogImage": "https://brandsovertime.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://brandsovertime.com",
+        "desktop": "screenshots/brandsovertime/2026-11-17-desktop.webp",
+        "phone": "screenshots/brandsovertime/2026-11-17-phone.webp"
+      }
+    },
+    "canyouuseai": {
+      "slug": "canyouuseai",
+      "name": "Can You Use AI",
+      "url": "https://canyouuseai.com",
+      "status": "live",
+      "statusSince": "2026-10-01",
+      "public": true,
+      "oneLiner": "Straight answers to \"can I use AI for...?\": a verdict, how to do it well, and the UK rules and risks. Free, no sign-up.",
+      "icon": "https://canyouuseai.com/apple-touch-icon.png",
+      "ogImage": "https://canyouuseai.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://canyouuseai.com",
+        "desktop": "screenshots/canyouuseai/2026-11-17-desktop.webp",
+        "phone": "screenshots/canyouuseai/2026-11-17-phone.webp"
+      }
+    },
+    "chartsmade": {
+      "slug": "chartsmade",
+      "name": "Chartsmade",
+      "url": "https://chartsmade.com",
+      "status": "live",
+      "statusSince": "2026-10-19",
+      "public": true,
+      "oneLiner": "Turns a table, a CSV, a spreadsheet or a sentence into a finished chart you share as a live embed, PNG or SVG.",
+      "icon": "https://chartsmade.com/apple-touch-icon.png",
+      "ogImage": "https://chartsmade.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://chartsmade.com",
+        "desktop": "screenshots/chartsmade/2026-11-17-desktop.webp",
+        "phone": "screenshots/chartsmade/2026-11-17-phone.webp"
+      }
+    },
+    "cortex-map": {
+      "slug": "cortex-map",
+      "name": "Cortex Map",
+      "url": "https://cortex-map.pages.dev",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "An open-source, living 3D knowledge-graph component for React and three.js, with a live demo.",
+      "icon": null,
+      "ogImage": null,
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://cortex-map.pages.dev",
+        "desktop": "screenshots/cortex-map/2026-11-17-desktop.webp",
+        "phone": "screenshots/cortex-map/2026-11-17-phone.webp"
+      }
+    },
+    "deadwritingtheory": {
+      "slug": "deadwritingtheory",
+      "name": "Dead Writing Theory",
+      "url": "https://deadwritingtheory.com",
+      "status": "live",
+      "statusSince": "2026-10-04",
+      "public": true,
+      "oneLiner": "Tests with data, one case at a time, the claim that the web's writing is collapsing into one machine-made voice.",
+      "icon": "https://deadwritingtheory.com/apple-touch-icon.png",
+      "ogImage": "https://deadwritingtheory.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://deadwritingtheory.com",
+        "desktop": "screenshots/deadwritingtheory/2026-11-17-desktop.webp",
+        "phone": "screenshots/deadwritingtheory/2026-11-17-phone.webp"
+      }
+    },
+    "decksmade": {
+      "slug": "decksmade",
+      "name": "Decksmade",
+      "url": "https://decksmade.com",
+      "status": "live",
+      "statusSince": "2026-10-19",
+      "public": true,
+      "oneLiner": "Turns a report, a spreadsheet or an old deck into a designed presentation. Every number on a slide comes from your file, and you can check each one.",
+      "icon": "https://decksmade.com/apple-touch-icon.png",
+      "ogImage": "https://decksmade.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://decksmade.com",
+        "desktop": "screenshots/decksmade/2026-11-17-desktop.webp",
+        "phone": "screenshots/decksmade/2026-11-17-phone.webp"
+      }
+    },
+    "forematter": {
+      "slug": "forematter",
+      "name": "Forematter",
+      "url": "https://forematter.com",
+      "status": "building",
+      "statusSince": "2026-10-27",
+      "public": true,
+      "oneLiner": null,
+      "icon": "https://forematter.com/apple-touch-icon.png",
+      "ogImage": "https://forematter.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://forematter.com",
+        "desktop": "screenshots/forematter/2026-11-17-desktop.webp",
+        "phone": "screenshots/forematter/2026-11-17-phone.webp"
+      }
+    },
+    "gary-the-spacehorse": {
+      "slug": "gary-the-spacehorse",
+      "name": "Gary the Space Horse",
+      "url": "https://garythespacehorse.com",
+      "status": "live",
+      "statusSince": "2026-11-07",
+      "public": true,
+      "oneLiner": "A bedtime show about a horse in space with a helmet and no oxygen tank, narrated by the Moon.",
+      "icon": "https://garythespacehorse.com/site-img/cast/gary.webp",
+      "ogImage": "https://garythespacehorse.com/site-img/ep1.jpg",
+      "owner": "jack",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://garythespacehorse.com",
+        "desktop": "screenshots/gary-the-spacehorse/2026-11-17-desktop.webp",
+        "phone": "screenshots/gary-the-spacehorse/2026-11-17-phone.webp"
+      }
+    },
+    "hilyt": {
+      "slug": "hilyt",
+      "name": "Hilyt",
+      "url": "https://hilyt.it",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "Open profiles for people and businesses that AI systems can read: a crawlable page, schema.org markup and a plain-text card, with no login wall.",
+      "icon": "https://hilyt.it/favicon.ico",
+      "ogImage": "https://hilyt.it/og-image.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://hilyt.it",
+        "desktop": "screenshots/hilyt/2026-11-17-desktop.webp",
+        "phone": "screenshots/hilyt/2026-11-17-phone.webp"
+      }
+    },
+    "howtogetaito": {
+      "slug": "howtogetaito",
+      "name": "How to get AI to",
+      "url": "https://howtogetaito.com",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "A library of practical guides to getting AI to do things, and if your task isn't there, a plan for it in about ten seconds.",
+      "icon": "https://howtogetaito.com/apple-touch-icon.png",
+      "ogImage": "https://howtogetaito.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://howtogetaito.com",
+        "desktop": "screenshots/howtogetaito/2026-11-17-desktop.webp",
+        "phone": "screenshots/howtogetaito/2026-11-17-phone.webp"
+      }
+    },
+    "isthereathing": {
+      "slug": "isthereathing",
+      "name": "Is There a Thing",
+      "url": "https://isthereathing.com",
+      "status": "live",
+      "statusSince": "2026-10-02",
+      "public": true,
+      "oneLiner": "One question per page, \"is there a thing for that?\", with an honest yes, partly or not really, the real options, the cost and the catch.",
+      "icon": "https://isthereathing.com/apple-touch-icon.png",
+      "ogImage": "https://isthereathing.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://isthereathing.com",
+        "desktop": "screenshots/isthereathing/2026-11-17-desktop.webp",
+        "phone": "screenshots/isthereathing/2026-11-17-phone.webp"
+      }
+    },
+    "iwantaito": {
+      "slug": "iwantaito",
+      "name": "I Want AI To",
+      "url": "https://iwantaito.com",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "Plain-English Claude prompts, what they really produced (mistakes included), and how to put the result live from GitHub with no terminal.",
+      "icon": "https://iwantaito.com/apple-touch-icon.png",
+      "ogImage": "https://iwantaito.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://iwantaito.com",
+        "desktop": "screenshots/iwantaito/2026-11-17-desktop.webp",
+        "phone": "screenshots/iwantaito/2026-11-17-phone.webp"
+      }
+    },
+    "jarvising": {
+      "slug": "jarvising",
+      "name": "Jarvising",
+      "url": "https://jarvising.com",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "An open portfolio of test projects, published as they're built.",
+      "icon": "https://jarvising.com/apple-touch-icon.png",
+      "ogImage": "https://jarvising.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://jarvising.com",
+        "desktop": "screenshots/jarvising/2026-11-17-desktop.webp",
+        "phone": "screenshots/jarvising/2026-11-17-phone.webp"
+      }
+    },
+    "launchvideomaker": {
+      "slug": "launchvideomaker",
+      "name": "Launch Video Maker",
+      "url": "https://launchvideomaker.com",
+      "status": "live",
+      "statusSince": "2026-09-28",
+      "public": true,
+      "oneLiner": "Turns a business website into a short motion reel with music for YouTube, Shorts, Reels and TikTok. You approve the facts first.",
+      "icon": "https://launchvideomaker.com/apple-touch-icon.png",
+      "ogImage": "https://launchvideomaker.com/og.png",
+      "owner": "ape",
+      "socials": [
+        {
+          "platform": "youtube",
+          "url": "https://www.youtube.com/@launchvideomaker"
+        },
+        {
+          "platform": "instagram",
+          "url": "https://www.instagram.com/launchvideomaker/"
+        },
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/1346618835206897"
+        },
+        {
+          "platform": "linkedin",
+          "url": "https://www.linkedin.com/company/launchvideomaker/"
+        }
+      ],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://launchvideomaker.com",
+        "desktop": "screenshots/launchvideomaker/2026-11-17-desktop.webp",
+        "phone": "screenshots/launchvideomaker/2026-11-17-phone.webp"
+      }
+    },
+    "lookgoodtools": {
+      "slug": "lookgoodtools",
+      "name": "Look Good Tools",
+      "url": "https://lookgoodtools.com",
+      "status": "live",
+      "statusSince": "2026-10-19",
+      "public": true,
+      "oneLiner": "Makes charts and slide decks look good in your own brand: Chartsmade and Decksmade, with one login and one credit wallet.",
+      "icon": "https://lookgoodtools.com/apple-touch-icon.png",
+      "ogImage": "https://lookgoodtools.com/og-everyone.jpg",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://lookgoodtools.com",
+        "desktop": "screenshots/lookgoodtools/2026-11-17-desktop.webp",
+        "phone": "screenshots/lookgoodtools/2026-11-17-phone.webp"
+      }
+    },
+    "marketframe": {
+      "slug": "marketframe",
+      "name": "MarketFrame",
+      "url": "https://marketframe.app",
+      "status": "live",
+      "statusSince": "2026-10-21",
+      "public": true,
+      "oneLiner": "Free daily news sentiment for every FTSE 100 company: it reads the UK business news each morning and scores every story's tone.",
+      "icon": "https://marketframe.app/apple-touch-icon.png",
+      "ogImage": "https://marketframe.app/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://marketframe.app",
+        "desktop": "screenshots/marketframe/2026-11-17-desktop.webp",
+        "phone": "screenshots/marketframe/2026-11-17-phone.webp"
+      }
+    },
+    "noctemlabs": {
+      "slug": "noctemlabs",
+      "name": "Noctem Labs",
+      "url": "https://noctemlabs.co.uk",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "The studio's lab: studies, failures and experiments, published with the evidence, including a museum of the fleet's own failures.",
+      "icon": "https://noctemlabs.co.uk/apple-touch-icon.png",
+      "ogImage": "https://noctemlabs.co.uk/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://noctemlabs.co.uk",
+        "desktop": "screenshots/noctemlabs/2026-11-17-desktop.webp",
+        "phone": "screenshots/noctemlabs/2026-11-17-phone.webp"
+      }
+    },
+    "notquitefolk": {
+      "slug": "notquitefolk",
+      "name": "Not Quite Folk",
+      "url": "https://notquitefolk.com",
+      "status": "live",
+      "statusSince": "2026-10-27",
+      "public": true,
+      "oneLiner": "A small studio making openly AI presenter personas for Instagram and TikTok that never pretend to be human. Oriel is the first.",
+      "icon": "https://notquitefolk.com/apple-touch-icon.png",
+      "ogImage": "https://notquitefolk.com/og.png",
+      "owner": "ape",
+      "socials": [
+        {
+          "platform": "linkedin",
+          "url": "https://www.linkedin.com/company/not-quite-folk/"
+        },
+        {
+          "platform": "instagram",
+          "url": "https://www.instagram.com/hey_oriel/"
+        },
+        {
+          "platform": "youtube",
+          "url": "https://www.youtube.com/@hey_oriel"
+        }
+      ],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://notquitefolk.com",
+        "desktop": "screenshots/notquitefolk/2026-11-17-desktop.webp",
+        "phone": "screenshots/notquitefolk/2026-11-17-phone.webp"
+      }
+    },
+    "paws": {
+      "slug": "paws",
+      "name": "Paws of London",
+      "url": "https://pawsof.london",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "A guide to dog-friendly cafés, pubs, restaurants, hotels and shops across London, plus dog walking routes.",
+      "icon": "https://pawsof.london/apple-touch-icon.png",
+      "ogImage": "https://pawsof.london/hero-dogs-london.jpg",
+      "owner": "ape",
+      "socials": [
+        {
+          "platform": "youtube",
+          "url": "https://www.youtube.com/@paws_of_london"
+        },
+        {
+          "platform": "instagram",
+          "url": "https://www.instagram.com/paws_of_ldn/"
+        },
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/1408131432387431"
+        },
+        {
+          "platform": "linkedin",
+          "url": "https://www.linkedin.com/company/paws-of-ldn/"
+        }
+      ],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://pawsof.london",
+        "desktop": "screenshots/paws/2026-11-17-desktop.webp",
+        "phone": "screenshots/paws/2026-11-17-phone.webp"
+      }
+    },
+    "productphotoshots": {
+      "slug": "productphotoshots",
+      "name": "Product Photo Shots",
+      "url": "https://productphotoshots.com",
+      "status": "live",
+      "statusSince": "2026-10-04",
+      "public": true,
+      "oneLiner": "Send one photo of a real product and get campaign shots of that exact product in new scenes, each checked against the original.",
+      "icon": "https://productphotoshots.com/apple-touch-icon.png",
+      "ogImage": "https://productphotoshots.com/assets/brand/share.jpg",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://productphotoshots.com",
+        "desktop": "screenshots/productphotoshots/2026-11-17-desktop.webp",
+        "phone": "screenshots/productphotoshots/2026-11-17-phone.webp"
+      }
+    },
+    "reviewnudge": {
+      "slug": "reviewnudge",
+      "name": "ReviewNudge",
+      "url": "https://reviewnudge.app",
+      "status": "live",
+      "statusSince": "2026-09-29",
+      "public": true,
+      "oneLiner": "Free, no-account tools for small businesses to ask for honest reviews, reply to them and show real feedback as QR cards and testimonial images.",
+      "icon": "https://reviewnudge.app/logo-512.png",
+      "ogImage": "https://reviewnudge.app/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://reviewnudge.app",
+        "desktop": "screenshots/reviewnudge/2026-11-17-desktop.webp",
+        "phone": "screenshots/reviewnudge/2026-11-17-phone.webp"
+      }
+    },
+    "reviewsnot": {
+      "slug": "reviewsnot",
+      "name": "reviewsnot",
+      "url": "https://reviewsnot.com",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "One problem per page about reviews not showing: the likely cause first, the fix in steps, linked to the platform's own help pages.",
+      "icon": "https://reviewsnot.com/apple-touch-icon.png",
+      "ogImage": "https://reviewsnot.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://reviewsnot.com",
+        "desktop": "screenshots/reviewsnot/2026-11-17-desktop.webp",
+        "phone": "screenshots/reviewsnot/2026-11-17-phone.webp"
+      }
+    },
+    "scriptgrain": {
+      "slug": "scriptgrain",
+      "name": "ScriptGrain",
+      "url": "https://scriptgrain.com",
+      "status": "live",
+      "statusSince": "2026-08-20",
+      "public": true,
+      "oneLiner": "Reads writing you've already published into a voice profile of 45 measured attributes, then drafts new content and scores each draft against it.",
+      "icon": "https://scriptgrain.com/apple-touch-icon.png",
+      "ogImage": "https://scriptgrain.com/og-image.png",
+      "owner": "ape",
+      "socials": [
+        {
+          "platform": "youtube",
+          "url": "https://www.youtube.com/@scriptgrainapp"
+        },
+        {
+          "platform": "instagram",
+          "url": "https://www.instagram.com/scriptgrainapp/"
+        },
+        {
+          "platform": "linkedin",
+          "url": "https://www.linkedin.com/company/scriptgrain/"
+        }
+      ],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://scriptgrain.com",
+        "desktop": "screenshots/scriptgrain/2026-11-17-desktop.webp",
+        "phone": "screenshots/scriptgrain/2026-11-17-phone.webp"
+      }
+    },
+    "seracu": {
+      "slug": "seracu",
+      "name": "Seracu",
+      "url": "https://seracu.com",
+      "status": "live",
+      "statusSince": "2026-10-19",
+      "public": true,
+      "oneLiner": "Finds the searches your website is missing and writes finished articles for them in your own voice, every claim traced to a fetched page.",
+      "icon": "https://seracu.com/favicon.svg",
+      "ogImage": "https://seracu.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://seracu.com",
+        "desktop": "screenshots/seracu/2026-11-17-desktop.webp",
+        "phone": "screenshots/seracu/2026-11-17-phone.webp"
+      }
+    },
+    "ukspend": {
+      "slug": "ukspend",
+      "name": "UK Spend",
+      "url": "https://ukspend.com",
+      "status": "live",
+      "statusSince": "2026-10-14",
+      "public": true,
+      "oneLiner": "London council spending made searchable: £123.3bn across more than 17 million payments from 32 authorities, by supplier and category.",
+      "icon": "https://ukspend.com/apple-touch-icon.png",
+      "ogImage": "https://ukspend.com/og-image.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://ukspend.com",
+        "desktop": "screenshots/ukspend/2026-11-17-desktop.webp",
+        "phone": "screenshots/ukspend/2026-11-17-phone.webp"
+      }
+    },
+    "usingaias": {
+      "slug": "usingaias",
+      "name": "Using AI As",
+      "url": "https://usingaias.com",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "Shows people in finance, HR and office admin how to use AI at work without breaking confidentiality or UK GDPR.",
+      "icon": "https://usingaias.com/apple-touch-icon.png",
+      "ogImage": "https://usingaias.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://usingaias.com",
+        "desktop": "screenshots/usingaias/2026-11-17-desktop.webp",
+        "phone": "screenshots/usingaias/2026-11-17-phone.webp"
+      }
+    },
+    "visibilitytoai": {
+      "slug": "visibilitytoai",
+      "name": "Visibility to AI",
+      "url": "https://visibilitytoai.com",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "Measures whether ChatGPT, Claude, Gemini and Perplexity name and cite a company when its buyers ask them questions.",
+      "icon": "https://visibilitytoai.com/apple-touch-icon.png",
+      "ogImage": "https://visibilitytoai.com/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://visibilitytoai.com",
+        "desktop": "screenshots/visibilitytoai/2026-11-17-desktop.webp",
+        "phone": "screenshots/visibilitytoai/2026-11-17-phone.webp"
+      }
+    },
+    "whatisgeo": {
+      "slug": "whatisgeo",
+      "name": "What is GEO",
+      "url": "https://whatisgeo.app",
+      "status": "live",
+      "statusSince": null,
+      "public": true,
+      "oneLiner": "A practical, source-linked beginner's guide to Generative Engine Optimisation (GEO), for business owners and marketers.",
+      "icon": "https://whatisgeo.app/apple-touch-icon.png",
+      "ogImage": "https://whatisgeo.app/og.png",
+      "owner": "ape",
+      "socials": [],
+      "screenshot": {
+        "captured": "2026-11-17",
+        "page": "https://whatisgeo.app",
+        "desktop": "screenshots/whatisgeo/2026-11-17-desktop.webp",
+        "phone": "screenshots/whatisgeo/2026-11-17-phone.webp"
+      }
+    }
+  }
+}
