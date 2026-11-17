@@ -31,5 +31,5 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 ## Related
 
 - [jstov.uk](https://jstov.uk/): Jack Stovell's personal site.
-- Jack Stovell on X: https://x.com/StovBuilds · Instagram: https://www.instagram.com/stovbuilds · LinkedIn: https://www.linkedin.com/in/jackstovell/
+- Jack Stovell on X: https://x.com/StovBuilds · Instagram: https://www.instagram.com/stovbuilds · LinkedIn: https://www.linkedin.com/in/jackstovell/ · YouTube: https://www.youtube.com/@StovBuilds · TikTok: https://www.tiktok.com/@stovbuilds
 - [adaptprogressevolve.com](https://adaptprogressevolve.com/): Adapt Progress Evolve.
