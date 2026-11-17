@@ -18,6 +18,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: node --check tools/indexnow.mjs
+      - name: company details match the shared registry copy
+        run: node scripts/identity-render.mjs --check
       - name: /.well-known/ never answers with the app page
         run: bun test tests/well-known.test.ts
       - run: bun run typecheck
