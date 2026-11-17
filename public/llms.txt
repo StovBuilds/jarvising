@@ -18,6 +18,7 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 ## Pages
 
 - [Home](https://jarvising.com/): the dictionary entry for "jarvising" and the index of entries.
+- [Who we are](https://jarvising.com/who-we-are/): Adapt Progress Evolve, the studio that runs this site, and its 29 public projects
 
 ## Source
 
@@ -30,5 +31,5 @@ jarvising.com is an open portfolio of test projects, experiments and tools built
 ## Related
 
 - [jstov.uk](https://jstov.uk/): Jack Stovell's personal site.
-- Jack Stovell on X: https://x.com/StovBuilds · Instagram: https://www.instagram.com/stovbuilds · LinkedIn: https://www.linkedin.com/in/jackstovell/
+- Jack Stovell on X: https://x.com/StovBuilds · Instagram: https://www.instagram.com/stovbuilds · LinkedIn: https://www.linkedin.com/in/jackstovell/ · YouTube: https://www.youtube.com/@StovBuilds · TikTok: https://www.tiktok.com/@stovbuilds
 - [adaptprogressevolve.com](https://adaptprogressevolve.com/): Adapt Progress Evolve.
