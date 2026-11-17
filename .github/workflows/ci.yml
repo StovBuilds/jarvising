@@ -18,6 +18,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: node --check tools/indexnow.mjs
+      - name: /.well-known/ never answers with the app page
+        run: bun test tests/well-known.test.ts
       - run: bun run typecheck
       - name: brand scrub (entry 003 names no brands)
         run: node tools/brand-scrub.mjs
@@ -36,7 +38,7 @@ jobs:
         run: |
           set -e
           for f in index.html mcp-server/index.html who-we-are/index.html projects/enigma/index.html projects/enigma/live/index.html \
-                   _headers og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png models/bombe.glb models/enigma.glb models/props.glb \
+                   _headers .well-known/poppy.json og.png robots.txt sitemap.xml llms.txt projects/enigma/hero.jpg projects/enigma/og.png models/bombe.glb models/enigma.glb models/props.glb \
                    projects/cortex/index.html projects/cortex/live/index.html projects/cortex/hero.jpg projects/cortex/og.png \
                    projects/rig/index.html projects/rig/live/index.html projects/rig/hero.jpg projects/rig/og.png models/rig-parts.glb \
                    projects/submarine/index.html projects/submarine/live/index.html projects/submarine/hero.jpg projects/submarine/og.png; do
